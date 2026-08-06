@@ -71,3 +71,9 @@ public/
 ## Content Editing
 
 All tutorials, categories, and site text are stored as JSON files under `src/data/` and are edited exclusively through the admin panel — no manual file editing needed. Changes go live immediately.
+
+## Contact
+
+- **YouTube:** [@AhmadYTTutorial](https://www.youtube.com/@AhmadYTTutorial)
+- **WhatsApp:** [+92 334 1100761](https://wa.me/923341100761)
+- **Email:** [hammadansar49@gmail.com](mailto:hammadansar49@gmail.com)
