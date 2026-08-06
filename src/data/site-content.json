@@ -1,0 +1,15 @@
+{
+  "aboutHeading": "Every YouTube Tutorial, Paired With Its AI Prompt",
+  "aboutDescription": "Ahmad YT Tutorial teaches AI video editing, Shorts, and channel growth tips. Every video comes with the exact AI prompt used to make it, free to copy from this site.",
+  "contactHeading": "Contact Ahmad YT Tutorial",
+  "contactDescription": "For questions, suggestions, or collaborations, reach out to us on any of the platforms below.",
+  "email": "hammadansar49@gmail.com",
+  "youtubeUrl": "https://www.youtube.com/@AhmadYTTutorial",
+  "socials": [
+    { "name": "YouTube", "handle": "@AhmadYTTutorial", "url": "https://www.youtube.com/@AhmadYTTutorial" },
+    { "name": "WhatsApp", "handle": "+92 334 1100761", "url": "https://wa.me/923341100761" },
+    { "name": "Instagram", "handle": "ahmadyttutorial", "url": "https://instagram.com/ahmadyttutorial" },
+    { "name": "Telegram", "handle": "ahmadyttutorial", "url": "https://t.me/ahmadyttutorial" },
+    { "name": "Facebook", "handle": "ahmadyttutorial", "url": "https://facebook.com/ahmadyttutorial" }
+  ]
+}

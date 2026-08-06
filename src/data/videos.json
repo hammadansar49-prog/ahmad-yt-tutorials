@@ -1,0 +1,42 @@
+[
+  {
+    "slug": "ai-thumbnail-design-prompt",
+    "title": "How to Design a Professional YouTube Thumbnail With AI",
+    "description": "Learn how to design eye-catching YouTube thumbnails using AI tools.",
+    "thumbnail": "/uploads/1786045192572-739171.jpeg",
+    "youtubeUrl": "https://www.youtube.com/@AhmadYTTutorial",
+    "category": "AI Editing",
+    "tools": [
+      "Midjourney",
+      "Photoshop",
+      "Canva"
+    ],
+    "prompt": "Create a high-CTR YouTube thumbnail, 1280x720px, bold 3D text with the title in the center, dramatic lighting, vibrant red-blue-orange gradient background with circuit/tech lines, a subject on the left pointing at the title, glowing neon outline effect, professional YouTube thumbnail style, ultra sharp, 4k."
+  },
+  {
+    "slug": "shorts-viral-script-prompt",
+    "title": "How to Write a Viral YouTube Shorts Script",
+    "description": "Learn how to use AI to write a 30-second viral Shorts script that boosts watch time.",
+    "thumbnail": "/thumbnails/placeholder-2.svg",
+    "youtubeUrl": "https://www.youtube.com/@AhmadYTTutorial",
+    "category": "Shorts",
+    "tools": [
+      "ChatGPT",
+      "CapCut"
+    ],
+    "prompt": "Write a 30-second viral YouTube Shorts script about [TOPIC]. Hook the viewer in the first 3 seconds with a bold question or shocking fact, keep sentences short and punchy, include a mid-video re-hook, and end with a strong call-to-action to follow the channel. Format the output as: HOOK, BODY (3 short beats), CTA."
+  },
+  {
+    "slug": "video-editing-transitions-prompt",
+    "title": "Video Editing With Smooth Transitions",
+    "description": "Learn how to add smooth, professional transitions in CapCut and Premiere Pro.",
+    "thumbnail": "/thumbnails/placeholder-3.svg",
+    "youtubeUrl": "https://www.youtube.com/@AhmadYTTutorial",
+    "category": "Editing",
+    "tools": [
+      "CapCut",
+      "Adobe Premiere Pro"
+    ],
+    "prompt": "Act as a professional video editor. Suggest 5 smooth transition ideas (with exact effect names for CapCut and Premiere Pro) suited for a fast-paced tutorial video, including timing (in frames/seconds) and the mood each transition creates."
+  }
+]
