@@ -82,18 +82,16 @@ export default async function Home({
         {filteredVideos.length > 0 ? (
           <div
             className={
-              filteredVideos.length < 3
-                ? "flex flex-wrap justify-center gap-6"
-                : "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+              filteredVideos.length === 1
+                ? "flex justify-center"
+                : "grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6"
             }
           >
             {filteredVideos.map((video) => (
               <div
                 key={video.slug}
                 className={
-                  filteredVideos.length < 3
-                    ? "w-full sm:w-[340px]"
-                    : undefined
+                  filteredVideos.length === 1 ? "w-full sm:w-[340px]" : undefined
                 }
               >
                 <VideoCard video={video} />
