@@ -6,10 +6,30 @@
   "email": "hammadansar49@gmail.com",
   "youtubeUrl": "https://www.youtube.com/@AhmadYTTutorial",
   "socials": [
-    { "name": "YouTube", "handle": "@AhmadYTTutorial", "url": "https://www.youtube.com/@AhmadYTTutorial" },
-    { "name": "WhatsApp", "handle": "+92 334 1100761", "url": "https://wa.me/923341100761" },
-    { "name": "Instagram", "handle": "ahmadyttutorial", "url": "https://instagram.com/ahmadyttutorial" },
-    { "name": "Telegram", "handle": "ahmadyttutorial", "url": "https://t.me/ahmadyttutorial" },
-    { "name": "Facebook", "handle": "ahmadyttutorial", "url": "https://facebook.com/ahmadyttutorial" }
+    {
+      "name": "YouTube",
+      "handle": "@AhmadYTTutorial",
+      "url": "https://www.youtube.com/@AhmadYTTutorial"
+    },
+    {
+      "name": "WhatsApp",
+      "handle": "+92 334 1100761",
+      "url": "https://wa.me/923341100761"
+    },
+    {
+      "name": "Instagram",
+      "handle": "ahmadyttutorial",
+      "url": "https://instagram.com/ahmadyttutorial"
+    },
+    {
+      "name": "Telegram",
+      "handle": "ahmadyttutorial",
+      "url": "https://t.me/ahmadyttutorial"
+    },
+    {
+      "name": "Facebook",
+      "handle": "ahmadyttutorial",
+      "url": "https://facebook.com/ahmadyttutorial"
+    }
   ]
 }

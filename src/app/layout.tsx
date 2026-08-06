@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import GlowParticles from "@/components/GlowParticles";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -37,8 +38,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-[#06102b] text-white">
-        {children}
+      <body className="relative min-h-full flex flex-col text-white">
+        <GlowParticles />
+        <div className="relative z-10 flex flex-col flex-1 min-h-full">
+          {children}
+        </div>
       </body>
     </html>
   );

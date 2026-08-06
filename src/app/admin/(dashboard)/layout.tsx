@@ -7,8 +7,8 @@ export default function AdminDashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-[#06102b] text-white flex">
-      <aside className="w-56 shrink-0 border-r border-white/10 bg-[#0a1030] flex flex-col">
+    <div className="min-h-screen text-white flex">
+      <aside className="w-56 shrink-0 border-r border-white/10 bg-[#0a1030]/85 backdrop-blur flex flex-col">
         <div className="px-5 py-5 border-b border-white/10">
           <span className="font-extrabold text-sm">
             Ahmad <span className="text-[#ff6a3d]">YT</span> Admin

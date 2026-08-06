@@ -1,18 +1,22 @@
 import Hero from "@/components/Hero";
 import VideoCard from "@/components/VideoCard";
 import CategoryTabs from "@/components/CategoryTabs";
+import AboutSection from "@/components/AboutSection";
+import ContactSection from "@/components/ContactSection";
 import { getVideos } from "@/lib/videos-store";
 import { getCategories } from "@/lib/categories-store";
+import { getSiteContent } from "@/lib/site-content-store";
 
 export const dynamic = "force-dynamic";
 
 export default async function Home({
   searchParams,
 }: PageProps<"/">) {
-  const [params, videos, allCategories] = await Promise.all([
+  const [params, videos, allCategories, siteContent] = await Promise.all([
     searchParams,
     getVideos(),
     getCategories(),
+    getSiteContent(),
   ]);
 
   const rawQuery = params?.q;
@@ -102,6 +106,9 @@ export default async function Home({
           </p>
         ) : null}
       </section>
+
+      <AboutSection content={siteContent} />
+      <ContactSection content={siteContent} />
     </main>
   );
 }

@@ -20,7 +20,28 @@
 }
 
 body {
-  background: var(--background);
+  background: radial-gradient(ellipse 120% 80% at 50% -10%, #101f52 0%, #06102b 45%, #010308 100%);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+@keyframes glow-float {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+    opacity: var(--glow-opacity, 0.5);
+  }
+  50% {
+    transform: translate(var(--glow-drift-x, 20px), var(--glow-drift-y, -30px)) scale(1.15);
+    opacity: calc(var(--glow-opacity, 0.5) * 1.4);
+  }
+}
+
+.glow-particle {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(var(--glow-blur, 12px));
+  animation: glow-float var(--glow-duration, 10s) ease-in-out infinite;
+  animation-delay: var(--glow-delay, 0s);
+  pointer-events: none;
 }

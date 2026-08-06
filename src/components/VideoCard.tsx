@@ -4,7 +4,7 @@ import type { Video } from "@/lib/videos-store";
 
 export default function VideoCard({ video }: { video: Video }) {
   return (
-    <article className="rounded-2xl border border-white/10 bg-[#0d1330]/80 shadow-lg shadow-black/30 overflow-hidden flex flex-col">
+    <article className="group/card rounded-2xl border border-white/10 bg-[#0d1330]/80 backdrop-blur shadow-lg shadow-black/30 overflow-hidden flex flex-col transition-all duration-300 hover:border-[#3b82f6]/40 hover:shadow-[0_0_40px_-12px_rgba(59,130,246,0.5)] hover:-translate-y-1">
       <Link
         href={`/tutorial/${video.slug}`}
         className="relative block aspect-video group"
