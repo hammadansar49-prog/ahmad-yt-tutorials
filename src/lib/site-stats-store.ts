@@ -3,19 +3,40 @@ import path from "path";
 
 type SiteStats = {
   totalVisits: number;
+  countries: Record<string, number>;
 };
 
 const filePath = path.join(process.cwd(), "src/data/site-stats.json");
 
-export async function getTotalVisits(): Promise<number> {
+async function readStats(): Promise<SiteStats> {
   const raw = await fs.readFile(filePath, "utf-8");
-  const stats = JSON.parse(raw) as SiteStats;
-  return stats.totalVisits ?? 0;
+  const stats = JSON.parse(raw) as Partial<SiteStats>;
+  return {
+    totalVisits: stats.totalVisits ?? 0,
+    countries: stats.countries ?? {},
+  };
 }
 
-export async function recordVisit(): Promise<void> {
-  const raw = await fs.readFile(filePath, "utf-8");
-  const stats = JSON.parse(raw) as SiteStats;
-  stats.totalVisits = (stats.totalVisits ?? 0) + 1;
+export async function getTotalVisits(): Promise<number> {
+  const stats = await readStats();
+  return stats.totalVisits;
+}
+
+export async function getCountryStats(): Promise<
+  { country: string; count: number }[]
+> {
+  const stats = await readStats();
+  return Object.entries(stats.countries)
+    .map(([country, count]) => ({ country, count }))
+    .sort((a, b) => b.count - a.count);
+}
+
+export async function recordVisit(country?: string | null): Promise<void> {
+  const stats = await readStats();
+  stats.totalVisits += 1;
+
+  const label = country && country.trim() ? country.trim() : "Unknown";
+  stats.countries[label] = (stats.countries[label] ?? 0) + 1;
+
   await fs.writeFile(filePath, JSON.stringify(stats, null, 2), "utf-8");
 }

@@ -14,7 +14,7 @@ export default async function ContactPage() {
 
   return (
     <main className="flex-1">
-      <PageViewTracker />
+      <PageViewTracker trackKey="contact" />
       <ContactSection content={content} />
     </main>
   );

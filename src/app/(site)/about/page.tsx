@@ -14,7 +14,7 @@ export default async function AboutPage() {
 
   return (
     <main className="flex-1">
-      <PageViewTracker />
+      <PageViewTracker trackKey="about" />
       <AboutSection content={content} />
     </main>
   );

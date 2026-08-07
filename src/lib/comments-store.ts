@@ -42,6 +42,18 @@ export async function getCommentCounts(): Promise<Record<string, number>> {
   return counts;
 }
 
+export async function getPendingCommentCounts(): Promise<
+  Record<string, number>
+> {
+  const comments = await getComments();
+  const counts: Record<string, number> = {};
+  for (const c of comments) {
+    if (c.approved) continue;
+    counts[c.videoSlug] = (counts[c.videoSlug] ?? 0) + 1;
+  }
+  return counts;
+}
+
 export async function addComment(input: {
   videoSlug: string;
   name: string;

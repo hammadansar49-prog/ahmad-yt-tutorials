@@ -2,15 +2,16 @@ import Image from "next/image";
 import Link from "next/link";
 import { getVideos } from "@/lib/videos-store";
 import { deleteVideoAction } from "@/lib/video-actions";
-import { getCommentCounts } from "@/lib/comments-store";
+import { getCommentCounts, getPendingCommentCounts } from "@/lib/comments-store";
 import DeleteButton from "./DeleteButton";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminVideosPage() {
-  const [videos, commentCounts] = await Promise.all([
+  const [videos, commentCounts, pendingCounts] = await Promise.all([
     getVideos(),
     getCommentCounts(),
+    getPendingCommentCounts(),
   ]);
 
   return (
@@ -82,6 +83,11 @@ export default async function AdminVideosPage() {
                       <path d="M21 12a8 8 0 1 1-3.4-6.5L21 4l-1 4.2A7.96 7.96 0 0 1 21 12Z" />
                     </svg>
                     {commentCounts[video.slug] ?? 0} comments
+                    {(pendingCounts[video.slug] ?? 0) > 0 && (
+                      <span className="ml-1 rounded-full bg-[#ff2d55]/20 text-[#ff6a8a] px-1.5 py-0.5 text-[10px] font-semibold">
+                        +{pendingCounts[video.slug]} waiting for approval
+                      </span>
+                    )}
                   </Link>
                 </div>
               </div>

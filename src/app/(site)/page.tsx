@@ -54,7 +54,7 @@ export default async function Home({
 
   return (
     <main className="flex-1">
-      <PageViewTracker />
+      <PageViewTracker trackKey="home" />
       {!hasFilter && <Hero />}
 
       <section className="max-w-6xl mx-auto px-4 sm:px-6 py-12">
