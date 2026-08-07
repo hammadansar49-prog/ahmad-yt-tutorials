@@ -2,6 +2,7 @@
 
 import fs from "fs/promises";
 import path from "path";
+import sharp from "sharp";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { isAuthed } from "@/lib/auth";
@@ -14,15 +15,28 @@ import {
 
 const uploadsDir = path.join(process.cwd(), "public", "uploads");
 
+// Thumbnails are only ever displayed at small/medium sizes on the site, so
+// no matter how large the uploaded file is (a raw 4K photo, a phone camera
+// shot, etc.), we downscale and re-encode it as compressed WebP here. This
+// keeps page load fast regardless of what admins upload.
+const MAX_THUMBNAIL_WIDTH = 1280;
+const THUMBNAIL_QUALITY = 75;
+
 async function saveThumbnail(file: File): Promise<string | null> {
   if (!file || file.size === 0) return null;
 
   await fs.mkdir(uploadsDir, { recursive: true });
 
-  const ext = path.extname(file.name) || ".jpg";
-  const safeName = `${Date.now()}-${Math.round(Math.random() * 1e6)}${ext}`;
-  const buffer = Buffer.from(await file.arrayBuffer());
-  await fs.writeFile(path.join(uploadsDir, safeName), buffer);
+  const safeName = `${Date.now()}-${Math.round(Math.random() * 1e6)}.webp`;
+  const inputBuffer = Buffer.from(await file.arrayBuffer());
+
+  const optimizedBuffer = await sharp(inputBuffer)
+    .rotate() // respect EXIF orientation before resizing
+    .resize({ width: MAX_THUMBNAIL_WIDTH, withoutEnlargement: true })
+    .webp({ quality: THUMBNAIL_QUALITY })
+    .toBuffer();
+
+  await fs.writeFile(path.join(uploadsDir, safeName), optimizedBuffer);
 
   return `/uploads/${safeName}`;
 }
