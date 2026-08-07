@@ -38,7 +38,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="relative min-h-full flex flex-col text-white">
+      <body
+        className="relative min-h-full flex flex-col text-white"
+        suppressHydrationWarning
+      >
         <GlowParticles />
         <div className="relative z-10 flex flex-col flex-1 min-h-full">
           {children}
