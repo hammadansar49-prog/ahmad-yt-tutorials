@@ -120,12 +120,12 @@ export default function Navbar() {
             Contact
           </Link>
           <a
-            href="https://www.youtube.com/@AhmadYTTutorial"
+            href="https://www.youtube.com/@AhmadYTTutorial?sub_confirmation=1"
             target="_blank"
             rel="noopener noreferrer"
             className="rounded-lg bg-gradient-to-r from-[#ff2d55] to-[#ff8a1c] px-4 py-2 text-white font-semibold hover:brightness-110 transition whitespace-nowrap"
           >
-            YouTube Channel
+            Subscribe
           </a>
         </div>
 
@@ -198,12 +198,12 @@ export default function Navbar() {
             Contact
           </Link>
           <a
-            href="https://www.youtube.com/@AhmadYTTutorial"
+            href="https://www.youtube.com/@AhmadYTTutorial?sub_confirmation=1"
             target="_blank"
             rel="noopener noreferrer"
             className="block rounded-lg bg-gradient-to-r from-[#ff2d55] to-[#ff8a1c] px-3 py-2.5 text-white font-semibold text-center mt-2"
           >
-            YouTube Channel
+            Subscribe
           </a>
         </div>
       )}
