@@ -12,7 +12,7 @@ export default function VideoCard({
   commentCount?: number;
 }) {
   return (
-    <article className="group/card rounded-xl sm:rounded-2xl border border-white/10 bg-[#0d1330]/80 backdrop-blur shadow-lg shadow-black/30 overflow-hidden flex flex-col transition-all duration-300 hover:border-[#3b82f6]/40 hover:shadow-[0_0_40px_-12px_rgba(59,130,246,0.5)] hover:-translate-y-1">
+    <article className="group/card h-full rounded-xl sm:rounded-2xl border border-white/10 bg-[#0d1330]/80 backdrop-blur shadow-lg shadow-black/30 overflow-hidden flex flex-col transition-all duration-300 hover:border-[#3b82f6]/40 hover:shadow-[0_0_40px_-12px_rgba(59,130,246,0.5)] hover:-translate-y-1">
       <Link
         href={`/tutorial/${video.slug}`}
         className="relative block aspect-video group"
@@ -43,7 +43,7 @@ export default function VideoCard({
 
       <div className="p-2.5 sm:p-4 flex flex-col gap-1.5 sm:gap-3 flex-1">
         <Link href={`/tutorial/${video.slug}`}>
-          <h3 className="text-sm sm:text-lg font-bold text-white leading-snug hover:text-[#ff8a1c] transition line-clamp-2">
+          <h3 className="text-sm sm:text-lg font-bold text-white leading-snug hover:text-[#ff8a1c] transition line-clamp-2 min-h-[2.5em] sm:min-h-[3.5em]">
             {video.title}
           </h3>
         </Link>

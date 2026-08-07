@@ -9,8 +9,17 @@ export default function ExpandableDescription({ text }: { text: string }) {
   const isLong = text.length > TRUNCATE_THRESHOLD;
 
   return (
-    <div className="hidden sm:block text-sm text-white/60">
-      <p className={expanded || !isLong ? "" : "line-clamp-2"}>{text}</p>
+    <div className="hidden sm:block text-sm text-white/60 min-h-[2.6em]">
+      <p
+        className={expanded ? "" : "overflow-hidden"}
+        style={
+          expanded
+            ? undefined
+            : { display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical" as const, maxHeight: "2.4em" }
+        }
+      >
+        {text}
+      </p>
       {isLong && (
         <button
           type="button"

@@ -96,7 +96,9 @@ export default async function Home({
               <div
                 key={video.slug}
                 className={
-                  filteredVideos.length === 1 ? "w-full sm:w-[340px]" : undefined
+                  filteredVideos.length === 1
+                    ? "w-full sm:w-[340px]"
+                    : "h-full"
                 }
               >
                 <VideoCard
