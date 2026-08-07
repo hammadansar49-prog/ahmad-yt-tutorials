@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getSiteContent } from "@/lib/site-content-store";
 import AboutSection from "@/components/AboutSection";
+import PageViewTracker from "@/components/PageViewTracker";
 
 export const metadata: Metadata = {
   title: "About - Ahmad YT Tutorial",
@@ -13,6 +14,7 @@ export default async function AboutPage() {
 
   return (
     <main className="flex-1">
+      <PageViewTracker />
       <AboutSection content={content} />
     </main>
   );

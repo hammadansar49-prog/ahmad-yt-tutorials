@@ -3,21 +3,25 @@ import VideoCard from "@/components/VideoCard";
 import CategoryTabs from "@/components/CategoryTabs";
 import AboutSection from "@/components/AboutSection";
 import ContactSection from "@/components/ContactSection";
+import PageViewTracker from "@/components/PageViewTracker";
 import { getVideos } from "@/lib/videos-store";
 import { getCategories } from "@/lib/categories-store";
 import { getSiteContent } from "@/lib/site-content-store";
+import { getCommentCounts } from "@/lib/comments-store";
 
 export const dynamic = "force-dynamic";
 
 export default async function Home({
   searchParams,
 }: PageProps<"/">) {
-  const [params, videos, allCategories, siteContent] = await Promise.all([
-    searchParams,
-    getVideos(),
-    getCategories(),
-    getSiteContent(),
-  ]);
+  const [params, videos, allCategories, siteContent, commentCounts] =
+    await Promise.all([
+      searchParams,
+      getVideos(),
+      getCategories(),
+      getSiteContent(),
+      getCommentCounts(),
+    ]);
 
   const rawQuery = params?.q;
   const query = (Array.isArray(rawQuery) ? rawQuery[0] : rawQuery ?? "")
@@ -50,6 +54,7 @@ export default async function Home({
 
   return (
     <main className="flex-1">
+      <PageViewTracker />
       {!hasFilter && <Hero />}
 
       <section className="max-w-6xl mx-auto px-4 sm:px-6 py-12">
@@ -94,7 +99,10 @@ export default async function Home({
                   filteredVideos.length === 1 ? "w-full sm:w-[340px]" : undefined
                 }
               >
-                <VideoCard video={video} />
+                <VideoCard
+                  video={video}
+                  commentCount={commentCounts[video.slug] ?? 0}
+                />
               </div>
             ))}
           </div>

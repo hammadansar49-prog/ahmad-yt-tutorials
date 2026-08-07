@@ -26,52 +26,56 @@ export default function CategoryRow({
   );
 
   return (
-    <div className="flex items-center gap-3 rounded-xl border border-white/10 bg-[#0d1330]/80 p-4">
+    <div className="flex flex-col sm:flex-row sm:items-center gap-3 rounded-xl border border-white/10 bg-[#0d1330]/80 p-4">
       {editing ? (
-        <form action={formAction} className="flex-1 flex items-center gap-2">
+        <form action={formAction} className="flex-1 flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
           <input
             name="name"
             defaultValue={name}
             autoFocus
-            className="flex-1 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:outline-none focus:border-[#ff6a3d]/60 transition"
+            className="flex-1 min-w-0 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:outline-none focus:border-[#ff6a3d]/60 transition"
           />
-          <button
-            type="submit"
-            disabled={pending}
-            className="rounded-lg bg-gradient-to-r from-[#ff2d55] to-[#ff8a1c] px-3 py-2 text-xs font-semibold text-white hover:brightness-110 transition disabled:opacity-60"
-          >
-            {pending ? "Saving..." : "Save"}
-          </button>
-          <button
-            type="button"
-            onClick={() => setEditing(false)}
-            className="rounded-lg border border-white/10 px-3 py-2 text-xs font-semibold text-white/70 hover:bg-white/5 transition"
-          >
-            Cancel
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              type="submit"
+              disabled={pending}
+              className="rounded-lg bg-gradient-to-r from-[#ff2d55] to-[#ff8a1c] px-3 py-2 text-xs font-semibold text-white hover:brightness-110 transition disabled:opacity-60"
+            >
+              {pending ? "Saving..." : "Save"}
+            </button>
+            <button
+              type="button"
+              onClick={() => setEditing(false)}
+              className="rounded-lg border border-white/10 px-3 py-2 text-xs font-semibold text-white/70 hover:bg-white/5 transition"
+            >
+              Cancel
+            </button>
+          </div>
         </form>
       ) : (
         <>
-          <div className="flex-1">
-            <span className="text-white font-medium">{name}</span>
-            <span className="ml-2 text-xs text-white/40">
+          <div className="flex-1 min-w-0">
+            <span className="text-white font-medium break-words">{name}</span>
+            <span className="ml-2 text-xs text-white/40 whitespace-nowrap">
               {videoCount} tutorial{videoCount !== 1 ? "s" : ""}
             </span>
           </div>
-          <button
-            type="button"
-            onClick={() => setEditing(true)}
-            className="rounded-lg border border-white/10 px-3 py-2 text-xs font-semibold text-white/70 hover:bg-white/5 transition"
-          >
-            Rename
-          </button>
-          <button
-            type="button"
-            onClick={() => setConfirmOpen(true)}
-            className="rounded-lg border border-red-500/30 px-3 py-2 text-xs font-semibold text-red-400 hover:bg-red-500/10 transition"
-          >
-            Delete
-          </button>
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              type="button"
+              onClick={() => setEditing(true)}
+              className="rounded-lg border border-white/10 px-3 py-2 text-xs font-semibold text-white/70 hover:bg-white/5 transition"
+            >
+              Rename
+            </button>
+            <button
+              type="button"
+              onClick={() => setConfirmOpen(true)}
+              className="rounded-lg border border-red-500/30 px-3 py-2 text-xs font-semibold text-red-400 hover:bg-red-500/10 transition"
+            >
+              Delete
+            </button>
+          </div>
         </>
       )}
 

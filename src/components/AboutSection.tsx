@@ -52,11 +52,15 @@ export default function AboutSection({
         <h2 className="text-2xl sm:text-3xl font-bold text-white text-center mb-12">
           How It Works
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-          {steps.map((step) => (
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-6">
+          {steps.map((step, i) => (
             <div
               key={step.number}
-              className="rounded-2xl border border-white/10 bg-[#0d1330]/80 p-6 hover:border-[#ff6a3d]/50 transition"
+              className={`rounded-xl sm:rounded-2xl border border-white/10 bg-[#0d1330]/80 p-3 sm:p-6 hover:border-[#ff6a3d]/50 transition ${
+                i === steps.length - 1 && steps.length % 2 !== 0
+                  ? "col-span-2 sm:col-span-1"
+                  : ""
+              }`}
             >
               <span className="text-4xl font-extrabold bg-gradient-to-r from-[#ff2d55] to-[#ff8a1c] bg-clip-text text-transparent">
                 {step.number}

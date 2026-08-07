@@ -90,7 +90,7 @@ export default function ContactSection({
       )}
 
       <section className="max-w-5xl mx-auto px-4 sm:px-6 py-16">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+        <div className="grid grid-cols-2 gap-2.5 sm:gap-5">
           {content.socials.map((s) => {
             const visuals = iconMap[s.name.toLowerCase()] ?? defaultIcon;
             return (
@@ -99,22 +99,22 @@ export default function ContactSection({
                 href={s.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group flex items-center gap-4 rounded-2xl border border-white/10 bg-[#0d1330]/80 p-5 hover:border-white/30 hover:-translate-y-0.5 transition"
+                className="group flex items-center gap-2.5 sm:gap-4 rounded-xl sm:rounded-2xl border border-white/10 bg-[#0d1330]/80 p-3 sm:p-5 hover:border-white/30 hover:-translate-y-0.5 transition"
               >
                 <span
-                  className={`flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br ${visuals.gradient} text-white shrink-0`}
+                  className={`flex items-center justify-center w-9 h-9 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-gradient-to-br ${visuals.gradient} text-white shrink-0 [&_svg]:w-4 [&_svg]:h-4 sm:[&_svg]:w-6 sm:[&_svg]:h-6`}
                 >
                   {visuals.icon}
                 </span>
-                <span>
-                  <span className="block text-white font-semibold">
+                <span className="min-w-0">
+                  <span className="block text-white font-semibold text-sm sm:text-base truncate">
                     {s.name}
                   </span>
-                  <span className="block text-white/50 text-sm">
+                  <span className="block text-white/50 text-xs sm:text-sm truncate">
                     {s.handle}
                   </span>
                 </span>
-                <span className="ml-auto text-white/30 group-hover:text-white/70 transition">
+                <span className="ml-auto hidden sm:inline text-white/30 group-hover:text-white/70 transition">
                   ↗
                 </span>
               </a>

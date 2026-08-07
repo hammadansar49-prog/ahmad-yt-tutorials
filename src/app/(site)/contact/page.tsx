@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getSiteContent } from "@/lib/site-content-store";
 import ContactSection from "@/components/ContactSection";
+import PageViewTracker from "@/components/PageViewTracker";
 
 export const metadata: Metadata = {
   title: "Contact - Ahmad YT Tutorial",
@@ -13,6 +14,7 @@ export default async function ContactPage() {
 
   return (
     <main className="flex-1">
+      <PageViewTracker />
       <ContactSection content={content} />
     </main>
   );

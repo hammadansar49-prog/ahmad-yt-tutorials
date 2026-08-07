@@ -2,12 +2,16 @@ import Image from "next/image";
 import Link from "next/link";
 import { getVideos } from "@/lib/videos-store";
 import { deleteVideoAction } from "@/lib/video-actions";
+import { getCommentCounts } from "@/lib/comments-store";
 import DeleteButton from "./DeleteButton";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminVideosPage() {
-  const videos = await getVideos();
+  const [videos, commentCounts] = await Promise.all([
+    getVideos(),
+    getCommentCounts(),
+  ]);
 
   return (
     <div>
@@ -56,6 +60,30 @@ export default async function AdminVideosPage() {
                 <p className="text-sm text-white/50 truncate">
                   {video.description}
                 </p>
+                <div className="flex items-center gap-3 mt-1.5 text-xs text-white/40">
+                  <span className="inline-flex items-center gap-1">
+                    <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z" />
+                      <circle cx="12" cy="12" r="3" />
+                    </svg>
+                    {video.views ?? 0} views
+                  </span>
+                  <span className="inline-flex items-center gap-1">
+                    <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M12 21s-6.7-4.35-9.3-8.2C1 10 1.8 6.6 4.6 5.2c2.3-1.2 4.9-.3 6.4 1.7 1.5-2 4.1-2.9 6.4-1.7 2.8 1.4 3.6 4.8 1.9 7.6C18.7 16.65 12 21 12 21Z" />
+                    </svg>
+                    {video.likes ?? 0} likes
+                  </span>
+                  <Link
+                    href="/admin/comments"
+                    className="inline-flex items-center gap-1 hover:text-white transition"
+                  >
+                    <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M21 12a8 8 0 1 1-3.4-6.5L21 4l-1 4.2A7.96 7.96 0 0 1 21 12Z" />
+                    </svg>
+                    {commentCounts[video.slug] ?? 0} comments
+                  </Link>
+                </div>
               </div>
 
               <div className="flex items-center gap-2 shrink-0">

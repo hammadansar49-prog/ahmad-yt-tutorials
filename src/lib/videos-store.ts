@@ -10,6 +10,8 @@ export type Video = {
   category: string;
   tools: string[];
   prompt: string;
+  views?: number;
+  likes?: number;
 };
 
 const filePath = path.join(process.cwd(), "src/data/videos.json");
@@ -17,6 +19,28 @@ const filePath = path.join(process.cwd(), "src/data/videos.json");
 export async function getVideos(): Promise<Video[]> {
   const raw = await fs.readFile(filePath, "utf-8");
   return JSON.parse(raw) as Video[];
+}
+
+export async function incrementViews(slug: string): Promise<number> {
+  const videos = await getVideos();
+  const video = videos.find((v) => v.slug === slug);
+  if (!video) return 0;
+  video.views = (video.views ?? 0) + 1;
+  await saveVideos(videos);
+  return video.views;
+}
+
+export async function toggleLike(
+  slug: string,
+  liked: boolean
+): Promise<number> {
+  const videos = await getVideos();
+  const video = videos.find((v) => v.slug === slug);
+  if (!video) return 0;
+  const current = video.likes ?? 0;
+  video.likes = liked ? current + 1 : Math.max(0, current - 1);
+  await saveVideos(videos);
+  return video.likes;
 }
 
 export async function getVideoBySlug(slug: string): Promise<Video | undefined> {

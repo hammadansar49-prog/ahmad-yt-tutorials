@@ -19,7 +19,7 @@ export default function AddCategoryForm() {
         await formAction(formData);
         formRef.current?.reset();
       }}
-      className="flex items-start gap-2 mb-6"
+      className="flex flex-col sm:flex-row sm:items-start gap-2 mb-6"
     >
       <div className="flex-1">
         <input
