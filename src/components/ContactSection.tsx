@@ -69,12 +69,12 @@ export default function ContactSection({
   return (
     <>
       <div className="relative h-px max-w-5xl mx-auto">
-        <div className="absolute inset-x-4 sm:inset-x-6 h-px bg-gradient-to-r from-transparent via-[#ff6a3d]/50 to-transparent" />
+        <div className="absolute inset-x-4 sm:inset-x-6 h-px bg-gradient-to-r from-transparent via-[#3b82f6]/50 to-transparent" />
       </div>
 
       {showHeading && (
         <section className="relative overflow-hidden">
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_50%_60%_at_50%_30%,rgba(255,106,61,0.12),transparent_70%)]" />
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_50%_60%_at_50%_30%,rgba(59,130,246,0.14),transparent_70%)]" />
           <div className="relative max-w-5xl mx-auto px-4 sm:px-6 pt-14 pb-16 text-center">
             <span className="inline-block text-xs font-semibold tracking-widest text-[#ff8a1c] uppercase mb-4">
               Get In Touch
