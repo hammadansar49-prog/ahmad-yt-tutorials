@@ -5,7 +5,7 @@ export default async function Footer() {
   const content = await getSiteContent();
 
   return (
-    <footer className="relative border-t border-white/10 mt-8">
+    <footer className="relative border-t border-white/10 mt-8 bg-[#06102b]/60 backdrop-blur">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-14 grid grid-cols-1 sm:grid-cols-3 gap-10">
         <div>
           <span className="font-extrabold text-lg text-white">

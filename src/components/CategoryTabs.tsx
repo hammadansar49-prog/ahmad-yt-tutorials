@@ -1,4 +1,6 @@
-import Link from "next/link";
+"use client";
+
+import { useRouter } from "next/navigation";
 
 export default function CategoryTabs({
   categories,
@@ -9,6 +11,8 @@ export default function CategoryTabs({
   active: string;
   query: string;
 }) {
+  const router = useRouter();
+
   function hrefFor(category: string) {
     const params = new URLSearchParams();
     if (query) params.set("q", query);
@@ -17,10 +21,17 @@ export default function CategoryTabs({
     return qs ? `/?${qs}` : "/";
   }
 
+  function go(category: string, e: React.MouseEvent) {
+    e.preventDefault();
+    router.push(hrefFor(category));
+    router.refresh();
+  }
+
   return (
     <div className="flex flex-wrap justify-center gap-2 mb-10">
-      <Link
+      <a
         href={hrefFor("")}
+        onClick={(e) => go("", e)}
         className={
           !active
             ? "rounded-full px-4 py-2 text-sm font-semibold bg-gradient-to-r from-[#ff2d55] to-[#ff8a1c] text-white transition"
@@ -28,13 +39,14 @@ export default function CategoryTabs({
         }
       >
         All
-      </Link>
+      </a>
       {categories.map((c) => {
         const isActive = active === c.name;
         return (
-          <Link
+          <a
             key={c.name}
             href={hrefFor(c.name)}
+            onClick={(e) => go(c.name, e)}
             className={
               isActive
                 ? "rounded-full px-4 py-2 text-sm font-semibold bg-gradient-to-r from-[#ff2d55] to-[#ff8a1c] text-white transition"
@@ -43,7 +55,7 @@ export default function CategoryTabs({
           >
             {c.name}
             <span className="ml-1.5 text-xs opacity-70">{c.count}</span>
-          </Link>
+          </a>
         );
       })}
     </div>

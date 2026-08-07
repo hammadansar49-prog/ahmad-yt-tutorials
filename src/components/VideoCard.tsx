@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Video } from "@/lib/videos-store";
 import LikeButton from "./LikeButton";
+import ExpandableDescription from "./ExpandableDescription";
 
 export default function VideoCard({
   video,
@@ -46,9 +47,7 @@ export default function VideoCard({
             {video.title}
           </h3>
         </Link>
-        <p className="hidden sm:block text-sm text-white/60 line-clamp-2">
-          {video.description}
-        </p>
+        <ExpandableDescription text={video.description} />
 
         <div className="flex items-center gap-3 sm:gap-4 text-white/60">
           <LikeButton
