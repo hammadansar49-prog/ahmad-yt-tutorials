@@ -52,6 +52,22 @@ export default async function Footer() {
                 YouTube Channel
               </a>
             </li>
+            <li>
+              <Link
+                href="/disclaimer"
+                className="text-white/70 hover:text-white transition"
+              >
+                Disclaimer
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/privacy-policy"
+                className="text-white/70 hover:text-white transition"
+              >
+                Privacy Policy
+              </Link>
+            </li>
           </ul>
         </div>
 

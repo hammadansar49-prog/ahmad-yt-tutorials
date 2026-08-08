@@ -47,8 +47,9 @@ export default function Navbar() {
   function goHome(e: React.MouseEvent) {
     e.preventDefault();
     setMenuOpen(false);
+    const alreadyHome = pathname === "/";
     router.push("/");
-    router.refresh();
+    if (alreadyHome) router.refresh();
     window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
   }
 
@@ -118,6 +119,12 @@ export default function Navbar() {
           </Link>
           <Link href="/contact" className={navLinkClass}>
             Contact
+          </Link>
+          <Link href="/disclaimer" className={navLinkClass}>
+            Disclaimer
+          </Link>
+          <Link href="/privacy-policy" className={navLinkClass}>
+            Privacy Policy
           </Link>
           <a
             href="https://www.youtube.com/@AhmadYTTutorial?sub_confirmation=1"
@@ -196,6 +203,20 @@ export default function Navbar() {
             className="block rounded-lg px-3 py-2.5 text-white/80 hover:bg-white/5 hover:text-white transition"
           >
             Contact
+          </Link>
+          <Link
+            href="/disclaimer"
+            onClick={() => setMenuOpen(false)}
+            className="block rounded-lg px-3 py-2.5 text-white/80 hover:bg-white/5 hover:text-white transition"
+          >
+            Disclaimer
+          </Link>
+          <Link
+            href="/privacy-policy"
+            onClick={() => setMenuOpen(false)}
+            className="block rounded-lg px-3 py-2.5 text-white/80 hover:bg-white/5 hover:text-white transition"
+          >
+            Privacy Policy
           </Link>
           <a
             href="https://www.youtube.com/@AhmadYTTutorial?sub_confirmation=1"

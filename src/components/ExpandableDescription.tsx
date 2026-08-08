@@ -11,11 +11,16 @@ export default function ExpandableDescription({ text }: { text: string }) {
   return (
     <div className="hidden sm:block text-sm text-white/60 min-h-[2.6em]">
       <p
-        className={expanded ? "" : "overflow-hidden"}
+        className={expanded ? "break-words" : "overflow-hidden break-words"}
         style={
           expanded
             ? undefined
-            : { display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical" as const, maxHeight: "2.4em" }
+            : {
+                display: "-webkit-box",
+                WebkitLineClamp: 2,
+                WebkitBoxOrient: "vertical" as const,
+                textOverflow: "ellipsis",
+              }
         }
       >
         {text}

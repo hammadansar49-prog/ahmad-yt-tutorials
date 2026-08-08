@@ -13,6 +13,7 @@ const links = [
   { href: "/admin/comments", label: "Comments" },
   { href: "/admin/categories", label: "Categories" },
   { href: "/admin/settings", label: "About & Contact Settings" },
+  { href: "/admin/legal", label: "Disclaimer & Privacy Policy" },
 ];
 
 export default function AdminSidebar() {
