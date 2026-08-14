@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import Image from "next/image";
 import type { VideoFormState } from "@/lib/video-actions";
 import type { Video } from "@/lib/videos-store";
@@ -22,6 +22,7 @@ export default function VideoForm({
   categories: string[];
 }) {
   const [state, formAction, pending] = useActionState(action, initialState);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   return (
     <form action={formAction} className="space-y-6 max-w-2xl">
@@ -97,14 +98,23 @@ export default function VideoForm({
         <label className="block text-sm font-medium text-white/70 mb-1.5">
           Thumbnail Image {video ? "(leave empty to keep current)" : "*"}
         </label>
-        {video?.thumbnail && (
+        {(previewUrl || video?.thumbnail) && (
           <div className="relative w-40 aspect-video rounded-lg overflow-hidden mb-2 border border-white/10">
-            <Image
-              src={video.thumbnail}
-              alt="Current thumbnail"
-              fill
-              className="object-cover"
-            />
+            {previewUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element -- blob: preview URL, next/image can't optimize it
+              <img
+                src={previewUrl}
+                alt="New thumbnail preview"
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <Image
+                src={video!.thumbnail}
+                alt="Current thumbnail"
+                fill
+                className="object-cover"
+              />
+            )}
           </div>
         )}
         <input
@@ -112,6 +122,13 @@ export default function VideoForm({
           type="file"
           accept="image/*"
           required={!video}
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            setPreviewUrl((prev) => {
+              if (prev) URL.revokeObjectURL(prev);
+              return file ? URL.createObjectURL(file) : null;
+            });
+          }}
           className="w-full text-sm text-white/70 file:mr-4 file:rounded-lg file:border-0 file:bg-white/10 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-white/20 file:transition"
         />
       </div>
