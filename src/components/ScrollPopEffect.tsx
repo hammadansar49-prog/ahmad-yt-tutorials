@@ -2,53 +2,48 @@
 
 import { useEffect } from "react";
 
+type Entry = {
+  el: HTMLElement;
+  isDeck: boolean;
+  deckX: number;
+  deckY: number;
+  deckRot: number;
+  target: number;
+  current: number;
+};
+
 /**
- * Pops card-like blocks (anything with a "pop-card" class) into view with
- * a fade + scale + slide-up as they scroll into the viewport. Siblings
- * that appear together (e.g. a grid row) are staggered slightly for a
- * nicer cascading effect. Runs once per element (doesn't reverse on
- * scroll-out) — cheap and avoids re-triggering as the user scrolls back
- * and forth.
+ * Scroll-scrubbed card reveal: every "pop-card" continuously tracks scroll
+ * position (like the heading text-scrub effect) instead of firing once
+ * when it enters view — opacity/position/rotation are a direct function
+ * of how far the card has scrolled through the viewport, so the motion
+ * is tied to the scroll gesture rather than a canned one-shot animation.
  *
- * Elements are (re-)registered with the observer on every scan, keyed by
- * a WeakSet rather than a DOM dataset flag — React StrictMode's dev-mode
- * mount -> cleanup -> remount would otherwise leave the *live* effect
- * instance's observer watching nothing (since a dataset flag set by the
- * first, since-cleaned-up instance would make the second instance skip
- * registration entirely, permanently freezing every card at opacity: 0).
+ * The displayed value chases the scroll-computed target with a lerp on
+ * every animation frame (same trick as the cursor ring) instead of
+ * snapping straight to it, which is what makes the motion read as
+ * buttery-smooth "effort" rather than a stepped, mechanical follow.
+ *
+ * "pop-deck" cards additionally start fanned out like a stacked hand of
+ * cards (via data-deck-x/y/rot) and splay into their grid position as
+ * they scrub in.
  */
 export default function ScrollPopEffect() {
   useEffect(() => {
-    const groups = new Map<Element | null, HTMLElement[]>();
-    const observedByThisInstance = new WeakSet<HTMLElement>();
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (!entry.isIntersecting) continue;
-          const el = entry.target as HTMLElement;
-          const siblings = groups.get(el.parentElement) ?? [el];
-          const index = siblings.indexOf(el);
-          el.style.transitionDelay = `${Math.max(0, index) * 70}ms`;
-          el.classList.add("pop-in");
-          observer.unobserve(el);
-        }
-      },
-      { threshold: 0.15, rootMargin: "0px 0px -40px 0px" }
-    );
+    const registered = new Map<HTMLElement, Entry>();
 
     const scan = () => {
       document.querySelectorAll<HTMLElement>(".pop-card").forEach((el) => {
-        const key = el.parentElement;
-        const list = groups.get(key) ?? [];
-        if (!list.includes(el)) {
-          list.push(el);
-          groups.set(key, list);
-        }
-        if (!observedByThisInstance.has(el) && !el.classList.contains("pop-in")) {
-          observedByThisInstance.add(el);
-          observer.observe(el);
-        }
+        if (registered.has(el)) return;
+        registered.set(el, {
+          el,
+          isDeck: el.classList.contains("pop-deck"),
+          deckX: Number(el.dataset.deckX ?? 0),
+          deckY: Number(el.dataset.deckY ?? 30),
+          deckRot: Number(el.dataset.deckRot ?? 0),
+          target: 0,
+          current: 0,
+        });
       });
     };
 
@@ -56,24 +51,70 @@ export default function ScrollPopEffect() {
     const mutationObserver = new MutationObserver(scan);
     mutationObserver.observe(document.body, { childList: true, subtree: true });
 
-    // Safety net: if the observer never fires for some reason (older
-    // browser quirk, etc.), don't leave content permanently invisible —
-    // periodically reveal anything that's already on/near screen but
-    // still hidden. Cards well below the fold are left for the real
-    // observer so the scroll-triggered feel is preserved for them.
-    const fallback = setInterval(() => {
-      document.querySelectorAll<HTMLElement>(".pop-card:not(.pop-in)").forEach((el) => {
-        const rect = el.getBoundingClientRect();
-        if (rect.top < window.innerHeight + 200 && rect.bottom > -200) {
-          el.classList.add("pop-in");
+    const computeTargets = () => {
+      const vh = window.innerHeight;
+      const startY = vh * 0.95; // just entering at the bottom
+      const endY = vh * 0.55; // settled once past the middle
+      for (const entry of registered.values()) {
+        const rect = entry.el.getBoundingClientRect();
+        const raw = (startY - rect.top) / (startY - endY);
+        entry.target = Math.min(1, Math.max(0, raw));
+      }
+    };
+
+    let raf = 0;
+    const LERP = 0.09;
+    const render = () => {
+      let anyMoving = false;
+      for (const entry of registered.values()) {
+        const diff = entry.target - entry.current;
+        if (Math.abs(diff) < 0.0008) {
+          if (entry.current !== entry.target) entry.current = entry.target;
+        } else {
+          entry.current += diff * LERP;
+          anyMoving = true;
         }
-      });
-    }, 1500);
+
+        const eased = 1 - Math.pow(1 - entry.current, 3); // ease-out cubic
+        const remaining = 1 - eased;
+
+        entry.el.style.opacity = String(eased);
+        if (entry.isDeck) {
+          const x = remaining * entry.deckX;
+          const y = remaining * entry.deckY;
+          const rot = remaining * entry.deckRot;
+          const scale = 0.9 + 0.1 * eased;
+          entry.el.style.transform = `translate(${x}px, ${y}px) rotate(${rot}deg) scale(${scale})`;
+        } else {
+          const y = remaining * 32;
+          const scale = 0.92 + 0.08 * eased;
+          entry.el.style.transform = `translateY(${y}px) scale(${scale})`;
+        }
+      }
+      // Keep the render loop alive as long as anything is still chasing
+      // its target so the lerp can settle smoothly.
+      if (anyMoving) raf = requestAnimationFrame(render);
+      else raf = 0;
+    };
+
+    const kick = () => {
+      computeTargets();
+      if (!raf) raf = requestAnimationFrame(render);
+    };
+
+    // computeTargets() is cheap (just getBoundingClientRect reads), so it
+    // can run straight off the scroll event; the render loop then keeps
+    // re-scheduling itself every frame on its own (see "anyMoving" above)
+    // until the lerp has fully settled, well past the last scroll event.
+    window.addEventListener("scroll", kick, { passive: true });
+    window.addEventListener("resize", kick);
+    kick();
 
     return () => {
       mutationObserver.disconnect();
-      observer.disconnect();
-      clearInterval(fallback);
+      window.removeEventListener("scroll", kick);
+      window.removeEventListener("resize", kick);
+      if (raf) cancelAnimationFrame(raf);
     };
   }, []);
 
