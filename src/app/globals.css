@@ -85,6 +85,13 @@ html.has-custom-cursor * {
   pointer-events: none;
   z-index: 9999;
   border-radius: 9999px;
+  opacity: 1;
+  transition: opacity 0.15s ease;
+}
+
+.cursor-dot.cursor-hidden,
+.cursor-ring.cursor-hidden {
+  opacity: 0;
 }
 
 .cursor-dot {
