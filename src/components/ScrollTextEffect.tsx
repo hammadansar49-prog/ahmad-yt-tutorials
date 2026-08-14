@@ -10,7 +10,12 @@ import { useEffect } from "react";
  */
 export default function ScrollTextEffect() {
   useEffect(() => {
-    const registered: HTMLElement[] = [];
+    // A Set (not an array populated only on first-split) so that React 18/19
+    // StrictMode's mount -> cleanup -> remount in dev still ends up with a
+    // full, correct element list on the *second* (live) effect instance —
+    // otherwise it would end up watching zero elements and scrolling would
+    // never update anything after the very first paint.
+    const registered = new Set<HTMLElement>();
 
     function splitIntoChars(el: HTMLElement) {
       const words = el.textContent?.split(/(\s+)/) ?? [];
@@ -37,10 +42,11 @@ export default function ScrollTextEffect() {
         "main h1, main h2, main h3, footer h3"
       );
       targets.forEach((el) => {
-        if (el.dataset.scrollScrub) return;
-        el.dataset.scrollScrub = "true";
-        splitIntoChars(el);
-        registered.push(el);
+        if (!el.dataset.scrollScrub) {
+          el.dataset.scrollScrub = "true";
+          splitIntoChars(el);
+        }
+        registered.add(el);
       });
     };
 
@@ -48,9 +54,7 @@ export default function ScrollTextEffect() {
     const mutationObserver = new MutationObserver(scan);
     mutationObserver.observe(document.body, { childList: true, subtree: true });
 
-    let ticking = false;
     const update = () => {
-      ticking = false;
       const vh = window.innerHeight;
       for (const el of registered) {
         const rect = el.getBoundingClientRect();
@@ -69,11 +73,14 @@ export default function ScrollTextEffect() {
       }
     };
 
+    let ticking = false;
     const onScroll = () => {
-      if (!ticking) {
-        ticking = true;
-        requestAnimationFrame(update);
-      }
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        update();
+        ticking = false;
+      });
     };
 
     window.addEventListener("scroll", onScroll, { passive: true });
