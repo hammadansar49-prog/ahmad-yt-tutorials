@@ -86,32 +86,51 @@ export default function ScrollTextEffect() {
     };
 
     let raf = 0;
-    const LERP = 0.18;
+    const LERP = 0.11;
     const render = () => {
       let anyMoving = false;
       for (const entry of registered.values()) {
         const diff = entry.target - entry.current;
-        if (Math.abs(diff) < 0.001) {
+        if (Math.abs(diff) < 0.0006) {
           entry.current = entry.target;
         } else {
           entry.current += diff * LERP;
           anyMoving = true;
         }
 
-        const revealCount = Math.round(entry.current * entry.chars.length);
-        if (revealCount === entry.lastCount) continue;
+        // Continuous position within the letters, not just a whole
+        // count — the letter right at the boundary gets a fractional
+        // glow (its own in-between color) instead of snapping straight
+        // from dim to lit, so the "wave" reads as one continuous flow
+        // across the word rather than discrete steps.
+        const pos = entry.current * entry.chars.length;
+        const revealCount = Math.floor(pos);
+        const frac = pos - revealCount;
 
-        const prev = entry.lastCount;
-        if (revealCount > prev) {
-          for (let i = Math.max(prev, 0); i < revealCount; i++) {
-            entry.chars[i].classList.add("stc-lit");
+        if (revealCount !== entry.lastCount) {
+          const prev = entry.lastCount;
+          if (revealCount > prev) {
+            for (let i = Math.max(prev, 0); i < revealCount; i++) {
+              entry.chars[i].classList.add("stc-lit");
+              entry.chars[i].style.color = "";
+            }
+          } else {
+            for (let i = revealCount; i < prev; i++) {
+              entry.chars[i]?.classList.remove("stc-lit");
+            }
           }
-        } else {
-          for (let i = revealCount; i < prev; i++) {
-            entry.chars[i]?.classList.remove("stc-lit");
+          // Clear whatever previously held the fractional boundary glow.
+          if (prev >= 0 && prev < entry.chars.length && prev !== revealCount) {
+            entry.chars[prev].style.color = "";
           }
+          entry.lastCount = revealCount;
         }
-        entry.lastCount = revealCount;
+
+        const boundaryChar = entry.chars[revealCount];
+        if (boundaryChar) {
+          boundaryChar.style.color =
+            frac > 0 ? `rgba(255,255,255,${0.22 + 0.78 * frac})` : "";
+        }
       }
       if (anyMoving) raf = requestAnimationFrame(render);
       else raf = 0;
