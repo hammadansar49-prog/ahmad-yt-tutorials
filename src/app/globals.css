@@ -76,7 +76,13 @@ html {
   height: 0px !important;
   width: 0px !important;
   -webkit-appearance: none;
-  background: transparent;
+  /* If a browser still insists on painting the button despite the
+     above, at least blend its background into the site's own navy
+     tone (matching the track) instead of leaving it in a jarring
+     mismatched color. */
+  background-color: #0a1230 !important;
+  border: none !important;
+  color: #0a1230 !important;
 }
 
 ::-webkit-scrollbar-corner {
