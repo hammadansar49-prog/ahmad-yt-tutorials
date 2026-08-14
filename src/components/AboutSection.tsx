@@ -62,7 +62,7 @@ export default function AboutSection({
               data-deck-x={(i - (steps.length - 1) / 2) * -34}
               data-deck-y={70}
               data-deck-rot={(i - (steps.length - 1) / 2) * -10}
-              className={`pop-card pop-deck rounded-xl sm:rounded-2xl border border-white/10 bg-[#0d1330]/80 p-3 sm:p-6 hover:border-[#ff6a3d]/50 transition-colors ${
+              className={`pop-card pop-deck pop-hover rounded-xl sm:rounded-2xl border border-white/10 bg-[#0d1330]/80 p-3 sm:p-6 hover:border-[#ff6a3d]/50 transition-colors ${
                 i === steps.length - 1 && steps.length % 2 !== 0
                   ? "col-span-2 sm:col-span-1"
                   : ""

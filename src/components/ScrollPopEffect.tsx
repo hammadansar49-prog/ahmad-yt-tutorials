@@ -53,14 +53,23 @@ export default function ScrollPopEffect() {
         };
         registered.set(el, entry);
 
-        el.addEventListener("mouseenter", () => {
-          entry.hoverTarget = 1;
-          kick();
-        });
-        el.addEventListener("mouseleave", () => {
-          entry.hoverTarget = 0;
-          kick();
-        });
+        // Only elements explicitly opted in (the "How It Works" deck
+        // cards and the Contact page's social cards) get the hover
+        // jump — applying it to every .pop-card used to also cover the
+        // tutorial video grid, where cards are constantly appearing/
+        // disappearing under the cursor as category filters are
+        // switched, causing a card to "jump" right as it appears and
+        // reading as an unwanted page jump.
+        if (el.classList.contains("pop-hover")) {
+          el.addEventListener("mouseenter", () => {
+            entry.hoverTarget = 1;
+            kick();
+          });
+          el.addEventListener("mouseleave", () => {
+            entry.hoverTarget = 0;
+            kick();
+          });
+        }
       });
     };
 
