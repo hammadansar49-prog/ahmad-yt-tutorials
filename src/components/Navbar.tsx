@@ -57,7 +57,7 @@ export default function Navbar() {
     "nav-link-fx text-white/80 hover:text-white transition";
 
   return (
-    <header className="sticky top-0 z-50 bg-[#06102b]/90 backdrop-blur border-b border-white/10 relative after:absolute after:inset-x-0 after:bottom-0 after:h-px after:bg-gradient-to-r after:from-transparent after:via-[#3b82f6]/60 after:to-transparent">
+    <header className="sticky top-0 z-50 bg-[#06102b]/95 border-b border-white/10 relative after:absolute after:inset-x-0 after:bottom-0 after:h-px after:bg-gradient-to-r after:from-transparent after:via-[#3b82f6]/60 after:to-transparent">
       <nav className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center gap-3 sm:gap-6">
         <Link
           href="/"

@@ -7,15 +7,17 @@ import { useEffect } from "react";
  * are individually dimmed, then progressively turn full white as the
  * heading scrolls through the viewport — the fraction of letters lit up
  * tracks scroll position exactly, like Apple-style marketing pages.
+ *
+ * Performance: character spans are cached per element (queried once, not
+ * every scroll frame) and the DOM is only touched when the revealed count
+ * actually changes, so scrolling doesn't thrash layout/paint.
  */
 export default function ScrollTextEffect() {
   useEffect(() => {
-    // A Set (not an array populated only on first-split) so that React 18/19
-    // StrictMode's mount -> cleanup -> remount in dev still ends up with a
-    // full, correct element list on the *second* (live) effect instance —
-    // otherwise it would end up watching zero elements and scrolling would
-    // never update anything after the very first paint.
-    const registered = new Set<HTMLElement>();
+    const registered = new Map<
+      HTMLElement,
+      { chars: HTMLElement[]; lastCount: number }
+    >();
 
     function splitIntoChars(el: HTMLElement) {
       const words = el.textContent?.split(/(\s+)/) ?? [];
@@ -46,7 +48,10 @@ export default function ScrollTextEffect() {
           el.dataset.scrollScrub = "true";
           splitIntoChars(el);
         }
-        registered.add(el);
+        if (!registered.has(el)) {
+          const chars = Array.from(el.querySelectorAll<HTMLElement>(".stc"));
+          registered.set(el, { chars, lastCount: -1 });
+        }
       });
     };
 
@@ -56,20 +61,28 @@ export default function ScrollTextEffect() {
 
     const update = () => {
       const vh = window.innerHeight;
-      for (const el of registered) {
+      const startY = vh * 0.85;
+      const endY = vh * 0.3;
+
+      for (const [el, entry] of registered) {
         const rect = el.getBoundingClientRect();
-        // Reveal starts once the heading is 85% down the viewport (just
-        // entering) and finishes once it's 30% down (comfortably in view).
-        const startY = vh * 0.85;
-        const endY = vh * 0.3;
         const raw = (startY - rect.top) / (startY - endY);
         const progress = Math.min(1, Math.max(0, raw));
+        const revealCount = Math.round(progress * entry.chars.length);
 
-        const chars = el.querySelectorAll<HTMLElement>(".stc");
-        const revealCount = Math.round(progress * chars.length);
-        chars.forEach((c, i) => {
-          c.classList.toggle("stc-lit", i < revealCount);
-        });
+        if (revealCount === entry.lastCount) continue; // nothing changed, skip DOM writes
+
+        const prev = entry.lastCount;
+        if (revealCount > prev) {
+          for (let i = Math.max(prev, 0); i < revealCount; i++) {
+            entry.chars[i].classList.add("stc-lit");
+          }
+        } else {
+          for (let i = revealCount; i < prev; i++) {
+            entry.chars[i]?.classList.remove("stc-lit");
+          }
+        }
+        entry.lastCount = revealCount;
       }
     };
 

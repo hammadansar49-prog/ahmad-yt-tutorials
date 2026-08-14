@@ -110,12 +110,11 @@ html.has-custom-cursor * {
    white as its heading scrubs through the viewport while scrolling. */
 .stc {
   color: rgba(255, 255, 255, 0.22);
-  transition: color 0.15s linear, text-shadow 0.15s linear;
+  transition: color 0.2s linear;
 }
 
 .stc.stc-lit {
   color: #ffffff;
-  text-shadow: 0 0 18px rgba(255, 255, 255, 0.18);
 }
 
 /* Navbar link hover: a spinning glow sweeps in behind the label */
