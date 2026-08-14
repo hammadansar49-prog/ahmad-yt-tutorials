@@ -10,6 +10,8 @@ type Entry = {
   deckRot: number;
   target: number;
   current: number;
+  hoverTarget: number;
+  hoverCurrent: number;
 };
 
 /**
@@ -26,7 +28,10 @@ type Entry = {
  *
  * "pop-deck" cards additionally start fanned out like a stacked hand of
  * cards (via data-deck-x/y/rot) and splay into their grid position as
- * they scrub in.
+ * they scrub in, and lift outward on hover — since this script owns the
+ * element's whole inline "transform" (overwritten every scroll frame), a
+ * plain CSS :hover transform would just get clobbered, so the hover lift
+ * is folded into the same per-frame calculation instead.
  */
 export default function ScrollPopEffect() {
   useEffect(() => {
@@ -35,7 +40,7 @@ export default function ScrollPopEffect() {
     const scan = () => {
       document.querySelectorAll<HTMLElement>(".pop-card").forEach((el) => {
         if (registered.has(el)) return;
-        registered.set(el, {
+        const entry: Entry = {
           el,
           isDeck: el.classList.contains("pop-deck"),
           deckX: Number(el.dataset.deckX ?? 0),
@@ -43,7 +48,21 @@ export default function ScrollPopEffect() {
           deckRot: Number(el.dataset.deckRot ?? 0),
           target: 0,
           current: 0,
-        });
+          hoverTarget: 0,
+          hoverCurrent: 0,
+        };
+        registered.set(el, entry);
+
+        if (entry.isDeck) {
+          el.addEventListener("mouseenter", () => {
+            entry.hoverTarget = 1;
+            kick();
+          });
+          el.addEventListener("mouseleave", () => {
+            entry.hoverTarget = 0;
+            kick();
+          });
+        }
       });
     };
 
@@ -64,6 +83,7 @@ export default function ScrollPopEffect() {
 
     let raf = 0;
     const LERP = 0.22;
+    const HOVER_LERP = 0.25;
     const render = () => {
       let anyMoving = false;
       for (const entry of registered.values()) {
@@ -75,15 +95,30 @@ export default function ScrollPopEffect() {
           anyMoving = true;
         }
 
-        const eased = 1 - Math.pow(1 - entry.current, 3); // ease-out cubic
-        const remaining = 1 - eased;
+        const hoverDiff = entry.hoverTarget - entry.hoverCurrent;
+        if (Math.abs(hoverDiff) < 0.0008) {
+          if (entry.hoverCurrent !== entry.hoverTarget) entry.hoverCurrent = entry.hoverTarget;
+        } else {
+          entry.hoverCurrent += hoverDiff * HOVER_LERP;
+          anyMoving = true;
+        }
+
+        // Back-out easing: overshoots slightly past 1 then settles, so
+        // the card/button gives a small playful "jump" as it lands
+        // instead of a flat, purely-decelerating glide in.
+        const t = entry.current;
+        const c1 = 1.70158;
+        const c3 = c1 + 1;
+        const eased = 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);
+        const remaining = 1 - t; // position/rotation still settle smoothly (no overshoot)
+        const hoverLift = entry.hoverCurrent * -10; // pops outward/up on hover
 
         entry.el.style.opacity = String(eased);
         if (entry.isDeck) {
           const x = remaining * entry.deckX;
-          const y = remaining * entry.deckY;
+          const y = remaining * entry.deckY + hoverLift;
           const rot = remaining * entry.deckRot;
-          const scale = 0.9 + 0.1 * eased;
+          const scale = 0.9 + 0.1 * eased + entry.hoverCurrent * 0.03;
           entry.el.style.transform = `translate(${x}px, ${y}px) rotate(${rot}deg) scale(${scale})`;
         } else {
           const y = remaining * 32;
