@@ -102,7 +102,7 @@ export default function ContactSection({
                 href={s.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="pop-card group flex items-center gap-2.5 sm:gap-4 rounded-xl sm:rounded-2xl border border-white/10 bg-[#0d1330]/80 p-3 sm:p-5 hover:border-white/30 hover:-translate-y-0.5 transition"
+                className="pop-card group flex items-center gap-2.5 sm:gap-4 rounded-xl sm:rounded-2xl border border-white/10 bg-[#0d1330]/80 p-3 sm:p-5 hover:border-white/30 transition-colors"
               >
                 <span
                   className={`flex items-center justify-center w-9 h-9 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-gradient-to-br ${visuals.gradient} text-white shrink-0 [&_svg]:w-4 [&_svg]:h-4 sm:[&_svg]:w-6 sm:[&_svg]:h-6`}

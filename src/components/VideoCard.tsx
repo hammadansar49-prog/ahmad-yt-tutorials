@@ -12,7 +12,7 @@ export default function VideoCard({
   commentCount?: number;
 }) {
   return (
-    <article className="pop-card group/card h-full rounded-xl sm:rounded-2xl border border-white/10 bg-[#0d1330]/95 shadow-lg shadow-black/30 overflow-hidden flex flex-col transition-all duration-300 hover:border-[#3b82f6]/40 hover:shadow-[0_0_40px_-12px_rgba(59,130,246,0.5)] hover:-translate-y-1">
+    <article className="pop-card group/card h-full rounded-xl sm:rounded-2xl border border-white/10 bg-[#0d1330]/95 shadow-lg shadow-black/30 overflow-hidden flex flex-col transition-[border-color,box-shadow] duration-300 hover:border-[#3b82f6]/40 hover:shadow-[0_0_40px_-12px_rgba(59,130,246,0.5)]">
       <Link
         href={`/tutorial/${video.slug}`}
         className="relative block aspect-video group"
