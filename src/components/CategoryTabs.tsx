@@ -1,40 +1,19 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-
 export default function CategoryTabs({
   categories,
   active,
-  query,
+  onSelect,
 }: {
   categories: { name: string; count: number }[];
   active: string;
-  query: string;
+  onSelect: (category: string) => void;
 }) {
-  const router = useRouter();
-
-  function hrefFor(category: string) {
-    const params = new URLSearchParams();
-    if (query) params.set("q", query);
-    if (category) params.set("category", category);
-    const qs = params.toString();
-    return qs ? `/?${qs}` : "/";
-  }
-
-  function go(category: string, e: React.MouseEvent<HTMLAnchorElement>) {
-    e.preventDefault();
-
-    // router.push alone re-runs the (force-dynamic) route with the new
-    // searchParams — a follow-up router.refresh() was firing a second,
-    // redundant server round-trip that made switching feel slow.
-    router.push(hrefFor(category), { scroll: false });
-  }
-
   return (
     <div className="flex flex-wrap justify-center gap-2 mb-10">
-      <a
-        href={hrefFor("")}
-        onClick={(e) => go("", e)}
+      <button
+        type="button"
+        onClick={() => onSelect("")}
         className={
           !active
             ? "cat-tab rounded-full px-4 py-2 text-sm font-semibold bg-gradient-to-r from-[#ff2d55] to-[#ff8a1c] text-white transition"
@@ -42,14 +21,14 @@ export default function CategoryTabs({
         }
       >
         All
-      </a>
+      </button>
       {categories.map((c) => {
         const isActive = active === c.name;
         return (
-          <a
+          <button
+            type="button"
             key={c.name}
-            href={hrefFor(c.name)}
-            onClick={(e) => go(c.name, e)}
+            onClick={() => onSelect(c.name)}
             className={
               isActive
                 ? "cat-tab rounded-full px-4 py-2 text-sm font-semibold bg-gradient-to-r from-[#ff2d55] to-[#ff8a1c] text-white transition"
@@ -58,7 +37,7 @@ export default function CategoryTabs({
           >
             {c.name}
             <span className="ml-1.5 text-xs opacity-70">{c.count}</span>
-          </a>
+          </button>
         );
       })}
     </div>

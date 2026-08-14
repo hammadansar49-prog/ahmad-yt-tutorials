@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { where } from "firebase/firestore";
 import VideoCard from "./VideoCard";
 import CategoryTabs from "./CategoryTabs";
@@ -11,13 +13,16 @@ export default function HomeVideoGrid({
   initialVideos,
   initialCategories,
   query,
-  category,
+  category: initialCategory,
 }: {
   initialVideos: Video[];
   initialCategories: string[];
   query: string;
   category: string;
 }) {
+  const router = useRouter();
+  const [category, setCategory] = useState(initialCategory);
+
   const videos = useFirestoreCollection<Video>("videos", initialVideos);
   const approvedComments = useFirestoreCollection<Comment>(
     "comments",
@@ -28,6 +33,19 @@ export default function HomeVideoGrid({
   const commentCounts: Record<string, number> = {};
   for (const c of approvedComments) {
     commentCounts[c.videoSlug] = (commentCounts[c.videoSlug] ?? 0) + 1;
+  }
+
+  function selectCategory(next: string) {
+    // Update local state immediately so the grid re-filters instantly,
+    // without waiting on a server round-trip. Sync the URL in the
+    // background (fire-and-forget) purely so the filter is shareable/
+    // bookmarkable and survives a refresh.
+    setCategory(next);
+    const params = new URLSearchParams();
+    if (query) params.set("q", query);
+    if (next) params.set("category", next);
+    const qs = params.toString();
+    router.replace(qs ? `/?${qs}` : "/", { scroll: false });
   }
 
   const hasFilter = Boolean(query || category);
@@ -73,7 +91,7 @@ export default function HomeVideoGrid({
         <CategoryTabs
           categories={categoriesWithCounts}
           active={category}
-          query={query}
+          onSelect={selectCategory}
         />
       )}
 
