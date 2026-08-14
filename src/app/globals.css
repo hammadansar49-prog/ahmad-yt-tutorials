@@ -80,9 +80,9 @@ html {
      above, at least blend its background into the site's own navy
      tone (matching the track) instead of leaving it in a jarring
      mismatched color. */
-  background-color: #0a1230 !important;
+  background-color: #06102b !important;
   border: none !important;
-  color: #0a1230 !important;
+  color: #06102b !important;
 }
 
 ::-webkit-scrollbar-corner {
