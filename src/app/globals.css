@@ -62,6 +62,12 @@ html {
   background: linear-gradient(180deg, #ff6a3d, #ffb020);
 }
 
+::-webkit-scrollbar-button {
+  display: none;
+  height: 0;
+  width: 0;
+}
+
 @keyframes glow-float {
   0%,
   100% {

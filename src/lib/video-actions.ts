@@ -5,6 +5,7 @@ import { v2 as cloudinary } from "cloudinary";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { isAuthed } from "@/lib/auth";
+import { sendPushToAll } from "@/lib/push-actions";
 import {
   getVideos,
   addOrUpdateVideo,
@@ -99,6 +100,16 @@ export async function createVideoAction(
   };
 
   await addOrUpdateVideo(newVideo);
+
+  try {
+    await sendPushToAll({
+      title: "New Tutorial: " + title,
+      body: description,
+      url: `/tutorial/${slug}`,
+    });
+  } catch {
+    // Never block publishing a video on notification delivery failing.
+  }
 
   revalidatePath("/");
   revalidatePath("/admin/videos");

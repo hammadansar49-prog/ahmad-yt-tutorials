@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PresenceHeartbeat from "@/components/PresenceHeartbeat";
+import NotificationOptIn from "@/components/NotificationOptIn";
 
 export default function SiteLayout({
   children,
@@ -16,6 +17,7 @@ export default function SiteLayout({
       </Suspense>
       {children}
       <Footer />
+      <NotificationOptIn />
     </>
   );
 }
