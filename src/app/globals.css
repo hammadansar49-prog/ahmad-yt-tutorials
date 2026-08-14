@@ -117,6 +117,33 @@ html.has-custom-cursor * {
   color: #ffffff;
 }
 
+/* Scroll pop-in reveal for cards/blocks */
+.pop-card {
+  opacity: 0;
+  transform: translateY(32px) scale(0.92);
+  transition: opacity 0.6s cubic-bezier(0.34, 1.56, 0.64, 1),
+    transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  will-change: transform, opacity;
+}
+
+.pop-card.pop-in {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* Stacked-card-deck variant: cards start fanned/overlapping like a hand
+   of cards, then splay out into their final grid position on reveal. */
+.pop-deck {
+  transform: translate(var(--deck-x, 0), var(--deck-y, 30px))
+    rotate(var(--deck-rot, 0deg)) scale(0.9);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.pop-deck.pop-in {
+  transform: translate(0, 0) rotate(0deg) scale(1);
+}
+
 /* Navbar link hover: a spinning glow sweeps in behind the label */
 .nav-link-fx {
   position: relative;

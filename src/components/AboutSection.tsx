@@ -59,7 +59,15 @@ export default function AboutSection({
           {steps.map((step, i) => (
             <div
               key={step.number}
-              className={`rounded-xl sm:rounded-2xl border border-white/10 bg-[#0d1330]/80 p-3 sm:p-6 hover:border-[#ff6a3d]/50 transition ${
+              style={
+                {
+                  "--deck-x": `${(i - (steps.length - 1) / 2) * -14}px`,
+                  "--deck-y": "26px",
+                  "--deck-rot": `${(i - (steps.length - 1) / 2) * -6}deg`,
+                  transitionDelay: `${i * 90}ms`,
+                } as React.CSSProperties
+              }
+              className={`pop-card pop-deck rounded-xl sm:rounded-2xl border border-white/10 bg-[#0d1330]/80 p-3 sm:p-6 hover:border-[#ff6a3d]/50 transition ${
                 i === steps.length - 1 && steps.length % 2 !== 0
                   ? "col-span-2 sm:col-span-1"
                   : ""
@@ -80,7 +88,7 @@ export default function AboutSection({
       </section>
 
       <section className="max-w-5xl mx-auto px-4 sm:px-6 pb-20">
-        <div className="rounded-2xl border border-white/10 bg-gradient-to-r from-[#0d1330] to-[#1a0f3d] p-8 sm:p-10 text-center">
+        <div className="pop-card rounded-2xl border border-white/10 bg-gradient-to-r from-[#0d1330] to-[#1a0f3d] p-8 sm:p-10 text-center">
           <h2 className="text-2xl font-bold text-white mb-3">
             Never Miss A New Tutorial
           </h2>
