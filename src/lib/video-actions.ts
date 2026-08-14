@@ -1,19 +1,17 @@
 "use server";
 
-import fs from "fs/promises";
-import path from "path";
 import sharp from "sharp";
+import { v2 as cloudinary } from "cloudinary";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { isAuthed } from "@/lib/auth";
 import {
   getVideos,
-  saveVideos,
+  addOrUpdateVideo,
+  deleteVideoBySlug,
   uniqueSlug,
   type Video,
 } from "@/lib/videos-store";
-
-const uploadsDir = path.join(process.cwd(), "public", "uploads");
 
 // Thumbnails are only ever displayed at small/medium sizes on the site, so
 // no matter how large the uploaded file is (a raw 4K photo, a phone camera
@@ -22,12 +20,15 @@ const uploadsDir = path.join(process.cwd(), "public", "uploads");
 const MAX_THUMBNAIL_WIDTH = 1280;
 const THUMBNAIL_QUALITY = 75;
 
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
 async function saveThumbnail(file: File): Promise<string | null> {
   if (!file || file.size === 0) return null;
 
-  await fs.mkdir(uploadsDir, { recursive: true });
-
-  const safeName = `${Date.now()}-${Math.round(Math.random() * 1e6)}.webp`;
   const inputBuffer = Buffer.from(await file.arrayBuffer());
 
   const optimizedBuffer = await sharp(inputBuffer)
@@ -36,9 +37,20 @@ async function saveThumbnail(file: File): Promise<string | null> {
     .webp({ quality: THUMBNAIL_QUALITY })
     .toBuffer();
 
-  await fs.writeFile(path.join(uploadsDir, safeName), optimizedBuffer);
+  const publicId = `${Date.now()}-${Math.round(Math.random() * 1e6)}`;
 
-  return `/uploads/${safeName}`;
+  const result = await new Promise<{ secure_url: string }>((resolve, reject) => {
+    const stream = cloudinary.uploader.upload_stream(
+      { folder: "uploads", public_id: publicId, format: "webp" },
+      (error, uploadResult) => {
+        if (error || !uploadResult) return reject(error);
+        resolve(uploadResult);
+      }
+    );
+    stream.end(optimizedBuffer);
+  });
+
+  return result.secure_url;
 }
 
 function parseTools(raw: string): string[] {
@@ -74,7 +86,6 @@ export async function createVideoAction(
   }
 
   const slug = await uniqueSlug(title);
-  const videos = await getVideos();
 
   const newVideo: Video = {
     slug,
@@ -87,7 +98,7 @@ export async function createVideoAction(
     prompt,
   };
 
-  await saveVideos([newVideo, ...videos]);
+  await addOrUpdateVideo(newVideo);
 
   revalidatePath("/");
   revalidatePath("/admin/videos");
@@ -137,8 +148,10 @@ export async function updateVideoAction(
     prompt,
   };
 
-  const nextVideos = videos.map((v) => (v.slug === originalSlug ? updated : v));
-  await saveVideos(nextVideos);
+  await addOrUpdateVideo(updated);
+  if (newSlug !== originalSlug) {
+    await deleteVideoBySlug(originalSlug);
+  }
 
   revalidatePath("/");
   revalidatePath("/admin/videos");
@@ -150,8 +163,7 @@ export async function deleteVideoAction(formData: FormData): Promise<void> {
   if (!(await isAuthed())) return;
 
   const slug = String(formData.get("slug") ?? "");
-  const videos = await getVideos();
-  await saveVideos(videos.filter((v) => v.slug !== slug));
+  await deleteVideoBySlug(slug);
 
   revalidatePath("/");
   revalidatePath("/admin/videos");

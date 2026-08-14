@@ -1,19 +1,19 @@
-import fs from "fs/promises";
-import path from "path";
+import { FieldValue } from "firebase-admin/firestore";
+import { adminDb } from "@/lib/firebase-admin";
 
 type SiteStats = {
   totalVisits: number;
   countries: Record<string, number>;
 };
 
-const filePath = path.join(process.cwd(), "src/data/site-stats.json");
+const statsDocRef = () => adminDb.collection("config").doc("site-stats");
 
 async function readStats(): Promise<SiteStats> {
-  const raw = await fs.readFile(filePath, "utf-8");
-  const stats = JSON.parse(raw) as Partial<SiteStats>;
+  const snap = await statsDocRef().get();
+  const stats = snap.data() as Partial<SiteStats> | undefined;
   return {
-    totalVisits: stats.totalVisits ?? 0,
-    countries: stats.countries ?? {},
+    totalVisits: stats?.totalVisits ?? 0,
+    countries: stats?.countries ?? {},
   };
 }
 
@@ -32,11 +32,12 @@ export async function getCountryStats(): Promise<
 }
 
 export async function recordVisit(country?: string | null): Promise<void> {
-  const stats = await readStats();
-  stats.totalVisits += 1;
-
   const label = country && country.trim() ? country.trim() : "Unknown";
-  stats.countries[label] = (stats.countries[label] ?? 0) + 1;
-
-  await fs.writeFile(filePath, JSON.stringify(stats, null, 2), "utf-8");
+  await statsDocRef().set(
+    {
+      totalVisits: FieldValue.increment(1),
+      [`countries.${label}`]: FieldValue.increment(1),
+    },
+    { merge: true }
+  );
 }

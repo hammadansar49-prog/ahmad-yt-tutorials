@@ -1,5 +1,4 @@
-import fs from "fs/promises";
-import path from "path";
+import { adminDb } from "@/lib/firebase-admin";
 
 export type LegalContent = {
   disclaimerHeading: string;
@@ -8,13 +7,13 @@ export type LegalContent = {
   privacyBody: string;
 };
 
-const filePath = path.join(process.cwd(), "src/data/legal-content.json");
+const legalDocRef = () => adminDb.collection("config").doc("legal-content");
 
 export async function getLegalContent(): Promise<LegalContent> {
-  const raw = await fs.readFile(filePath, "utf-8");
-  return JSON.parse(raw) as LegalContent;
+  const snap = await legalDocRef().get();
+  return snap.data() as LegalContent;
 }
 
 export async function saveLegalContent(content: LegalContent): Promise<void> {
-  await fs.writeFile(filePath, JSON.stringify(content, null, 2), "utf-8");
+  await legalDocRef().set(content);
 }

@@ -1,13 +1,13 @@
-import fs from "fs/promises";
-import path from "path";
+import { adminDb } from "@/lib/firebase-admin";
 
-const filePath = path.join(process.cwd(), "src/data/categories.json");
+const categoriesDocRef = () => adminDb.collection("config").doc("categories");
 
 export async function getCategories(): Promise<string[]> {
-  const raw = await fs.readFile(filePath, "utf-8");
-  return JSON.parse(raw) as string[];
+  const snap = await categoriesDocRef().get();
+  const data = snap.data() as { list?: string[] } | undefined;
+  return data?.list ?? [];
 }
 
 export async function saveCategories(categories: string[]): Promise<void> {
-  await fs.writeFile(filePath, JSON.stringify(categories, null, 2), "utf-8");
+  await categoriesDocRef().set({ list: categories });
 }

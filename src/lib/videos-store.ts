@@ -1,5 +1,5 @@
-import fs from "fs/promises";
-import path from "path";
+import { FieldValue } from "firebase-admin/firestore";
+import { adminDb } from "@/lib/firebase-admin";
 
 export type Video = {
   slug: string;
@@ -14,42 +14,58 @@ export type Video = {
   likes?: number;
 };
 
-const filePath = path.join(process.cwd(), "src/data/videos.json");
+const videosCollection = () => adminDb.collection("videos");
 
 export async function getVideos(): Promise<Video[]> {
-  const raw = await fs.readFile(filePath, "utf-8");
-  return JSON.parse(raw) as Video[];
+  const snap = await videosCollection().get();
+  return snap.docs.map((d) => d.data() as Video);
 }
 
 export async function incrementViews(slug: string): Promise<number> {
-  const videos = await getVideos();
-  const video = videos.find((v) => v.slug === slug);
-  if (!video) return 0;
-  video.views = (video.views ?? 0) + 1;
-  await saveVideos(videos);
-  return video.views;
+  const ref = videosCollection().doc(slug);
+  const snap = await ref.get();
+  if (!snap.exists) return 0;
+  await ref.update({ views: FieldValue.increment(1) });
+  const updated = await ref.get();
+  return (updated.data() as Video).views ?? 0;
 }
 
 export async function toggleLike(
   slug: string,
   liked: boolean
 ): Promise<number> {
-  const videos = await getVideos();
-  const video = videos.find((v) => v.slug === slug);
-  if (!video) return 0;
-  const current = video.likes ?? 0;
-  video.likes = liked ? current + 1 : Math.max(0, current - 1);
-  await saveVideos(videos);
-  return video.likes;
+  const ref = videosCollection().doc(slug);
+  const result = await adminDb.runTransaction(async (tx) => {
+    const snap = await tx.get(ref);
+    if (!snap.exists) return 0;
+    const current = (snap.data() as Video).likes ?? 0;
+    const next = liked ? current + 1 : Math.max(0, current - 1);
+    tx.update(ref, { likes: next });
+    return next;
+  });
+  return result;
 }
 
 export async function getVideoBySlug(slug: string): Promise<Video | undefined> {
-  const videos = await getVideos();
-  return videos.find((v) => v.slug === slug);
+  const snap = await videosCollection().doc(slug).get();
+  if (!snap.exists) return undefined;
+  return snap.data() as Video;
 }
 
 export async function saveVideos(videos: Video[]): Promise<void> {
-  await fs.writeFile(filePath, JSON.stringify(videos, null, 2), "utf-8");
+  const batch = adminDb.batch();
+  for (const video of videos) {
+    batch.set(videosCollection().doc(video.slug), video);
+  }
+  await batch.commit();
+}
+
+export async function addOrUpdateVideo(video: Video): Promise<void> {
+  await videosCollection().doc(video.slug).set(video);
+}
+
+export async function deleteVideoBySlug(slug: string): Promise<void> {
+  await videosCollection().doc(slug).delete();
 }
 
 export function slugify(title: string): string {

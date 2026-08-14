@@ -1,5 +1,4 @@
-import fs from "fs/promises";
-import path from "path";
+import { adminDb } from "@/lib/firebase-admin";
 
 export type Comment = {
   id: string;
@@ -10,23 +9,22 @@ export type Comment = {
   approved: boolean;
 };
 
-const filePath = path.join(process.cwd(), "src/data/comments.json");
+const commentsCollection = () => adminDb.collection("comments");
 
 export async function getComments(): Promise<Comment[]> {
-  const raw = await fs.readFile(filePath, "utf-8");
-  return JSON.parse(raw) as Comment[];
-}
-
-export async function saveComments(comments: Comment[]): Promise<void> {
-  await fs.writeFile(filePath, JSON.stringify(comments, null, 2), "utf-8");
+  const snap = await commentsCollection().get();
+  return snap.docs.map((d) => d.data() as Comment);
 }
 
 export async function getApprovedCommentsForVideo(
   slug: string
 ): Promise<Comment[]> {
-  const comments = await getComments();
-  return comments
-    .filter((c) => c.videoSlug === slug && c.approved)
+  const snap = await commentsCollection()
+    .where("videoSlug", "==", slug)
+    .where("approved", "==", true)
+    .get();
+  return snap.docs
+    .map((d) => d.data() as Comment)
     .sort(
       (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
     );
@@ -59,7 +57,6 @@ export async function addComment(input: {
   name: string;
   text: string;
 }): Promise<Comment> {
-  const comments = await getComments();
   const comment: Comment = {
     id: `${Date.now()}-${Math.round(Math.random() * 1e6)}`,
     videoSlug: input.videoSlug,
@@ -68,18 +65,14 @@ export async function addComment(input: {
     createdAt: new Date().toISOString(),
     approved: false,
   };
-  await saveComments([comment, ...comments]);
+  await commentsCollection().doc(comment.id).set(comment);
   return comment;
 }
 
 export async function approveComment(id: string): Promise<void> {
-  const comments = await getComments();
-  await saveComments(
-    comments.map((c) => (c.id === id ? { ...c, approved: true } : c))
-  );
+  await commentsCollection().doc(id).update({ approved: true });
 }
 
 export async function deleteComment(id: string): Promise<void> {
-  const comments = await getComments();
-  await saveComments(comments.filter((c) => c.id !== id));
+  await commentsCollection().doc(id).delete();
 }

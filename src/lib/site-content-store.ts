@@ -1,5 +1,4 @@
-import fs from "fs/promises";
-import path from "path";
+import { adminDb } from "@/lib/firebase-admin";
 
 export type SocialLink = {
   name: string;
@@ -17,13 +16,13 @@ export type SiteContent = {
   socials: SocialLink[];
 };
 
-const filePath = path.join(process.cwd(), "src/data/site-content.json");
+const contentDocRef = () => adminDb.collection("config").doc("site-content");
 
 export async function getSiteContent(): Promise<SiteContent> {
-  const raw = await fs.readFile(filePath, "utf-8");
-  return JSON.parse(raw) as SiteContent;
+  const snap = await contentDocRef().get();
+  return snap.data() as SiteContent;
 }
 
 export async function saveSiteContent(content: SiteContent): Promise<void> {
-  await fs.writeFile(filePath, JSON.stringify(content, null, 2), "utf-8");
+  await contentDocRef().set(content);
 }

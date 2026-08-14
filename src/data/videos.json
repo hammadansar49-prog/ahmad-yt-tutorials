@@ -10,7 +10,7 @@
       "cha"
     ],
     "prompt": "kml.mkm",
-    "likes": 0,
+    "likes": 1,
     "views": 8
   },
   {
@@ -38,7 +38,7 @@
       "Canva"
     ],
     "prompt": "Create a high-CTR YouTube thumbnail, 1280x720px, bold 3D text with the title in the center, dramatic lighting, vibrant red-blue-orange gradient background with circuit/tech lines, a subject on the left pointing at the title, glowing neon outline effect, professional YouTube thumbnail style, ultra sharp, 4k.",
-    "views": 5,
+    "views": 8,
     "likes": 1
   },
   {
@@ -52,7 +52,8 @@
       "ChatGPT",
       "CapCut"
     ],
-    "prompt": "Write a 30-second viral YouTube Shorts script about [TOPIC]. Hook the viewer in the first 3 seconds with a bold question or shocking fact, keep sentences short and punchy, include a mid-video re-hook, and end with a strong call-to-action to follow the channel. Format the output as: HOOK, BODY (3 short beats), CTA."
+    "prompt": "Write a 30-second viral YouTube Shorts script about [TOPIC]. Hook the viewer in the first 3 seconds with a bold question or shocking fact, keep sentences short and punchy, include a mid-video re-hook, and end with a strong call-to-action to follow the channel. Format the output as: HOOK, BODY (3 short beats), CTA.",
+    "views": 1
   },
   {
     "slug": "video-editing-transitions-prompt",
