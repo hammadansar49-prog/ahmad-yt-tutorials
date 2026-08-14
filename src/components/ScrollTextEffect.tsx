@@ -43,10 +43,15 @@ export default function ScrollTextEffect() {
       // Footer headings are excluded: the footer sits at the very bottom
       // of the page, so there's often no scroll room left for the scrub
       // to ever reach full progress — they'd get stuck half-dim forever.
+      // Card titles (inside .pop-card, e.g. tutorial card h3s) are also
+      // excluded: letter-by-letter scrubbing many repeated card titles at
+      // once added a lot of extra DOM/work and wasn't the intent — only
+      // the page's own section headings should scrub.
       const targets = document.querySelectorAll<HTMLElement>(
         "main h1, main h2, main h3"
       );
       targets.forEach((el) => {
+        if (el.closest(".pop-card")) return;
         if (!el.dataset.scrollScrub) {
           el.dataset.scrollScrub = "true";
           splitIntoChars(el);

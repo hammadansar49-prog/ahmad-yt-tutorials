@@ -53,8 +53,8 @@ export default function ScrollPopEffect() {
 
     const computeTargets = () => {
       const vh = window.innerHeight;
-      const startY = vh * 0.95; // just entering at the bottom
-      const endY = vh * 0.55; // settled once past the middle
+      const startY = vh * 0.98; // just entering at the bottom
+      const endY = vh * 0.72; // settled soon after — a short scroll distance
       for (const entry of registered.values()) {
         const rect = entry.el.getBoundingClientRect();
         const raw = (startY - rect.top) / (startY - endY);
@@ -63,7 +63,7 @@ export default function ScrollPopEffect() {
     };
 
     let raf = 0;
-    const LERP = 0.09;
+    const LERP = 0.22;
     const render = () => {
       let anyMoving = false;
       for (const entry of registered.values()) {
