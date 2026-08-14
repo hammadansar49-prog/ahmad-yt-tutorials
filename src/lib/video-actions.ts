@@ -17,8 +17,8 @@ import {
 // no matter how large the uploaded file is (a raw 4K photo, a phone camera
 // shot, etc.), we downscale and re-encode it as compressed WebP here. This
 // keeps page load fast regardless of what admins upload.
-const MAX_THUMBNAIL_WIDTH = 1280;
-const THUMBNAIL_QUALITY = 75;
+const MAX_THUMBNAIL_WIDTH = 1920;
+const THUMBNAIL_QUALITY = 88;
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,

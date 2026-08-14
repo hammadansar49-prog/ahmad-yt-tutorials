@@ -21,6 +21,8 @@ export default function VideoCard({
           src={video.thumbnail}
           alt={video.title}
           fill
+          quality={90}
+          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 400px"
           className="object-cover group-hover:scale-105 transition-transform duration-300"
         />
         <span className="absolute top-1.5 left-1.5 sm:top-3 sm:left-3 rounded-full bg-black/60 px-2 py-0.5 sm:px-3 sm:py-1 text-[10px] sm:text-xs font-semibold text-white/90 backdrop-blur">

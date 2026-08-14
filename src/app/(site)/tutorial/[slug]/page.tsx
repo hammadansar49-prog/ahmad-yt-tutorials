@@ -59,8 +59,9 @@ export default async function TutorialPage({
             alt={video.title}
             fill
             priority
+            quality={92}
+            sizes="(max-width: 768px) 100vw, 768px"
             className="object-cover"
-            unoptimized={video.thumbnail.startsWith("http")}
           />
           <span className="absolute top-4 left-4 rounded-full bg-black/60 px-3 py-1 text-xs font-semibold text-white/90 backdrop-blur">
             {video.category}
