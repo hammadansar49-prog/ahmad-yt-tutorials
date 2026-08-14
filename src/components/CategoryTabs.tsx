@@ -21,10 +21,20 @@ export default function CategoryTabs({
     return qs ? `/?${qs}` : "/";
   }
 
-  function go(category: string, e: React.MouseEvent) {
+  function go(category: string, e: React.MouseEvent<HTMLAnchorElement>) {
     e.preventDefault();
-    router.push(hrefFor(category));
-    router.refresh();
+
+    // A quick outward "pop" on the tab that was just tapped.
+    const el = e.currentTarget;
+    el.classList.remove("cat-tab-pop");
+    // Force a reflow so the animation restarts if the same tab is clicked twice.
+    void el.offsetWidth;
+    el.classList.add("cat-tab-pop");
+
+    // router.push alone re-runs the (force-dynamic) route with the new
+    // searchParams — a follow-up router.refresh() was firing a second,
+    // redundant server round-trip that made switching feel slow.
+    router.push(hrefFor(category), { scroll: false });
   }
 
   return (
@@ -34,8 +44,8 @@ export default function CategoryTabs({
         onClick={(e) => go("", e)}
         className={
           !active
-            ? "rounded-full px-4 py-2 text-sm font-semibold bg-gradient-to-r from-[#ff2d55] to-[#ff8a1c] text-white transition"
-            : "rounded-full px-4 py-2 text-sm font-semibold border border-white/10 text-white/70 hover:bg-white/5 hover:text-white transition"
+            ? "cat-tab rounded-full px-4 py-2 text-sm font-semibold bg-gradient-to-r from-[#ff2d55] to-[#ff8a1c] text-white transition"
+            : "cat-tab rounded-full px-4 py-2 text-sm font-semibold border border-white/10 text-white/70 hover:bg-white/5 hover:text-white transition"
         }
       >
         All
@@ -49,8 +59,8 @@ export default function CategoryTabs({
             onClick={(e) => go(c.name, e)}
             className={
               isActive
-                ? "rounded-full px-4 py-2 text-sm font-semibold bg-gradient-to-r from-[#ff2d55] to-[#ff8a1c] text-white transition"
-                : "rounded-full px-4 py-2 text-sm font-semibold border border-white/10 text-white/70 hover:bg-white/5 hover:text-white transition"
+                ? "cat-tab rounded-full px-4 py-2 text-sm font-semibold bg-gradient-to-r from-[#ff2d55] to-[#ff8a1c] text-white transition"
+                : "cat-tab rounded-full px-4 py-2 text-sm font-semibold border border-white/10 text-white/70 hover:bg-white/5 hover:text-white transition"
             }
           >
             {c.name}
