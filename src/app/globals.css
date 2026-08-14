@@ -26,6 +26,11 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+  /* The browser's scroll-anchoring tries to "compensate" scroll position
+     when content above/within the viewport changes height (e.g. the
+     video grid shrinking from 5 cards to 1 after a category filter),
+     which was causing an unwanted jump on every filter click. */
+  overflow-anchor: none;
 }
 
 img {

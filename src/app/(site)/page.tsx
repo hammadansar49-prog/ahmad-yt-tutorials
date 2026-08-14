@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Hero from "@/components/Hero";
 import HomeVideoGrid from "@/components/HomeVideoGrid";
 import AboutSection from "@/components/AboutSection";
 import ContactSection from "@/components/ContactSection";
@@ -37,21 +36,16 @@ export default async function Home({
     Array.isArray(rawCategory) ? rawCategory[0] : rawCategory ?? ""
   ).trim();
 
-  const hasFilter = Boolean(query || category);
-
   return (
     <main className="flex-1">
       <PageViewTracker trackKey="home" />
-      {!hasFilter && <Hero />}
 
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 py-12">
-        <HomeVideoGrid
-          initialVideos={videos}
-          initialCategories={allCategories}
-          query={query}
-          category={category}
-        />
-      </section>
+      <HomeVideoGrid
+        initialVideos={videos}
+        initialCategories={allCategories}
+        query={query}
+        category={category}
+      />
 
       <AboutSection content={siteContent} headingLevel="h2" />
       <ContactSection content={siteContent} headingLevel="h2" />

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { where } from "firebase/firestore";
+import Hero from "./Hero";
 import VideoCard from "./VideoCard";
 import CategoryTabs from "./CategoryTabs";
 import { useFirestoreCollection } from "@/hooks/useFirestoreCollection";
@@ -69,61 +70,65 @@ export default function HomeVideoGrid({
 
   return (
     <>
-      <div className="text-center mb-10">
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-white">
-          Latest Tutorials &amp; Prompts
-        </h1>
-        <p className="mt-3 text-white/60 max-w-2xl mx-auto">
-          Every video comes with its full AI prompt — just hit{" "}
-          <span className="text-[#ff6a3d] font-semibold">Copy Code</span>{" "}
-          and the whole prompt is copied instantly.
-        </p>
-        {query && (
-          <p className="mt-4 text-sm text-white/50">
-            {filteredVideos.length > 0
-              ? `Showing results for "${query}"`
-              : `No tutorials found for "${query}"`}
+      {!hasFilter && <Hero />}
+
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 py-12">
+        <div className="text-center mb-10">
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-white">
+            Latest Tutorials &amp; Prompts
+          </h1>
+          <p className="mt-3 text-white/60 max-w-2xl mx-auto">
+            Every video comes with its full AI prompt — just hit{" "}
+            <span className="text-[#ff6a3d] font-semibold">Copy Code</span>{" "}
+            and the whole prompt is copied instantly.
           </p>
-        )}
-      </div>
-
-      {categoriesWithCounts.length > 0 && (
-        <CategoryTabs
-          categories={categoriesWithCounts}
-          active={category}
-          onSelect={selectCategory}
-        />
-      )}
-
-      {filteredVideos.length > 0 ? (
-        <div
-          className={
-            filteredVideos.length === 1
-              ? "flex justify-center"
-              : "grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6"
-          }
-        >
-          {filteredVideos.map((video) => (
-            <div
-              key={video.slug}
-              className={
-                filteredVideos.length === 1 ? "w-full sm:w-[340px]" : "h-full"
-              }
-            >
-              <VideoCard
-                video={video}
-                commentCount={commentCounts[video.slug] ?? 0}
-              />
-            </div>
-          ))}
+          {query && (
+            <p className="mt-4 text-sm text-white/50">
+              {filteredVideos.length > 0
+                ? `Showing results for "${query}"`
+                : `No tutorials found for "${query}"`}
+            </p>
+          )}
         </div>
-      ) : !query ? (
-        <p className="text-center text-white/50">
-          {hasFilter
-            ? "No tutorials in this category yet."
-            : "No tutorials in this category yet."}
-        </p>
-      ) : null}
+
+        {categoriesWithCounts.length > 0 && (
+          <CategoryTabs
+            categories={categoriesWithCounts}
+            active={category}
+            onSelect={selectCategory}
+          />
+        )}
+
+        {filteredVideos.length > 0 ? (
+          <div
+            className={
+              filteredVideos.length === 1
+                ? "flex justify-center"
+                : "grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6"
+            }
+          >
+            {filteredVideos.map((video) => (
+              <div
+                key={video.slug}
+                className={
+                  filteredVideos.length === 1 ? "w-full sm:w-[340px]" : "h-full"
+                }
+              >
+                <VideoCard
+                  video={video}
+                  commentCount={commentCounts[video.slug] ?? 0}
+                />
+              </div>
+            ))}
+          </div>
+        ) : !query ? (
+          <p className="text-center text-white/50">
+            {hasFilter
+              ? "No tutorials in this category yet."
+              : "No tutorials in this category yet."}
+          </p>
+        ) : null}
+      </section>
     </>
   );
 }

@@ -9,10 +9,21 @@ export default function CategoryTabs({
   active: string;
   onSelect: (category: string) => void;
 }) {
+  // Prevent the mouse click from focusing the button at all. A tab
+  // re-renders with a slightly different size/weight once it becomes
+  // active, and if the browser had just given it focus, it tries to keep
+  // that now-shifted focused element in view — which was the "page jumps
+  // around on click" bug. Keyboard (Tab-key) focus/activation is
+  // untouched since this only intercepts mousedown.
+  function preventFocus(e: React.MouseEvent<HTMLButtonElement>) {
+    e.preventDefault();
+  }
+
   return (
     <div className="flex flex-wrap justify-center gap-2 mb-10">
       <button
         type="button"
+        onMouseDown={preventFocus}
         onClick={() => onSelect("")}
         className={
           !active
@@ -28,6 +39,7 @@ export default function CategoryTabs({
           <button
             type="button"
             key={c.name}
+            onMouseDown={preventFocus}
             onClick={() => onSelect(c.name)}
             className={
               isActive
