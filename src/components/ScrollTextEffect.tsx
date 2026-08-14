@@ -40,8 +40,11 @@ export default function ScrollTextEffect() {
     }
 
     const scan = () => {
+      // Footer headings are excluded: the footer sits at the very bottom
+      // of the page, so there's often no scroll room left for the scrub
+      // to ever reach full progress — they'd get stuck half-dim forever.
       const targets = document.querySelectorAll<HTMLElement>(
-        "main h1, main h2, main h3, footer h3"
+        "main h1, main h2, main h3"
       );
       targets.forEach((el) => {
         if (!el.dataset.scrollScrub) {

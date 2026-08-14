@@ -17,7 +17,7 @@ export default async function Footer() {
         </div>
 
         <div>
-          <h3 className="text-sm font-semibold text-white/50 uppercase tracking-wide mb-4">
+          <h3 className="text-sm font-semibold text-white uppercase tracking-wide mb-4">
             Quick Links
           </h3>
           <ul className="space-y-2 text-sm">
@@ -72,7 +72,7 @@ export default async function Footer() {
         </div>
 
         <div>
-          <h3 className="text-sm font-semibold text-white/50 uppercase tracking-wide mb-4">
+          <h3 className="text-sm font-semibold text-white uppercase tracking-wide mb-4">
             Get In Touch
           </h3>
           <ul className="space-y-2 text-sm">
