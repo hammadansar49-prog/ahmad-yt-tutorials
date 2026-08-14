@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Hero from "@/components/Hero";
 import HomeVideoGrid from "@/components/HomeVideoGrid";
 import AboutSection from "@/components/AboutSection";
@@ -8,6 +9,13 @@ import { getCategories } from "@/lib/categories-store";
 import { getSiteContent } from "@/lib/site-content-store";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Ahmad YT Tutorial - AI Video Editing, Shorts & Tutorials",
+  description:
+    "The official website of Ahmad YT Tutorial - get the full AI prompt for every YouTube tutorial, free to copy. AI video editing, Shorts, and channel growth tips.",
+  alternates: { canonical: "/" },
+};
 
 export default async function Home({
   searchParams,
@@ -45,8 +53,8 @@ export default async function Home({
         />
       </section>
 
-      <AboutSection content={siteContent} />
-      <ContactSection content={siteContent} />
+      <AboutSection content={siteContent} headingLevel="h2" />
+      <ContactSection content={siteContent} headingLevel="h2" />
     </main>
   );
 }

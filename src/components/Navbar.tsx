@@ -54,7 +54,7 @@ export default function Navbar() {
   }
 
   const navLinkClass =
-    "text-white/80 hover:text-white transition";
+    "nav-link-fx text-white/80 hover:text-white transition";
 
   return (
     <header className="sticky top-0 z-50 bg-[#06102b]/90 backdrop-blur border-b border-white/10 relative after:absolute after:inset-x-0 after:bottom-0 after:h-px after:bg-gradient-to-r after:from-transparent after:via-[#3b82f6]/60 after:to-transparent">

@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   title: "About - Ahmad YT Tutorial",
   description:
     "Learn about Ahmad YT Tutorial - how we share the AI prompt behind every YouTube video on this website.",
+  alternates: { canonical: "/about" },
 };
 
 export default async function AboutPage() {

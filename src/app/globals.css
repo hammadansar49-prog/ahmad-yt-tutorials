@@ -45,3 +45,86 @@ body {
   animation-delay: var(--glow-delay, 0s);
   pointer-events: none;
 }
+
+/* Custom mouse cursor */
+html.has-custom-cursor,
+html.has-custom-cursor * {
+  cursor: none !important;
+}
+
+.cursor-dot,
+.cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 9999;
+  border-radius: 9999px;
+}
+
+.cursor-dot {
+  width: 6px;
+  height: 6px;
+  background: #ff6a3d;
+}
+
+.cursor-ring {
+  width: 32px;
+  height: 32px;
+  border: 1.5px solid rgba(255, 106, 61, 0.6);
+  transition: width 0.2s ease, height 0.2s ease, background-color 0.2s ease;
+}
+
+.cursor-ring.cursor-ring-active {
+  width: 24px;
+  height: 24px;
+  background: rgba(255, 106, 61, 0.15);
+}
+
+/* Scroll-triggered heading reveal: dim -> full white as it enters view */
+.scroll-reveal {
+  color: rgba(255, 255, 255, 0.28);
+  transition: color 0.7s ease, text-shadow 0.7s ease;
+}
+
+.scroll-reveal.scroll-reveal-in {
+  color: #ffffff;
+  text-shadow: 0 0 24px rgba(255, 255, 255, 0.15);
+}
+
+/* Navbar link hover: a spinning glow sweeps in behind the label */
+.nav-link-fx {
+  position: relative;
+  display: inline-block;
+  isolation: isolate;
+  padding: 0.35rem 0.15rem;
+}
+
+.nav-link-fx::before {
+  content: "";
+  position: absolute;
+  inset: -10px -14px;
+  z-index: -1;
+  border-radius: 9999px;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    rgba(255, 106, 61, 0.55) 90deg,
+    transparent 180deg,
+    rgba(59, 130, 246, 0.5) 270deg,
+    transparent 360deg
+  );
+  opacity: 0;
+  transform: rotate(0deg) scale(0.6);
+  transition: opacity 0.35s ease, transform 0.6s ease;
+}
+
+.nav-link-fx:hover::before,
+.nav-link-fx:focus-visible::before {
+  opacity: 1;
+  transform: rotate(-360deg) scale(1);
+}
+
+.nav-link-fx span {
+  position: relative;
+}

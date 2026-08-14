@@ -21,6 +21,19 @@ export async function generateMetadata({
   return {
     title: `${video.title} - Ahmad YT Tutorial`,
     description: video.description,
+    alternates: { canonical: `/tutorial/${video.slug}` },
+    openGraph: {
+      title: video.title,
+      description: video.description,
+      type: "article",
+      images: [video.thumbnail],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: video.title,
+      description: video.description,
+      images: [video.thumbnail],
+    },
   };
 }
 

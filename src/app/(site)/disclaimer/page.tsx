@@ -6,6 +6,7 @@ import LegalContentBlock from "@/components/LegalContentBlock";
 export const metadata: Metadata = {
   title: "Disclaimer - Ahmad YT Tutorial",
   description: "Disclaimer for Ahmad YT Tutorial.",
+  alternates: { canonical: "/disclaimer" },
 };
 
 export default async function DisclaimerPage() {

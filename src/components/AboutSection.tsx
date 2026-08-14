@@ -21,10 +21,13 @@ const steps = [
 export default function AboutSection({
   content,
   showHeading = true,
+  headingLevel = "h1",
 }: {
   content: SiteContent;
   showHeading?: boolean;
+  headingLevel?: "h1" | "h2";
 }) {
+  const Heading = headingLevel;
   return (
     <>
       <div className="relative h-px max-w-5xl mx-auto">
@@ -38,9 +41,9 @@ export default function AboutSection({
             <span className="inline-block text-xs font-semibold tracking-widest text-[#ff8a1c] uppercase mb-4">
               About Us
             </span>
-            <h1 className="text-3xl sm:text-5xl font-extrabold text-white mb-5">
+            <Heading className="text-3xl sm:text-5xl font-extrabold text-white mb-5">
               {content.aboutHeading}
-            </h1>
+            </Heading>
             <p className="text-white/70 max-w-2xl mx-auto text-base sm:text-lg leading-relaxed">
               {content.aboutDescription}
             </p>

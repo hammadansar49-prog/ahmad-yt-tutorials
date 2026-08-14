@@ -6,6 +6,7 @@ import LegalContentBlock from "@/components/LegalContentBlock";
 export const metadata: Metadata = {
   title: "Privacy Policy - Ahmad YT Tutorial",
   description: "Privacy Policy for Ahmad YT Tutorial.",
+  alternates: { canonical: "/privacy-policy" },
 };
 
 export default async function PrivacyPolicyPage() {

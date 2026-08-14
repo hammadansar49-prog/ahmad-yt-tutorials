@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   title: "Contact - Ahmad YT Tutorial",
   description:
     "Get in touch with Ahmad YT Tutorial - follow us on YouTube, Instagram, Telegram, and Facebook.",
+  alternates: { canonical: "/contact" },
 };
 
 export default async function ContactPage() {
