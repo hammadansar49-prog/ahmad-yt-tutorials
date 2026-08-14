@@ -62,10 +62,21 @@ html {
   background: linear-gradient(180deg, #ff6a3d, #ffb020);
 }
 
-::-webkit-scrollbar-button {
-  display: none;
-  height: 0;
-  width: 0;
+::-webkit-scrollbar-button,
+::-webkit-scrollbar-button:single-button,
+::-webkit-scrollbar-button:vertical:start,
+::-webkit-scrollbar-button:vertical:end,
+::-webkit-scrollbar-button:horizontal:start,
+::-webkit-scrollbar-button:horizontal:end {
+  display: none !important;
+  height: 0 !important;
+  width: 0 !important;
+  -webkit-appearance: none;
+  background: transparent;
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
 }
 
 @keyframes glow-float {
