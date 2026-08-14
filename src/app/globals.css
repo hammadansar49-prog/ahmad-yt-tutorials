@@ -168,6 +168,23 @@ html.has-custom-cursor * {
   transition-duration: 0.08s;
 }
 
+/* Auto-translate (Google Website Translator) — used invisibly, driven
+   programmatically by country, so hide every bit of its default UI. */
+.goog-te-banner-frame.skiptranslate,
+#goog-gt-tt,
+.goog-te-balloon-frame {
+  display: none !important;
+}
+
+body {
+  top: 0 !important;
+}
+
+.goog-text-highlight {
+  background: none !important;
+  box-shadow: none !important;
+}
+
 /* Navbar link hover: a spinning glow sweeps in behind the label */
 .nav-link-fx {
   position: relative;
