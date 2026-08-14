@@ -1,18 +1,14 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { checkPassword, createSession, destroySession } from "@/lib/auth";
+import { createSession, destroySession, verifyAdminIdToken } from "@/lib/auth";
 
 export type LoginState = { error?: string };
 
-export async function loginAction(
-  _prevState: LoginState,
-  formData: FormData
-): Promise<LoginState> {
-  const password = String(formData.get("password") ?? "");
-
-  if (!checkPassword(password)) {
-    return { error: "Incorrect password. Please try again." };
+export async function loginWithFirebaseAction(idToken: string): Promise<LoginState> {
+  const result = await verifyAdminIdToken(idToken);
+  if (!result.ok) {
+    return { error: result.error };
   }
 
   await createSession();

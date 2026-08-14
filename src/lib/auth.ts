@@ -1,9 +1,34 @@
 import { cookies } from "next/headers";
+import adminApp from "@/lib/firebase-admin";
+import { getAuth } from "firebase-admin/auth";
 
 const SESSION_COOKIE = "admin_session";
 
-export function checkPassword(password: string): boolean {
-  return password === process.env.ADMIN_PASSWORD;
+function allowedAdminEmails(): string[] {
+  return (process.env.ALLOWED_ADMIN_EMAILS ?? "")
+    .split(",")
+    .map((e) => e.trim().toLowerCase())
+    .filter(Boolean);
+}
+
+/**
+ * Verifies a Firebase Auth ID token server-side and confirms the signed-in
+ * user's email is on the admin allow-list, before granting a session.
+ */
+export async function verifyAdminIdToken(idToken: string): Promise<{
+  ok: boolean;
+  error?: string;
+}> {
+  try {
+    const decoded = await getAuth(adminApp).verifyIdToken(idToken);
+    const email = decoded.email?.toLowerCase();
+    if (!email || !allowedAdminEmails().includes(email)) {
+      return { ok: false, error: "This account is not authorized for admin access." };
+    }
+    return { ok: true };
+  } catch {
+    return { ok: false, error: "Could not verify sign-in. Please try again." };
+  }
 }
 
 export async function createSession(): Promise<void> {

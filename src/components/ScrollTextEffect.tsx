@@ -20,7 +20,7 @@ export default function ScrollTextEffect() {
 
     const scan = () => {
       const targets = document.querySelectorAll<HTMLElement>(
-        "main h1, main h2, main h3"
+        "main h1, main h2, main h3, footer h3"
       );
       targets.forEach((el) => {
         if (!el.classList.contains("scroll-reveal")) {

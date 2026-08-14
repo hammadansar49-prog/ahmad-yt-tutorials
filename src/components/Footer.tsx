@@ -22,14 +22,14 @@ export default async function Footer() {
           </h3>
           <ul className="space-y-2 text-sm">
             <li>
-              <Link href="/" className="text-white/70 hover:text-white transition">
+              <Link href="/" className="nav-link-fx text-white/70 hover:text-white transition">
                 Home
               </Link>
             </li>
             <li>
               <Link
                 href="/about"
-                className="text-white/70 hover:text-white transition"
+                className="nav-link-fx text-white/70 hover:text-white transition"
               >
                 About
               </Link>
@@ -37,7 +37,7 @@ export default async function Footer() {
             <li>
               <Link
                 href="/contact"
-                className="text-white/70 hover:text-white transition"
+                className="nav-link-fx text-white/70 hover:text-white transition"
               >
                 Contact
               </Link>
@@ -47,7 +47,7 @@ export default async function Footer() {
                 href={content.youtubeUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-white/70 hover:text-white transition"
+                className="nav-link-fx text-white/70 hover:text-white transition"
               >
                 YouTube Channel
               </a>
@@ -55,7 +55,7 @@ export default async function Footer() {
             <li>
               <Link
                 href="/disclaimer"
-                className="text-white/70 hover:text-white transition"
+                className="nav-link-fx text-white/70 hover:text-white transition"
               >
                 Disclaimer
               </Link>
@@ -63,7 +63,7 @@ export default async function Footer() {
             <li>
               <Link
                 href="/privacy-policy"
-                className="text-white/70 hover:text-white transition"
+                className="nav-link-fx text-white/70 hover:text-white transition"
               >
                 Privacy Policy
               </Link>
@@ -82,7 +82,7 @@ export default async function Footer() {
                   href={s.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-white/70 hover:text-white transition"
+                  className="nav-link-fx text-white/70 hover:text-white transition"
                 >
                   {s.name}
                 </a>
@@ -91,7 +91,7 @@ export default async function Footer() {
             <li>
               <a
                 href={`mailto:${content.email}`}
-                className="text-white/70 hover:text-white transition"
+                className="nav-link-fx text-white/70 hover:text-white transition"
               >
                 {content.email}
               </a>
