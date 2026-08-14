@@ -5,18 +5,25 @@ import { useEffect } from "react";
 /**
  * Scroll-linked character reveal ("text scrub"): each heading's letters
  * are individually dimmed, then progressively turn full white as the
- * heading scrolls through the viewport — the fraction of letters lit up
- * tracks scroll position exactly, like Apple-style marketing pages.
+ * heading scrolls through the viewport.
+ *
+ * The revealed-letter count is driven by a lerped progress value (chases
+ * the raw scroll-computed target a little each frame, same technique as
+ * the card reveal) rather than jumping straight to it — a single mouse
+ * wheel tick moves the page by a chunk of pixels, which would otherwise
+ * light up several letters at once in one instant frame. Lerping spreads
+ * that same jump across a few frames so letters light up in a flowing
+ * sequence instead of clumping together.
  *
  * Performance: character spans are cached per element (queried once, not
  * every scroll frame) and the DOM is only touched when the revealed count
- * actually changes, so scrolling doesn't thrash layout/paint.
+ * actually changes.
  */
 export default function ScrollTextEffect() {
   useEffect(() => {
     const registered = new Map<
       HTMLElement,
-      { chars: HTMLElement[]; lastCount: number }
+      { chars: HTMLElement[]; lastCount: number; target: number; current: number }
     >();
 
     function splitIntoChars(el: HTMLElement) {
@@ -58,7 +65,7 @@ export default function ScrollTextEffect() {
         }
         if (!registered.has(el)) {
           const chars = Array.from(el.querySelectorAll<HTMLElement>(".stc"));
-          registered.set(el, { chars, lastCount: -1 });
+          registered.set(el, { chars, lastCount: -1, target: 0, current: 0 });
         }
       });
     };
@@ -67,18 +74,32 @@ export default function ScrollTextEffect() {
     const mutationObserver = new MutationObserver(scan);
     mutationObserver.observe(document.body, { childList: true, subtree: true });
 
-    const update = () => {
+    const computeTargets = () => {
       const vh = window.innerHeight;
       const startY = vh * 0.85;
       const endY = vh * 0.3;
-
       for (const [el, entry] of registered) {
         const rect = el.getBoundingClientRect();
         const raw = (startY - rect.top) / (startY - endY);
-        const progress = Math.min(1, Math.max(0, raw));
-        const revealCount = Math.round(progress * entry.chars.length);
+        entry.target = Math.min(1, Math.max(0, raw));
+      }
+    };
 
-        if (revealCount === entry.lastCount) continue; // nothing changed, skip DOM writes
+    let raf = 0;
+    const LERP = 0.18;
+    const render = () => {
+      let anyMoving = false;
+      for (const entry of registered.values()) {
+        const diff = entry.target - entry.current;
+        if (Math.abs(diff) < 0.001) {
+          entry.current = entry.target;
+        } else {
+          entry.current += diff * LERP;
+          anyMoving = true;
+        }
+
+        const revealCount = Math.round(entry.current * entry.chars.length);
+        if (revealCount === entry.lastCount) continue;
 
         const prev = entry.lastCount;
         if (revealCount > prev) {
@@ -92,26 +113,24 @@ export default function ScrollTextEffect() {
         }
         entry.lastCount = revealCount;
       }
+      if (anyMoving) raf = requestAnimationFrame(render);
+      else raf = 0;
     };
 
-    let ticking = false;
-    const onScroll = () => {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(() => {
-        update();
-        ticking = false;
-      });
+    const kick = () => {
+      computeTargets();
+      if (!raf) raf = requestAnimationFrame(render);
     };
 
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    update();
+    window.addEventListener("scroll", kick, { passive: true });
+    window.addEventListener("resize", kick);
+    kick();
 
     return () => {
       mutationObserver.disconnect();
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
+      window.removeEventListener("scroll", kick);
+      window.removeEventListener("resize", kick);
+      if (raf) cancelAnimationFrame(raf);
     };
   }, []);
 
