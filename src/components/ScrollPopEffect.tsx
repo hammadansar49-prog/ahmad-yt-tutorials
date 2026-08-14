@@ -53,16 +53,14 @@ export default function ScrollPopEffect() {
         };
         registered.set(el, entry);
 
-        if (entry.isDeck) {
-          el.addEventListener("mouseenter", () => {
-            entry.hoverTarget = 1;
-            kick();
-          });
-          el.addEventListener("mouseleave", () => {
-            entry.hoverTarget = 0;
-            kick();
-          });
-        }
+        el.addEventListener("mouseenter", () => {
+          entry.hoverTarget = 1;
+          kick();
+        });
+        el.addEventListener("mouseleave", () => {
+          entry.hoverTarget = 0;
+          kick();
+        });
       });
     };
 
@@ -129,8 +127,8 @@ export default function ScrollPopEffect() {
           const scale = 0.9 + 0.1 * eased + entry.hoverCurrent * 0.03;
           entry.el.style.transform = `translate(${x}px, ${y}px) rotate(${rot}deg) scale(${scale})`;
         } else {
-          const y = remaining * 32;
-          const scale = 0.92 + 0.08 * eased;
+          const y = remaining * 32 + hoverLift;
+          const scale = 0.92 + 0.08 * eased + entry.hoverCurrent * 0.03;
           entry.el.style.transform = `translateY(${y}px) scale(${scale})`;
         }
       }

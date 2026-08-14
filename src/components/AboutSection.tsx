@@ -95,7 +95,7 @@ export default function AboutSection({
             href={`${content.youtubeUrl}?sub_confirmation=1`}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-[#ff2d55] to-[#ff8a1c] text-white font-semibold px-6 py-3 hover:brightness-110 transition"
+            className="scroll-wiggle inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-[#ff2d55] to-[#ff8a1c] text-white font-semibold px-6 py-3 hover:brightness-110 transition"
           >
             Subscribe on YouTube
           </a>
