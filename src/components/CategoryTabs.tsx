@@ -24,13 +24,6 @@ export default function CategoryTabs({
   function go(category: string, e: React.MouseEvent<HTMLAnchorElement>) {
     e.preventDefault();
 
-    // A quick outward "pop" on the tab that was just tapped.
-    const el = e.currentTarget;
-    el.classList.remove("cat-tab-pop");
-    // Force a reflow so the animation restarts if the same tab is clicked twice.
-    void el.offsetWidth;
-    el.classList.add("cat-tab-pop");
-
     // router.push alone re-runs the (force-dynamic) route with the new
     // searchParams — a follow-up router.refresh() was firing a second,
     // redundant server round-trip that made switching feel slow.

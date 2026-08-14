@@ -141,25 +141,19 @@ html.has-custom-cursor * {
   transform: translate(30px, 70px) rotate(-8deg) scale(0.9);
 }
 
-/* Category tab click: a quick outward pop/lift */
+/* Category tab: lifts up on hover, presses inward on click */
 .cat-tab {
   display: inline-block;
+  transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-@keyframes cat-tab-pop {
-  0% {
-    transform: translateY(0) scale(1);
-  }
-  40% {
-    transform: translateY(-6px) scale(1.08);
-  }
-  100% {
-    transform: translateY(0) scale(1);
-  }
+.cat-tab:hover {
+  transform: translateY(-4px);
 }
 
-.cat-tab-pop {
-  animation: cat-tab-pop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+.cat-tab:active {
+  transform: translateY(-1px) scale(0.94);
+  transition-duration: 0.08s;
 }
 
 /* Navbar link hover: a spinning glow sweeps in behind the label */
