@@ -81,15 +81,16 @@ html.has-custom-cursor * {
   background: rgba(255, 106, 61, 0.15);
 }
 
-/* Scroll-triggered heading reveal: dim -> full white as it enters view */
-.scroll-reveal {
-  color: rgba(255, 255, 255, 0.28);
-  transition: color 0.7s ease, text-shadow 0.7s ease;
+/* Scroll-linked character reveal: each letter lights up from dim to full
+   white as its heading scrubs through the viewport while scrolling. */
+.stc {
+  color: rgba(255, 255, 255, 0.22);
+  transition: color 0.15s linear, text-shadow 0.15s linear;
 }
 
-.scroll-reveal.scroll-reveal-in {
+.stc.stc-lit {
   color: #ffffff;
-  text-shadow: 0 0 24px rgba(255, 255, 255, 0.15);
+  text-shadow: 0 0 18px rgba(255, 255, 255, 0.18);
 }
 
 /* Navbar link hover: a spinning glow sweeps in behind the label */
