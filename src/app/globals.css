@@ -37,12 +37,13 @@ img {
   image-rendering: -webkit-optimize-contrast;
 }
 
-/* Sleek, on-brand scrollbar */
-html {
-  scrollbar-width: thin;
-  scrollbar-color: #ff6a3d #0a1230;
-}
-
+/* Sleek, on-brand scrollbar. Deliberately webkit-only (no standard
+   `scrollbar-color`/`scrollbar-width`) — recent Chrome supports both the
+   standard and legacy webkit scrollbar models, and having both set at
+   once caused Chrome to fall back to a native-style scrollbar complete
+   with arrow buttons that none of the ::-webkit-scrollbar-button rules
+   below could then touch. Firefox (which only understands the standard
+   properties) will just show its own default scrollbar. */
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;
