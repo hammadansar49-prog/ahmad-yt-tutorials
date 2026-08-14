@@ -19,7 +19,7 @@ export default function CopyPromptBox({ prompt }: { prompt: string }) {
     <div className="rounded-lg border border-white/10 bg-[#0a1030] overflow-hidden">
       <div className="flex items-center justify-between px-4 py-2 bg-white/5 border-b border-white/10">
         <span className="text-xs font-medium text-white/60 tracking-wide">
-          PROMPT
+          Master Prompt
         </span>
         <button
           onClick={handleCopy}
