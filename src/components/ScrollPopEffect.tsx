@@ -67,7 +67,15 @@ export default function ScrollPopEffect() {
     };
 
     scan();
-    const mutationObserver = new MutationObserver(scan);
+    // Newly-inserted cards (e.g. a category filter swapping which
+    // tutorial cards are in the DOM) default to target/current = 0
+    // (invisible) until their real scroll position is computed — call
+    // kick() after every scan so they get their correct state right
+    // away instead of sitting hidden until the next scroll/resize event.
+    const mutationObserver = new MutationObserver(() => {
+      scan();
+      kick();
+    });
     mutationObserver.observe(document.body, { childList: true, subtree: true });
 
     const computeTargets = () => {
