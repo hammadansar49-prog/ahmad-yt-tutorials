@@ -1,5 +1,5 @@
 import { cookies } from "next/headers";
-import adminApp from "@/lib/firebase-admin";
+import { getAdminApp } from "@/lib/firebase-admin";
 import { getAuth } from "firebase-admin/auth";
 
 const SESSION_COOKIE = "admin_session";
@@ -20,7 +20,7 @@ export async function verifyAdminIdToken(idToken: string): Promise<{
   error?: string;
 }> {
   try {
-    const decoded = await getAuth(adminApp).verifyIdToken(idToken);
+    const decoded = await getAuth(getAdminApp()).verifyIdToken(idToken);
     const email = decoded.email?.toLowerCase();
     if (!email || !allowedAdminEmails().includes(email)) {
       return { ok: false, error: "This account is not authorized for admin access." };

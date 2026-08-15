@@ -9,6 +9,8 @@ export const metadata: Metadata = {
   alternates: { canonical: "/disclaimer" },
 };
 
+export const dynamic = "force-dynamic";
+
 export default async function DisclaimerPage() {
   const content = await getLegalContent();
 
