@@ -39,7 +39,7 @@ export default function Hero() {
       <div className="relative w-full flex items-center justify-center py-4 sm:py-6">
         <video
           ref={videoRef}
-          src="/banner.mp4"
+          src="/banner.mp4?v=2"
           poster="/banner.jpg"
           autoPlay
           muted
