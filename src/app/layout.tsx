@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { cookies, headers } from "next/headers";
 import { Geist, Geist_Mono } from "next/font/google";
 import GlowParticles from "@/components/GlowParticles";
 import CustomCursor from "@/components/CustomCursor";
@@ -6,6 +7,8 @@ import ScrollTextEffect from "@/components/ScrollTextEffect";
 import ScrollPopEffect from "@/components/ScrollPopEffect";
 import ScrollWiggle from "@/components/ScrollWiggle";
 import LanguageProvider from "@/components/LanguageProvider";
+import { resolveCountry } from "@/lib/geo";
+import { languageForCountry } from "@/lib/country-language-map";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -52,7 +55,26 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+async function resolveLang(): Promise<string | null> {
+  // The proxy (middleware) resolves this on a visitor's first request and
+  // caches it in a cookie — read that first (instant, no network call).
+  const cookieStore = await cookies();
+  const cached = cookieStore.get("site_lang")?.value;
+  if (cached) return cached === "en" ? null : cached;
+
+  // Fallback for the rare case the proxy didn't run/set it in time.
+  try {
+    const hdrs = await headers();
+    const country = await resolveCountry(hdrs);
+    return languageForCountry(country);
+  } catch {
+    return null;
+  }
+}
+
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  const lang = await resolveLang();
+
   return (
     <html
       lang="en"
@@ -67,7 +89,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <ScrollTextEffect />
         <ScrollPopEffect />
         <ScrollWiggle />
-        <LanguageProvider>
+        <LanguageProvider initialLang={lang}>
           <div className="relative z-10 flex flex-col flex-1 min-h-full">
             {children}
           </div>

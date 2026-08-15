@@ -4,14 +4,13 @@ import { useLang } from "./LanguageProvider";
 
 /**
  * Renders `original`, or the pre-translated version for the visitor's
- * detected language if one was stored (see src/lib/translate.ts). Only
- * ever used on non-heading text (paragraphs, descriptions) — headings are
- * deliberately left untranslated because they're also targeted by the
- * scroll-scrub letter-reveal effect, which splits their text into many
- * <span> children; if this component's output changed language *after*
- * that split already happened, React would be reconciling against DOM it
- * no longer recognizes (the same class of bug that made the old Google
- * Translate widget crash the site).
+ * detected language if one was stored (see src/lib/translate.ts).
+ *
+ * Safe to use on headings too (unlike an earlier version of this
+ * component) because the language is now resolved server-side, before
+ * any HTML is sent — see LanguageProvider — so there's never a
+ * client-side language swap after mount for the scroll-scrub letter-
+ * reveal effect's DOM-splitting to conflict with.
  */
 export default function TranslatedText({
   as: Tag = "span",
@@ -20,7 +19,7 @@ export default function TranslatedText({
   field,
   className,
 }: {
-  as?: "p" | "span" | "div";
+  as?: "p" | "span" | "div" | "h1" | "h2" | "h3";
   original: string;
   translations?: Record<string, Record<string, string>>;
   field: string;

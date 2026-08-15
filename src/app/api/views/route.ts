@@ -7,7 +7,7 @@ export async function POST(request: Request) {
   const body = await request.json().catch(() => ({}));
   const slug = typeof body.slug === "string" ? body.slug : null;
 
-  const country = await resolveCountry(request);
+  const country = await resolveCountry(request.headers);
   await recordVisit(country);
 
   if (slug) {

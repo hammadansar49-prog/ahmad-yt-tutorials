@@ -39,7 +39,9 @@ export async function updateSiteContentAction(
   }
 
   const translations = await translateFields({
+    aboutHeading,
     aboutDescription,
+    contactHeading,
     contactDescription,
   }).catch(() => undefined);
 

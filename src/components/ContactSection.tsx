@@ -69,7 +69,6 @@ export default function ContactSection({
   showHeading?: boolean;
   headingLevel?: "h1" | "h2";
 }) {
-  const Heading = headingLevel;
   return (
     <>
       <div className="relative h-px max-w-5xl mx-auto">
@@ -83,9 +82,13 @@ export default function ContactSection({
             <span className="inline-block text-xs font-semibold tracking-widest text-[#ff8a1c] uppercase mb-4">
               Get In Touch
             </span>
-            <Heading className="text-3xl sm:text-5xl font-extrabold text-white mb-5">
-              {content.contactHeading}
-            </Heading>
+            <TranslatedText
+              as={headingLevel}
+              className="text-3xl sm:text-5xl font-extrabold text-white mb-5"
+              original={content.contactHeading}
+              translations={content.translations}
+              field="contactHeading"
+            />
             <TranslatedText
               as="p"
               className="text-white/70 max-w-2xl mx-auto text-base sm:text-lg leading-relaxed"

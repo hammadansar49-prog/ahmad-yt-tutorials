@@ -23,7 +23,9 @@ export async function updateLegalContentAction(
   }
 
   const translations = await translateFields({
+    disclaimerHeading,
     disclaimerBody,
+    privacyHeading,
     privacyBody,
   }).catch(() => undefined);
 

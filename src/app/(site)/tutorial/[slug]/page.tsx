@@ -69,9 +69,13 @@ export default async function TutorialPage({
           </span>
         </div>
 
-        <h1 className="text-2xl sm:text-3xl font-extrabold text-white mt-6">
-          {video.title}
-        </h1>
+        <TranslatedText
+          as="h1"
+          className="text-2xl sm:text-3xl font-extrabold text-white mt-6"
+          original={video.title}
+          translations={video.translations}
+          field="title"
+        />
         <TranslatedText
           as="p"
           className="mt-2 text-white/60"
