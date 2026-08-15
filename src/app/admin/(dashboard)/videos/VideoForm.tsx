@@ -5,6 +5,7 @@ import Image from "next/image";
 import type { VideoFormState } from "@/lib/video-actions";
 import type { Video } from "@/lib/videos-store";
 import TagInput from "@/components/TagInput";
+import AutoGrowTextarea from "@/components/AutoGrowTextarea";
 import FaqInput from "@/components/FaqInput";
 import CategorySelect from "@/components/CategorySelect";
 
@@ -50,12 +51,12 @@ export default function VideoForm({
         <label className="block text-sm font-medium text-white/70 mb-1.5">
           Description *
         </label>
-        <textarea
+        <AutoGrowTextarea
           name="description"
           required
           rows={2}
           defaultValue={video?.description}
-          className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2.5 text-white placeholder-white/30 focus:outline-none focus:border-[#ff6a3d]/60 transition resize-none"
+          className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2.5 text-white placeholder-white/30 focus:outline-none focus:border-[#ff6a3d]/60 transition"
           placeholder="Short summary of the tutorial"
         />
       </div>
@@ -144,7 +145,7 @@ export default function VideoForm({
         <label className="block text-sm font-medium text-white/70 mb-1.5">
           AI Prompt *
         </label>
-        <textarea
+        <AutoGrowTextarea
           name="prompt"
           required
           rows={6}

@@ -84,6 +84,9 @@ export default function Navbar() {
           <Link href="/tutorials" className={navLinkClass}>
             All Posts
           </Link>
+          <Link href="/articles" className={navLinkClass}>
+            Articles
+          </Link>
           <Link href="/about" className={navLinkClass}>
             About
           </Link>
@@ -209,6 +212,13 @@ export default function Navbar() {
             className="block rounded-lg px-3 py-2.5 text-white/80 hover:bg-white/5 hover:text-white transition"
           >
             All Posts
+          </Link>
+          <Link
+            href="/articles"
+            onClick={() => setMenuOpen(false)}
+            className="block rounded-lg px-3 py-2.5 text-white/80 hover:bg-white/5 hover:text-white transition"
+          >
+            Articles
           </Link>
           <Link
             href="/about"
