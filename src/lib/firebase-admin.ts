@@ -20,13 +20,36 @@ export function getAdminApp(): App {
     return cachedApp;
   }
 
-  const projectId = process.env.FIREBASE_PROJECT_ID;
-  const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
-  const privateKey = process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, "\n");
+  // Preferred: one base64-encoded blob of the whole service account JSON.
+  // Some hosts' environment-variable UIs mangle a long multi-part PEM key
+  // (stray line breaks, silent truncation, whitespace changes) — a single
+  // base64 token has no special characters for that kind of storage to
+  // corrupt, so it survives copy/paste and web-UI text fields reliably.
+  const b64 = process.env.FIREBASE_SERVICE_ACCOUNT_BASE64;
+  let projectId: string | undefined;
+  let clientEmail: string | undefined;
+  let privateKey: string | undefined;
+
+  if (b64) {
+    try {
+      const decoded = JSON.parse(
+        Buffer.from(b64, "base64").toString("utf-8")
+      ) as { project_id: string; client_email: string; private_key: string };
+      projectId = decoded.project_id;
+      clientEmail = decoded.client_email;
+      privateKey = decoded.private_key;
+    } catch {
+      throw new Error("FIREBASE_SERVICE_ACCOUNT_BASE64 is not valid base64-encoded JSON.");
+    }
+  } else {
+    projectId = process.env.FIREBASE_PROJECT_ID;
+    clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
+    privateKey = process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, "\n");
+  }
 
   if (!projectId || !clientEmail || !privateKey) {
     throw new Error(
-      "Missing Firebase Admin SDK environment variables (FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL, FIREBASE_PRIVATE_KEY)."
+      "Missing Firebase Admin SDK credentials: set either FIREBASE_SERVICE_ACCOUNT_BASE64, or all three of FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL, FIREBASE_PRIVATE_KEY."
     );
   }
 

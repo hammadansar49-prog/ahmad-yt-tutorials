@@ -56,14 +56,15 @@ export const metadata: Metadata = {
 };
 
 async function resolveLang(): Promise<string | null> {
-  // The proxy (middleware) resolves this on a visitor's first request and
-  // caches it in a cookie — read that first (instant, no network call).
-  const cookieStore = await cookies();
-  const cached = cookieStore.get("site_lang")?.value;
-  if (cached) return cached === "en" ? null : cached;
-
-  // Fallback for the rare case the proxy didn't run/set it in time.
+  // Everything in here is defensive on purpose: this runs in the root
+  // layout, which every single page goes through, so *anything* thrown
+  // here takes the whole site down. If it fails for any reason at all,
+  // fall back to English rather than risk a site-wide crash.
   try {
+    const cookieStore = await cookies();
+    const cached = cookieStore.get("site_lang")?.value;
+    if (cached) return cached === "en" ? null : cached;
+
     const hdrs = await headers();
     const country = await resolveCountry(hdrs);
     return languageForCountry(country);
