@@ -2,8 +2,6 @@ import { getComments } from "@/lib/comments-store";
 import { getVideos } from "@/lib/videos-store";
 import CommentRow from "./CommentRow";
 
-export const dynamic = "force-dynamic";
-
 export default async function AdminCommentsPage() {
   const [comments, videos] = await Promise.all([getComments(), getVideos()]);
   const titleBySlug = new Map(videos.map((v) => [v.slug, v.title]));

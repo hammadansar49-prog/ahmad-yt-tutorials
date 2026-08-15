@@ -2,8 +2,6 @@ import VideoForm from "../VideoForm";
 import { createVideoAction } from "@/lib/video-actions";
 import { getCategories } from "@/lib/categories-store";
 
-export const dynamic = "force-dynamic";
-
 export default async function NewVideoPage() {
   const categories = await getCategories();
 

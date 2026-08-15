@@ -1,4 +1,5 @@
 import { FieldValue } from "firebase-admin/firestore";
+import { unstable_cache } from "next/cache";
 import { adminDb } from "@/lib/firebase-admin";
 
 export type Video = {
@@ -18,10 +19,17 @@ export type Video = {
 
 const videosCollection = () => adminDb.collection("videos");
 
-export async function getVideos(): Promise<Video[]> {
+async function fetchVideos(): Promise<Video[]> {
   const snap = await videosCollection().get();
   return snap.docs.map((d) => d.data() as Video);
 }
+
+export const getVideos = unstable_cache(fetchVideos, ["videos"], {
+  tags: ["videos"],
+  // View counts bump on nearly every page visit — don't tie that to cache
+  // invalidation (it would defeat the cache), just let it self-refresh.
+  revalidate: 60,
+});
 
 export async function incrementViews(slug: string): Promise<number> {
   const ref = videosCollection().doc(slug);

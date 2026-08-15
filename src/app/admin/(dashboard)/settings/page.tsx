@@ -1,8 +1,6 @@
 import { getSiteContent } from "@/lib/site-content-store";
 import SettingsForm from "./SettingsForm";
 
-export const dynamic = "force-dynamic";
-
 export default async function SettingsPage() {
   const content = await getSiteContent();
 

@@ -12,7 +12,7 @@ export async function loginWithFirebaseAction(idToken: string): Promise<LoginSta
   }
 
   await createSession();
-  redirect("/admin");
+  return {};
 }
 
 export async function logoutAction() {

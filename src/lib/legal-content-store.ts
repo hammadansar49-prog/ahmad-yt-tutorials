@@ -1,3 +1,4 @@
+import { unstable_cache } from "next/cache";
 import { adminDb } from "@/lib/firebase-admin";
 
 export type LegalContent = {
@@ -11,10 +12,14 @@ export type LegalContent = {
 
 const legalDocRef = () => adminDb.collection("config").doc("legal-content");
 
-export async function getLegalContent(): Promise<LegalContent> {
+async function fetchLegalContent(): Promise<LegalContent> {
   const snap = await legalDocRef().get();
   return snap.data() as LegalContent;
 }
+
+export const getLegalContent = unstable_cache(fetchLegalContent, ["legal-content"], {
+  tags: ["legal-content"],
+});
 
 export async function saveLegalContent(content: LegalContent): Promise<void> {
   await legalDocRef().set(content);

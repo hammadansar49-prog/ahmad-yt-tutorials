@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   signInWithEmailAndPassword,
   sendPasswordResetEmail,
@@ -24,6 +25,7 @@ function firebaseErrorMessage(code: string): string {
 }
 
 export default function LoginForm() {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -44,7 +46,13 @@ export default function LoginForm() {
       );
       const idToken = await credential.user.getIdToken();
       const result = await loginWithFirebaseAction(idToken);
-      if (result?.error) setError(result.error);
+      if (result?.error) {
+        setError(result.error);
+        setPending(false);
+        return;
+      }
+      router.push("/admin");
+      return;
     } catch (err) {
       const code = (err as { code?: string })?.code ?? "";
       setError(firebaseErrorMessage(code));

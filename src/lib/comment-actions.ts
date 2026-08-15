@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { updateTag } from "next/cache";
 import { isAuthed } from "@/lib/auth";
 import {
   addComment,
@@ -26,6 +27,7 @@ export async function submitCommentAction(
   }
 
   await addComment({ videoSlug: slug, name, text });
+  updateTag("comments");
   revalidatePath("/admin/comments");
 
   return { success: true };
@@ -36,6 +38,7 @@ export async function approveCommentAction(formData: FormData): Promise<void> {
   const id = String(formData.get("id") ?? "");
   const slug = String(formData.get("slug") ?? "");
   await approveComment(id);
+  updateTag("comments");
   revalidatePath("/admin/comments");
   revalidatePath(`/tutorial/${slug}`);
   revalidatePath("/");
@@ -46,6 +49,7 @@ export async function deleteCommentAction(formData: FormData): Promise<void> {
   const id = String(formData.get("id") ?? "");
   const slug = String(formData.get("slug") ?? "");
   await deleteComment(id);
+  updateTag("comments");
   revalidatePath("/admin/comments");
   revalidatePath(`/tutorial/${slug}`);
   revalidatePath("/");

@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { updateTag } from "next/cache";
 import { isAuthed } from "@/lib/auth";
 import { saveSiteContent, type SocialLink } from "@/lib/site-content-store";
 import { translateFields } from "@/lib/translate";
@@ -56,6 +57,7 @@ export async function updateSiteContentAction(
     translations,
   });
 
+  updateTag("site-content");
   revalidatePath("/about");
   revalidatePath("/contact");
   revalidatePath("/admin/settings");

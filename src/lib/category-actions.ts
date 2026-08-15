@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { updateTag } from "next/cache";
 import { isAuthed } from "@/lib/auth";
 import { getCategories, saveCategories } from "@/lib/categories-store";
 import { getVideos, saveVideos } from "@/lib/videos-store";
@@ -23,6 +24,7 @@ export async function addCategoryAction(
 
   await saveCategories([...categories, name]);
 
+  updateTag("categories");
   revalidatePath("/admin/categories");
   revalidatePath("/admin/videos/new");
   return {};
@@ -58,6 +60,8 @@ export async function renameCategoryAction(
     )
   );
 
+  updateTag("categories");
+  updateTag("videos");
   revalidatePath("/");
   revalidatePath("/admin/categories");
   revalidatePath("/admin/videos");
@@ -83,6 +87,8 @@ export async function deleteCategoryAction(formData: FormData): Promise<void> {
     )
   );
 
+  updateTag("categories");
+  updateTag("videos");
   revalidatePath("/");
   revalidatePath("/admin/categories");
   revalidatePath("/admin/videos");

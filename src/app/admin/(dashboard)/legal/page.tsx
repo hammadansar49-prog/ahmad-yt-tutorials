@@ -1,8 +1,6 @@
 import { getLegalContent } from "@/lib/legal-content-store";
 import LegalForm from "./LegalForm";
 
-export const dynamic = "force-dynamic";
-
 export default async function LegalPage() {
   const content = await getLegalContent();
 

@@ -3,8 +3,6 @@ import { getVideos } from "@/lib/videos-store";
 import { getComments } from "@/lib/comments-store";
 import { getTotalVisits } from "@/lib/site-stats-store";
 
-export const dynamic = "force-dynamic";
-
 export default async function AdminDashboardPage() {
   const [videos, comments, totalVisits] = await Promise.all([
     getVideos(),

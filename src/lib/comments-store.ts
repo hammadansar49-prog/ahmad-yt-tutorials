@@ -1,3 +1,4 @@
+import { unstable_cache } from "next/cache";
 import { adminDb } from "@/lib/firebase-admin";
 
 export type Comment = {
@@ -11,10 +12,14 @@ export type Comment = {
 
 const commentsCollection = () => adminDb.collection("comments");
 
-export async function getComments(): Promise<Comment[]> {
+async function fetchComments(): Promise<Comment[]> {
   const snap = await commentsCollection().get();
   return snap.docs.map((d) => d.data() as Comment);
 }
+
+export const getComments = unstable_cache(fetchComments, ["comments"], {
+  tags: ["comments"],
+});
 
 export async function getApprovedCommentsForVideo(
   slug: string

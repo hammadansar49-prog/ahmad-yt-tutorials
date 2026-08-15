@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { updateTag } from "next/cache";
 import { isAuthed } from "@/lib/auth";
 import { saveLegalContent } from "@/lib/legal-content-store";
 import { translateFields } from "@/lib/translate";
@@ -37,6 +38,7 @@ export async function updateLegalContentAction(
     translations,
   });
 
+  updateTag("legal-content");
   revalidatePath("/disclaimer");
   revalidatePath("/privacy-policy");
   revalidatePath("/admin/legal");

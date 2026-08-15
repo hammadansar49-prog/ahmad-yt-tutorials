@@ -4,6 +4,7 @@ import sharp from "sharp";
 import { v2 as cloudinary } from "cloudinary";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
+import { updateTag } from "next/cache";
 import { isAuthed } from "@/lib/auth";
 import { sendPushToAll } from "@/lib/push-actions";
 import { translateFields } from "@/lib/translate";
@@ -117,6 +118,7 @@ export async function createVideoAction(
     // Never block publishing a video on notification delivery failing.
   }
 
+  updateTag("videos");
   revalidatePath("/");
   revalidatePath("/admin/videos");
   redirect("/admin/videos");
@@ -176,6 +178,7 @@ export async function updateVideoAction(
     await deleteVideoBySlug(originalSlug);
   }
 
+  updateTag("videos");
   revalidatePath("/");
   revalidatePath("/admin/videos");
   revalidatePath(`/tutorial/${newSlug}`);
@@ -188,7 +191,25 @@ export async function deleteVideoAction(formData: FormData): Promise<void> {
   const slug = String(formData.get("slug") ?? "");
   await deleteVideoBySlug(slug);
 
+  updateTag("videos");
   revalidatePath("/");
   revalidatePath("/admin/videos");
   revalidatePath(`/tutorial/${slug}`);
+}
+
+export async function bulkDeleteVideosAction(
+  slugs: string[]
+): Promise<{ error?: string }> {
+  if (!(await isAuthed())) return { error: "Not authorized." };
+  if (slugs.length === 0) return {};
+
+  await Promise.all(slugs.map((slug) => deleteVideoBySlug(slug)));
+
+  updateTag("videos");
+  revalidatePath("/");
+  revalidatePath("/admin/videos");
+  for (const slug of slugs) {
+    revalidatePath(`/tutorial/${slug}`);
+  }
+  return {};
 }

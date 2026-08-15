@@ -1,3 +1,4 @@
+import { unstable_cache } from "next/cache";
 import { adminDb } from "@/lib/firebase-admin";
 
 export type SocialLink = {
@@ -20,10 +21,14 @@ export type SiteContent = {
 
 const contentDocRef = () => adminDb.collection("config").doc("site-content");
 
-export async function getSiteContent(): Promise<SiteContent> {
+async function fetchSiteContent(): Promise<SiteContent> {
   const snap = await contentDocRef().get();
   return snap.data() as SiteContent;
 }
+
+export const getSiteContent = unstable_cache(fetchSiteContent, ["site-content"], {
+  tags: ["site-content"],
+});
 
 export async function saveSiteContent(content: SiteContent): Promise<void> {
   await contentDocRef().set(content);

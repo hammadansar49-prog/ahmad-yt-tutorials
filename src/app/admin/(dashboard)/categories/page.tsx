@@ -3,8 +3,6 @@ import { getVideos } from "@/lib/videos-store";
 import AddCategoryForm from "./AddCategoryForm";
 import CategoryRow from "./CategoryRow";
 
-export const dynamic = "force-dynamic";
-
 export default async function CategoriesPage() {
   const [categories, videos] = await Promise.all([
     getCategories(),
