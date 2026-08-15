@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { isAuthed } from "@/lib/auth";
 import { sendPushToAll } from "@/lib/push-actions";
+import { translateFields } from "@/lib/translate";
 import {
   getVideos,
   addOrUpdateVideo,
@@ -88,6 +89,10 @@ export async function createVideoAction(
 
   const slug = await uniqueSlug(title);
 
+  const translations = await translateFields({ title, description }).catch(
+    () => undefined
+  );
+
   const newVideo: Video = {
     slug,
     title,
@@ -97,6 +102,7 @@ export async function createVideoAction(
     category,
     tools,
     prompt,
+    translations,
   };
 
   await addOrUpdateVideo(newVideo);
@@ -148,6 +154,11 @@ export async function updateVideoAction(
       ? existing.slug
       : await uniqueSlug(title, existing.slug);
 
+  const textChanged = title !== existing.title || description !== existing.description;
+  const translations = textChanged
+    ? await translateFields({ title, description }).catch(() => existing.translations)
+    : existing.translations;
+
   const updated: Video = {
     slug: newSlug,
     title,
@@ -157,6 +168,7 @@ export async function updateVideoAction(
     category,
     tools,
     prompt,
+    translations,
   };
 
   await addOrUpdateVideo(updated);

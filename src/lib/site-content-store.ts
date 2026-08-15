@@ -14,6 +14,8 @@ export type SiteContent = {
   email: string;
   youtubeUrl: string;
   socials: SocialLink[];
+  // { [languageCode]: { aboutDescription, contactDescription } }
+  translations?: Record<string, Record<string, string>>;
 };
 
 const contentDocRef = () => adminDb.collection("config").doc("site-content");

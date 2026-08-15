@@ -12,6 +12,8 @@ export type Video = {
   prompt: string;
   views?: number;
   likes?: number;
+  // { [languageCode]: { title, description } }
+  translations?: Record<string, Record<string, string>>;
 };
 
 const videosCollection = () => adminDb.collection("videos");

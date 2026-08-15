@@ -9,6 +9,7 @@ import LiveVideoMeta from "@/components/LiveVideoMeta";
 import LiveComments from "@/components/LiveComments";
 import CommentForm from "@/components/CommentForm";
 import PageViewTracker from "@/components/PageViewTracker";
+import TranslatedText from "@/components/TranslatedText";
 
 export const dynamic = "force-dynamic";
 
@@ -71,7 +72,13 @@ export default async function TutorialPage({
         <h1 className="text-2xl sm:text-3xl font-extrabold text-white mt-6">
           {video.title}
         </h1>
-        <p className="mt-2 text-white/60">{video.description}</p>
+        <TranslatedText
+          as="p"
+          className="mt-2 text-white/60"
+          original={video.description}
+          translations={video.translations}
+          field="description"
+        />
 
         <LiveVideoMeta
           slug={video.slug}

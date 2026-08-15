@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { isAuthed } from "@/lib/auth";
 import { saveLegalContent } from "@/lib/legal-content-store";
+import { translateFields } from "@/lib/translate";
 
 export type LegalContentFormState = { error?: string; success?: boolean };
 
@@ -21,11 +22,17 @@ export async function updateLegalContentAction(
     return { error: "Please fill in all required fields." };
   }
 
+  const translations = await translateFields({
+    disclaimerBody,
+    privacyBody,
+  }).catch(() => undefined);
+
   await saveLegalContent({
     disclaimerHeading,
     disclaimerBody,
     privacyHeading,
     privacyBody,
+    translations,
   });
 
   revalidatePath("/disclaimer");

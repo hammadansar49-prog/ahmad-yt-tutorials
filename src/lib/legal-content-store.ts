@@ -5,6 +5,8 @@ export type LegalContent = {
   disclaimerBody: string;
   privacyHeading: string;
   privacyBody: string;
+  // { [languageCode]: { disclaimerBody, privacyBody } }
+  translations?: Record<string, Record<string, string>>;
 };
 
 const legalDocRef = () => adminDb.collection("config").doc("legal-content");

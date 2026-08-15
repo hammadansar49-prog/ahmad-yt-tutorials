@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { isAuthed } from "@/lib/auth";
 import { saveSiteContent, type SocialLink } from "@/lib/site-content-store";
+import { translateFields } from "@/lib/translate";
 
 export type SiteContentFormState = { error?: string; success?: boolean };
 
@@ -37,6 +38,11 @@ export async function updateSiteContentAction(
     return { error: "Please fill in all required fields." };
   }
 
+  const translations = await translateFields({
+    aboutDescription,
+    contactDescription,
+  }).catch(() => undefined);
+
   await saveSiteContent({
     aboutHeading,
     aboutDescription,
@@ -45,6 +51,7 @@ export async function updateSiteContentAction(
     email,
     youtubeUrl,
     socials,
+    translations,
   });
 
   revalidatePath("/about");

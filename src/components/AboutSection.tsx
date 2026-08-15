@@ -1,4 +1,5 @@
 import type { SiteContent } from "@/lib/site-content-store";
+import TranslatedText from "./TranslatedText";
 
 const steps = [
   {
@@ -44,9 +45,13 @@ export default function AboutSection({
             <Heading className="text-3xl sm:text-5xl font-extrabold text-white mb-5">
               {content.aboutHeading}
             </Heading>
-            <p className="text-white/70 max-w-2xl mx-auto text-base sm:text-lg leading-relaxed">
-              {content.aboutDescription}
-            </p>
+            <TranslatedText
+              as="p"
+              className="text-white/70 max-w-2xl mx-auto text-base sm:text-lg leading-relaxed"
+              original={content.aboutDescription}
+              translations={content.translations}
+              field="aboutDescription"
+            />
           </div>
         </section>
       )}

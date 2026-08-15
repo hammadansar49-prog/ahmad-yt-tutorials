@@ -5,6 +5,7 @@ import CustomCursor from "@/components/CustomCursor";
 import ScrollTextEffect from "@/components/ScrollTextEffect";
 import ScrollPopEffect from "@/components/ScrollPopEffect";
 import ScrollWiggle from "@/components/ScrollWiggle";
+import LanguageProvider from "@/components/LanguageProvider";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -66,9 +67,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <ScrollTextEffect />
         <ScrollPopEffect />
         <ScrollWiggle />
-        <div className="relative z-10 flex flex-col flex-1 min-h-full">
-          {children}
-        </div>
+        <LanguageProvider>
+          <div className="relative z-10 flex flex-col flex-1 min-h-full">
+            {children}
+          </div>
+        </LanguageProvider>
       </body>
     </html>
   );

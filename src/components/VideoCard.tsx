@@ -1,8 +1,11 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import type { Video } from "@/lib/videos-store";
 import LikeButton from "./LikeButton";
 import ExpandableDescription from "./ExpandableDescription";
+import { useLang } from "./LanguageProvider";
 
 export default function VideoCard({
   video,
@@ -11,6 +14,11 @@ export default function VideoCard({
   video: Video;
   commentCount?: number;
 }) {
+  const lang = useLang();
+  const title = (lang && video.translations?.[lang]?.title) || video.title;
+  const description =
+    (lang && video.translations?.[lang]?.description) || video.description;
+
   return (
     <article className="pop-card group/card h-full rounded-xl sm:rounded-2xl border border-white/10 bg-[#0d1330]/95 shadow-lg shadow-black/30 overflow-hidden flex flex-col transition-[border-color,box-shadow] duration-300 hover:border-[#3b82f6]/40 hover:shadow-[0_0_40px_-12px_rgba(59,130,246,0.5)]">
       <Link
@@ -19,7 +27,7 @@ export default function VideoCard({
       >
         <Image
           src={video.thumbnail}
-          alt={video.title}
+          alt={title}
           fill
           quality={90}
           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 400px"
@@ -46,10 +54,10 @@ export default function VideoCard({
       <div className="p-2.5 sm:p-4 flex flex-col gap-1.5 sm:gap-3 flex-1">
         <Link href={`/tutorial/${video.slug}`}>
           <h3 className="text-sm sm:text-lg font-bold text-white leading-snug hover:text-[#ff8a1c] transition line-clamp-2 min-h-[2.5em] sm:min-h-[3.5em]">
-            {video.title}
+            {title}
           </h3>
         </Link>
-        <ExpandableDescription text={video.description} />
+        <ExpandableDescription text={description} />
 
         <div className="flex items-center gap-3 sm:gap-4 text-white/60">
           <LikeButton
