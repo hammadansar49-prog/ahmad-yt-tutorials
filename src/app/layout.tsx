@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { cookies, headers } from "next/headers";
+import { cookies } from "next/headers";
 import { Geist, Geist_Mono } from "next/font/google";
 import GlowParticles from "@/components/GlowParticles";
 import CustomCursor from "@/components/CustomCursor";
@@ -7,8 +7,7 @@ import ScrollTextEffect from "@/components/ScrollTextEffect";
 import ScrollPopEffect from "@/components/ScrollPopEffect";
 import ScrollWiggle from "@/components/ScrollWiggle";
 import LanguageProvider from "@/components/LanguageProvider";
-import { resolveCountry } from "@/lib/geo";
-import { languageForCountry } from "@/lib/country-language-map";
+import TranslatePrompt from "@/components/TranslatePrompt";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -60,14 +59,15 @@ async function resolveLang(): Promise<string | null> {
   // layout, which every single page goes through, so *anything* thrown
   // here takes the whole site down. If it fails for any reason at all,
   // fall back to English rather than risk a site-wide crash.
+  //
+  // Language is ONLY ever switched after the visitor explicitly answers
+  // the TranslatePrompt popup (which writes this cookie) — never silently
+  // based on geo-IP alone. Until they answer, the site stays in English.
   try {
     const cookieStore = await cookies();
     const cached = cookieStore.get("site_lang")?.value;
-    if (cached) return cached === "en" ? null : cached;
-
-    const hdrs = await headers();
-    const country = await resolveCountry(hdrs);
-    return languageForCountry(country);
+    if (!cached) return null;
+    return cached === "en" ? null : cached;
   } catch {
     return null;
   }
@@ -91,6 +91,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         <ScrollPopEffect />
         <ScrollWiggle />
         <LanguageProvider initialLang={lang}>
+          <TranslatePrompt />
           <div className="relative z-10 flex flex-col flex-1 min-h-full">
             {children}
           </div>

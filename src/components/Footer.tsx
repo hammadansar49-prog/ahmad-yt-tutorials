@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { getSiteContent } from "@/lib/site-content-store";
 
@@ -8,7 +9,14 @@ export default async function Footer() {
     <footer className="relative border-t border-white/10 mt-8 bg-[#06102b]/60 backdrop-blur">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-14 grid grid-cols-1 sm:grid-cols-3 gap-10">
         <div>
-          <span className="font-extrabold text-lg text-white">
+          <span className="flex items-center gap-2 font-extrabold text-lg text-white">
+            <Image
+              src="/icon.png"
+              alt="Ahmad YT Tutorial"
+              width={32}
+              height={32}
+              className="h-8 w-8 rounded-md object-cover"
+            />
             Ahmad <span className="text-[#ff6a3d]">YT</span> Tutorial
           </span>
           <p className="mt-3 text-sm text-white/60 leading-relaxed">

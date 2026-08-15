@@ -10,9 +10,9 @@ import { getSiteContent } from "@/lib/site-content-store";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Ahmad YT Tutorial - AI Video Editing, Shorts & Tutorials",
+  title: "Ahmad YT Tutorial - Free AI Video Prompts to Start Your YouTube Channel",
   description:
-    "The official website of Ahmad YT Tutorial - get the full AI prompt for every YouTube tutorial, free to copy. AI video editing, Shorts, and channel growth tips.",
+    "Learn why AI prompts matter and get the exact, tested prompts behind every Ahmad YT Tutorial video — free to copy. Start your YouTube journey with AI video editing, Shorts, and channel growth tips, no budget or editing experience needed.",
   alternates: { canonical: "/" },
 };
 

@@ -4,6 +4,8 @@ import type { Metadata } from "next";
 import { getVideoBySlug } from "@/lib/videos-store";
 import { getApprovedCommentsForVideo } from "@/lib/comments-store";
 import CopyPromptBox from "@/components/CopyPromptBox";
+import FaqSection from "@/components/FaqSection";
+import VideoEmbed from "@/components/VideoEmbed";
 import BackToTutorials from "@/components/BackToTutorials";
 import LiveVideoMeta from "@/components/LiveVideoMeta";
 import LiveComments from "@/components/LiveComments";
@@ -116,8 +118,21 @@ export default async function TutorialPage({
           rel="noopener noreferrer"
           className="mt-6 inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-[#22d3ee] to-[#3b82f6] text-[#06102b] font-semibold text-sm px-8 py-3 hover:brightness-110 transition"
         >
-          Watch Video
+          Watch on YouTube
         </a>
+
+        <div className="mt-10">
+          <h2 className="text-sm font-semibold text-white/50 uppercase tracking-wide mb-3">
+            Watch The Full Video
+          </h2>
+          <VideoEmbed
+            youtubeUrl={video.youtubeUrl}
+            thumbnail={video.thumbnail}
+            title={video.title}
+          />
+        </div>
+
+        <FaqSection faqs={video.faqs ?? []} sidePictures={video.sidePictures} />
 
         <div id="comments" className="mt-12 scroll-mt-20">
           <div className="mb-8">

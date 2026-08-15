@@ -13,6 +13,8 @@ export type Video = {
   prompt: string;
   views?: number;
   likes?: number;
+  faqs?: { question: string; answer: string }[];
+  sidePictures?: string[];
   // { [languageCode]: { title, description } }
   translations?: Record<string, Record<string, string>>;
 };

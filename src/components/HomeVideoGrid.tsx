@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { where } from "firebase/firestore";
 import Hero from "./Hero";
+import WhyOurPrompts from "./WhyOurPrompts";
 import VideoCard from "./VideoCard";
 import CategoryTabs from "./CategoryTabs";
 import { useFirestoreCollection } from "@/hooks/useFirestoreCollection";
@@ -71,6 +72,7 @@ export default function HomeVideoGrid({
   return (
     <>
       {!hasFilter && <Hero />}
+      {!hasFilter && <WhyOurPrompts />}
 
       <section className="max-w-6xl mx-auto px-4 sm:px-6 py-12">
         <div className="text-center mb-10">

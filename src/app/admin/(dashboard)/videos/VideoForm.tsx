@@ -5,6 +5,7 @@ import Image from "next/image";
 import type { VideoFormState } from "@/lib/video-actions";
 import type { Video } from "@/lib/videos-store";
 import TagInput from "@/components/TagInput";
+import FaqInput from "@/components/FaqInput";
 import CategorySelect from "@/components/CategorySelect";
 
 const initialState: VideoFormState = {};
@@ -23,6 +24,12 @@ export default function VideoForm({
 }) {
   const [state, formAction, pending] = useActionState(action, initialState);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [sidePicturePreviews, setSidePicturePreviews] = useState<string[]>([]);
+  const [sidePictureError, setSidePictureError] = useState<string | null>(
+    null
+  );
+
+  const MAX_SIDE_PICTURES = 5;
 
   return (
     <form action={formAction} className="space-y-6 max-w-2xl">
@@ -145,6 +152,78 @@ export default function VideoForm({
           className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2.5 text-white placeholder-white/30 focus:outline-none focus:border-[#ff6a3d]/60 transition font-mono text-sm"
           placeholder="Paste the full AI prompt used for this video"
         />
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-white/70 mb-1.5">
+          FAQs
+        </label>
+        <FaqInput name="faqs" defaultValue={video?.faqs} />
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-white/70 mb-1.5">
+          Side Pictures (1–5 images, shown alongside the FAQs)
+        </label>
+        {(sidePicturePreviews.length > 0 ||
+          (video?.sidePictures?.length ?? 0) > 0) && (
+          <div className="flex flex-wrap gap-2 mb-2">
+            {(sidePicturePreviews.length > 0
+              ? sidePicturePreviews
+              : video!.sidePictures!
+            ).map((src, i) => (
+              <div
+                key={i}
+                className="relative w-20 h-20 rounded-lg overflow-hidden border border-white/10"
+              >
+                {sidePicturePreviews.length > 0 ? (
+                  // eslint-disable-next-line @next/next/no-img-element -- blob: preview URL, next/image can't optimize it
+                  <img
+                    src={src}
+                    alt={`Side picture preview ${i + 1}`}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <Image
+                    src={src}
+                    alt={`Side picture ${i + 1}`}
+                    fill
+                    className="object-cover"
+                  />
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+        <input
+          name="sidePictures"
+          type="file"
+          accept="image/*"
+          multiple
+          onChange={(e) => {
+            const files = Array.from(e.target.files ?? []);
+            if (files.length > MAX_SIDE_PICTURES) {
+              setSidePictureError(
+                `You can upload up to ${MAX_SIDE_PICTURES} images only.`
+              );
+              e.target.value = "";
+              setSidePicturePreviews([]);
+              return;
+            }
+            setSidePictureError(null);
+            sidePicturePreviews.forEach((url) => URL.revokeObjectURL(url));
+            setSidePicturePreviews(files.map((f) => URL.createObjectURL(f)));
+          }}
+          className="w-full text-sm text-white/70 file:mr-4 file:rounded-lg file:border-0 file:bg-white/10 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-white/20 file:transition"
+        />
+        {sidePictureError && (
+          <p className="mt-1.5 text-sm text-red-400">{sidePictureError}</p>
+        )}
+        {video && (
+          <p className="mt-1.5 text-xs text-white/40">
+            Leave empty to keep the current side pictures.
+          </p>
+        )}
       </div>
 
       {state.error && <p className="text-sm text-red-400">{state.error}</p>}

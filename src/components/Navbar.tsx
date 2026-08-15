@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
@@ -62,14 +63,44 @@ export default function Navbar() {
         <Link
           href="/"
           onClick={goHome}
-          className="font-extrabold text-base sm:text-lg text-white shrink-0"
+          className="flex items-center gap-2 font-extrabold text-base sm:text-lg text-white shrink-0"
         >
-          Ahmad <span className="text-[#ff6a3d]">YT</span> Tutorial
+          <Image
+            src="/icon.png"
+            alt="Ahmad YT Tutorial"
+            width={32}
+            height={32}
+            className="h-7 w-7 sm:h-8 sm:w-8 rounded-md object-cover"
+          />
+          <span>
+            Ahmad <span className="text-[#ff6a3d]">YT</span> Tutorial
+          </span>
         </Link>
+
+        <div className="hidden sm:flex flex-1 items-center justify-center gap-6 text-sm font-medium">
+          <Link href="/" onClick={goHome} className={navLinkClass}>
+            Home
+          </Link>
+          <Link href="/tutorials" className={navLinkClass}>
+            All Posts
+          </Link>
+          <Link href="/about" className={navLinkClass}>
+            About
+          </Link>
+          <Link href="/contact" className={navLinkClass}>
+            Contact
+          </Link>
+          <Link href="/disclaimer" className={navLinkClass}>
+            Disclaimer
+          </Link>
+          <Link href="/privacy-policy" className={navLinkClass}>
+            Privacy Policy
+          </Link>
+        </div>
 
         <form
           onSubmit={handleSearch}
-          className="flex-1 min-w-0 max-w-sm hidden sm:flex items-center"
+          className="hidden sm:flex items-center w-48 lg:w-56 shrink-0 ml-auto"
         >
           <div className="relative w-full">
             <svg
@@ -87,7 +118,7 @@ export default function Navbar() {
               value={query}
               onChange={(e) => handleChange(e.target.value)}
               placeholder="Search tutorials..."
-              className="w-full rounded-lg border border-white/10 bg-white/5 pl-9 pr-9 py-2 text-sm text-white placeholder-white/40 focus:outline-none focus:border-[#ff6a3d]/60 transition"
+              className="w-full rounded-lg border border-white/10 bg-gray-700/60 pl-9 pr-9 py-2 text-sm text-white placeholder-white/40 focus:outline-none focus:border-[#ff6a3d]/60 transition"
             />
             {query && (
               <button
@@ -110,31 +141,14 @@ export default function Navbar() {
           </div>
         </form>
 
-        <div className="hidden sm:flex items-center gap-6 text-sm font-medium ml-auto">
-          <Link href="/" onClick={goHome} className={navLinkClass}>
-            Home
-          </Link>
-          <Link href="/about" className={navLinkClass}>
-            About
-          </Link>
-          <Link href="/contact" className={navLinkClass}>
-            Contact
-          </Link>
-          <Link href="/disclaimer" className={navLinkClass}>
-            Disclaimer
-          </Link>
-          <Link href="/privacy-policy" className={navLinkClass}>
-            Privacy Policy
-          </Link>
-          <a
-            href="https://www.youtube.com/@AhmadYTTutorial?sub_confirmation=1"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="rounded-lg bg-gradient-to-r from-[#ff2d55] to-[#ff8a1c] px-4 py-2 text-white font-semibold hover:brightness-110 transition whitespace-nowrap"
-          >
-            Subscribe
-          </a>
-        </div>
+        <a
+          href="https://www.youtube.com/@AhmadYTTutorial?sub_confirmation=1"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hidden sm:inline-flex shrink-0 rounded-lg bg-gradient-to-r from-[#ff2d55] to-[#ff8a1c] px-4 py-2 text-sm text-white font-semibold hover:brightness-110 transition whitespace-nowrap"
+        >
+          Subscribe
+        </a>
 
         <button
           type="button"
@@ -159,36 +173,42 @@ export default function Navbar() {
         </button>
       </nav>
 
-      <form onSubmit={handleSearch} className="sm:hidden px-4 pb-3">
-        <div className="relative w-full">
-          <svg
-            viewBox="0 0 24 24"
-            className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-          >
-            <circle cx="11" cy="11" r="7" />
-            <path d="m20 20-3.5-3.5" strokeLinecap="round" />
-          </svg>
-          <input
-            type="text"
-            value={query}
-            onChange={(e) => handleChange(e.target.value)}
-            placeholder="Search tutorials..."
-            className="w-full rounded-lg border border-white/10 bg-white/5 pl-9 pr-3 py-2 text-sm text-white placeholder-white/40 focus:outline-none focus:border-[#ff6a3d]/60 transition"
-          />
-        </div>
-      </form>
-
       {menuOpen && (
         <div className="sm:hidden border-t border-white/10 px-4 py-3 space-y-1 bg-[#06102b]">
+          <form onSubmit={handleSearch} className="mb-2">
+            <div className="relative w-full">
+              <svg
+                viewBox="0 0 24 24"
+                className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <circle cx="11" cy="11" r="7" />
+                <path d="m20 20-3.5-3.5" strokeLinecap="round" />
+              </svg>
+              <input
+                type="text"
+                value={query}
+                onChange={(e) => handleChange(e.target.value)}
+                placeholder="Search tutorials..."
+                className="w-full rounded-lg border border-white/10 bg-gray-700/60 pl-9 pr-3 py-2 text-sm text-white placeholder-white/40 focus:outline-none focus:border-[#ff6a3d]/60 transition"
+              />
+            </div>
+          </form>
           <Link
             href="/"
             onClick={goHome}
             className="block rounded-lg px-3 py-2.5 text-white/80 hover:bg-white/5 hover:text-white transition"
           >
             Home
+          </Link>
+          <Link
+            href="/tutorials"
+            onClick={() => setMenuOpen(false)}
+            className="block rounded-lg px-3 py-2.5 text-white/80 hover:bg-white/5 hover:text-white transition"
+          >
+            All Posts
           </Link>
           <Link
             href="/about"

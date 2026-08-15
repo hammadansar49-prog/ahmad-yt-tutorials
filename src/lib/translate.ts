@@ -9,19 +9,34 @@ const TARGET_LANGUAGES = [
   "ar", "fr", "es", "pt", "de", "it", "ru", "tr", "zh-CN", "ja", "ko", "id",
 ];
 
+// Hashtag/URL-heavy captions (e.g. "#aivideo #aitutorial ...") confuse
+// MyMemory's crowd-sourced matching and are a common cause of it returning
+// garbled or transliterated (e.g. Franco-Arabic "Roman Arabic") results
+// instead of a real translation. Stripping them before translating and
+// re-appending afterward keeps the translation quality high without
+// losing the hashtags from the stored text.
+function splitHashtagsAndUrls(text: string): { body: string; tail: string } {
+  const match = text.match(/\s*((?:[#@]\S+|https?:\/\/\S+)(?:\s+(?:[#@]\S+|https?:\/\/\S+))*)\s*$/);
+  if (!match) return { body: text, tail: "" };
+  return { body: text.slice(0, match.index).trim(), tail: match[1] };
+}
+
 async function translateOne(text: string, lang: string): Promise<string> {
   const trimmed = text.trim();
   if (!trimmed) return text;
+  const { body, tail } = splitHashtagsAndUrls(trimmed);
+  if (!body) return text;
   try {
     const res = await fetch(
       `https://api.mymemory.translated.net/get?q=${encodeURIComponent(
-        trimmed.slice(0, 480)
+        body.slice(0, 480)
       )}&langpair=en|${lang}`,
       { signal: AbortSignal.timeout(8000) }
     );
     const data = await res.json();
     const translated = data?.responseData?.translatedText;
-    return typeof translated === "string" && translated.trim() ? translated : text;
+    if (typeof translated !== "string" || !translated.trim()) return text;
+    return tail ? `${translated} ${tail}` : translated;
   } catch {
     return text; // never fail the caller's save over a translation hiccup
   }

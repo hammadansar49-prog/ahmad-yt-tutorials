@@ -56,11 +56,36 @@ async function saveThumbnail(file: File): Promise<string | null> {
   return result.secure_url;
 }
 
+const MAX_SIDE_PICTURES = 5;
+
+async function saveSidePictures(files: File[]): Promise<string[]> {
+  const usable = files.filter((f) => f && f.size > 0).slice(0, MAX_SIDE_PICTURES);
+  const uploaded = await Promise.all(usable.map((f) => saveThumbnail(f)));
+  return uploaded.filter((url): url is string => Boolean(url));
+}
+
 function parseTools(raw: string): string[] {
   return raw
     .split(",")
     .map((t) => t.trim())
     .filter(Boolean);
+}
+
+function parseFaqs(raw: string): { question: string; answer: string }[] {
+  try {
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+    return parsed.filter(
+      (f) =>
+        f &&
+        typeof f.question === "string" &&
+        typeof f.answer === "string" &&
+        f.question.trim() &&
+        f.answer.trim()
+    );
+  } catch {
+    return [];
+  }
 }
 
 export type VideoFormState = { error?: string };
@@ -76,8 +101,10 @@ export async function createVideoAction(
   const category = String(formData.get("category") ?? "").trim();
   const youtubeUrl = String(formData.get("youtubeUrl") ?? "").trim();
   const tools = parseTools(String(formData.get("tools") ?? ""));
+  const faqs = parseFaqs(String(formData.get("faqs") ?? "[]"));
   const prompt = String(formData.get("prompt") ?? "").trim();
   const thumbnailFile = formData.get("thumbnail") as File | null;
+  const sidePictureFiles = formData.getAll("sidePictures") as File[];
 
   if (!title || !description || !category || !youtubeUrl || !prompt) {
     return { error: "Please fill in all required fields." };
@@ -87,6 +114,8 @@ export async function createVideoAction(
   if (!thumbnail) {
     return { error: "Please upload a thumbnail image." };
   }
+
+  const sidePictures = await saveSidePictures(sidePictureFiles);
 
   const slug = await uniqueSlug(title);
 
@@ -103,6 +132,8 @@ export async function createVideoAction(
     category,
     tools,
     prompt,
+    faqs,
+    sidePictures,
     translations,
   };
 
@@ -136,8 +167,10 @@ export async function updateVideoAction(
   const category = String(formData.get("category") ?? "").trim();
   const youtubeUrl = String(formData.get("youtubeUrl") ?? "").trim();
   const tools = parseTools(String(formData.get("tools") ?? ""));
+  const faqs = parseFaqs(String(formData.get("faqs") ?? "[]"));
   const prompt = String(formData.get("prompt") ?? "").trim();
   const thumbnailFile = formData.get("thumbnail") as File | null;
+  const sidePictureFiles = formData.getAll("sidePictures") as File[];
 
   if (!title || !description || !category || !youtubeUrl || !prompt) {
     return { error: "Please fill in all required fields." };
@@ -150,6 +183,12 @@ export async function updateVideoAction(
   const uploadedThumbnail = thumbnailFile
     ? await saveThumbnail(thumbnailFile)
     : null;
+
+  const uploadedSidePictures = await saveSidePictures(sidePictureFiles);
+  const sidePictures =
+    uploadedSidePictures.length > 0
+      ? uploadedSidePictures
+      : existing.sidePictures ?? [];
 
   const newSlug =
     title.trim() === existing.title.trim()
@@ -170,6 +209,8 @@ export async function updateVideoAction(
     category,
     tools,
     prompt,
+    faqs,
+    sidePictures,
     translations,
   };
 
