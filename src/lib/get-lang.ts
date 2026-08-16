@@ -1,10 +1,6 @@
-import { cookies } from "next/headers";
-
-/** Server-side read of the visitor's translation language (see proxy.ts / layout.tsx). */
+/** Auto-translation was removed — the site now always renders its original content. */
 export async function getLang(): Promise<string | null> {
-  const cookieStore = await cookies();
-  const cached = cookieStore.get("site_lang")?.value;
-  return cached && cached !== "en" ? cached : null;
+  return null;
 }
 
 export function pickTranslation(

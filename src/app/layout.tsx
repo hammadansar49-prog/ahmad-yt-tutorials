@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { cookies } from "next/headers";
 import { Geist, Geist_Mono } from "next/font/google";
 import GlowParticles from "@/components/GlowParticles";
 import CustomCursor from "@/components/CustomCursor";
@@ -7,7 +6,6 @@ import ScrollTextEffect from "@/components/ScrollTextEffect";
 import ScrollPopEffect from "@/components/ScrollPopEffect";
 import ScrollWiggle from "@/components/ScrollWiggle";
 import LanguageProvider from "@/components/LanguageProvider";
-import TranslatePrompt from "@/components/TranslatePrompt";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -54,28 +52,7 @@ export const metadata: Metadata = {
   },
 };
 
-async function resolveLang(): Promise<string | null> {
-  // Everything in here is defensive on purpose: this runs in the root
-  // layout, which every single page goes through, so *anything* thrown
-  // here takes the whole site down. If it fails for any reason at all,
-  // fall back to English rather than risk a site-wide crash.
-  //
-  // Language is ONLY ever switched after the visitor explicitly answers
-  // the TranslatePrompt popup (which writes this cookie) — never silently
-  // based on geo-IP alone. Until they answer, the site stays in English.
-  try {
-    const cookieStore = await cookies();
-    const cached = cookieStore.get("site_lang")?.value;
-    if (!cached) return null;
-    return cached === "en" ? null : cached;
-  } catch {
-    return null;
-  }
-}
-
 export default async function RootLayout({ children }: LayoutProps<"/">) {
-  const lang = await resolveLang();
-
   return (
     <html
       lang="en"
@@ -90,8 +67,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         <ScrollTextEffect />
         <ScrollPopEffect />
         <ScrollWiggle />
-        <LanguageProvider initialLang={lang}>
-          <TranslatePrompt />
+        <LanguageProvider initialLang={null}>
           <div className="relative z-10 flex flex-col flex-1 min-h-full">
             {children}
           </div>
