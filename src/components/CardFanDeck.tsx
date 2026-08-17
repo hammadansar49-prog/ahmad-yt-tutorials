@@ -125,18 +125,18 @@ export default function CardFanDeck({
               zIndex: isHovered ? 50 : i,
               transition: `transform 550ms ${FLOW_EASE}, opacity 500ms ${FLOW_EASE}, box-shadow 550ms ${FLOW_EASE}, border-color 550ms ${FLOW_EASE}`,
             }}
-            className={`relative w-36 sm:w-56 lg:w-64 shrink-0 rounded-2xl border bg-[#0d1330] p-3.5 sm:p-5 lg:p-6 shadow-[0_22px_35px_-12px_rgba(0,0,0,0.65)] ${
-              i === 0 ? "" : "-ml-7 sm:-ml-14"
+            className={`relative w-[26vw] sm:w-56 lg:w-64 shrink-0 rounded-2xl border bg-[#0d1330] p-2 sm:p-5 lg:p-6 shadow-[0_22px_35px_-12px_rgba(0,0,0,0.65)] ${
+              i === 0 ? "" : "-ml-[11vw] sm:-ml-14"
             } ${
               isHovered
                 ? "border-[#ff6a3d]/60 shadow-2xl shadow-black/70"
                 : "border-white/10"
             }`}
           >
-            <h3 className="text-sm sm:text-base lg:text-lg font-bold text-white mb-2">
+            <h3 className="text-[10px] leading-tight sm:text-base lg:text-lg sm:leading-normal font-bold text-white mb-1 sm:mb-2">
               {item.title}
             </h3>
-            <p className="text-xs sm:text-sm text-white/60 leading-relaxed">
+            <p className="text-[9px] leading-snug sm:text-sm sm:leading-relaxed text-white/60">
               {item.text}
             </p>
           </div>
