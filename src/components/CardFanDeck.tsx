@@ -31,6 +31,7 @@ export default function CardFanDeck({
   items: { title: string; text: string }[];
 }) {
   const [hovered, setHovered] = useState<number | null>(null);
+  const [expanded, setExpanded] = useState<number | null>(null);
   const [revealed, setRevealed] = useState<boolean[]>(() =>
     items.map(() => false)
   );
@@ -96,52 +97,84 @@ export default function CardFanDeck({
   }, [items.length]);
 
   return (
-    <div
-      ref={deckRef}
-      className="flex justify-start sm:justify-center py-8 overflow-x-auto sm:overflow-visible px-4 sm:px-0 -mx-4 sm:mx-0"
-    >
-      {items.map((item, i) => {
-        const isHovered = hovered === i;
-        const isRevealed = revealed[i];
-        const tilt = TILTS[i % TILTS.length];
+    <>
+      <div
+        ref={deckRef}
+        className="flex justify-start sm:justify-center py-8 overflow-x-auto sm:overflow-visible px-4 sm:px-0 -mx-4 sm:mx-0"
+      >
+        {items.map((item, i) => {
+          const isHovered = hovered === i;
+          const isRevealed = revealed[i];
+          const tilt = TILTS[i % TILTS.length];
 
-        let transform: string;
-        if (isHovered) {
-          transform = "translateY(-52px) rotate(0deg) scale(1.12)";
-        } else if (isRevealed) {
-          transform = `translateY(0) rotate(${tilt}deg) scale(1)`;
-        } else {
-          transform = "translateY(56px) rotate(0deg) scale(0.94)";
-        }
+          let transform: string;
+          if (isHovered) {
+            transform = "translateY(-52px) rotate(0deg) scale(1.12)";
+          } else if (isRevealed) {
+            transform = `translateY(0) rotate(${tilt}deg) scale(1)`;
+          } else {
+            transform = "translateY(56px) rotate(0deg) scale(0.94)";
+          }
 
-        return (
+          return (
+            <div
+              key={item.title}
+              onMouseEnter={(e) => handleHover(e, i)}
+              onMouseLeave={() => setHovered(null)}
+              onClick={() => setExpanded(i)}
+              style={{
+                transform,
+                opacity: isRevealed || isHovered ? 1 : 0,
+                zIndex: isHovered ? 50 : i,
+                transition: `transform 550ms ${FLOW_EASE}, opacity 500ms ${FLOW_EASE}, box-shadow 550ms ${FLOW_EASE}, border-color 550ms ${FLOW_EASE}`,
+              }}
+              className={`relative w-[26vw] sm:w-56 lg:w-64 shrink-0 rounded-2xl border bg-[#0d1330] p-2 sm:p-5 lg:p-6 shadow-[0_22px_35px_-12px_rgba(0,0,0,0.65)] cursor-pointer ${
+                i === 0 ? "" : "-ml-[6vw] sm:-ml-14"
+              } ${
+                isHovered
+                  ? "border-[#ff6a3d]/60 shadow-2xl shadow-black/70"
+                  : "border-white/10"
+              }`}
+            >
+              <h3 className="text-[10px] leading-tight sm:text-base lg:text-lg sm:leading-normal font-bold text-white mb-1 sm:mb-2">
+                {item.title}
+              </h3>
+              <p className="text-[9px] leading-snug sm:text-sm sm:leading-relaxed text-white/60">
+                {item.text}
+              </p>
+            </div>
+          );
+        })}
+      </div>
+
+      {expanded !== null && (
+        <div
+          className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 p-4"
+          onClick={() => setExpanded(null)}
+        >
           <div
-            key={item.title}
-            onMouseEnter={(e) => handleHover(e, i)}
-            onMouseLeave={() => setHovered(null)}
-            style={{
-              transform,
-              opacity: isRevealed || isHovered ? 1 : 0,
-              zIndex: isHovered ? 50 : i,
-              transition: `transform 550ms ${FLOW_EASE}, opacity 500ms ${FLOW_EASE}, box-shadow 550ms ${FLOW_EASE}, border-color 550ms ${FLOW_EASE}`,
-            }}
-            className={`relative w-[26vw] sm:w-56 lg:w-64 shrink-0 rounded-2xl border bg-[#0d1330] p-2 sm:p-5 lg:p-6 shadow-[0_22px_35px_-12px_rgba(0,0,0,0.65)] ${
-              i === 0 ? "" : "-ml-[6vw] sm:-ml-14"
-            } ${
-              isHovered
-                ? "border-[#ff6a3d]/60 shadow-2xl shadow-black/70"
-                : "border-white/10"
-            }`}
+            className="w-full max-w-sm max-h-[80vh] overflow-y-auto rounded-2xl border border-[#ff6a3d]/60 bg-[#0d1330] p-5 shadow-2xl shadow-black/70"
+            onClick={(e) => e.stopPropagation()}
           >
-            <h3 className="text-[10px] leading-tight sm:text-base lg:text-lg sm:leading-normal font-bold text-white mb-1 sm:mb-2">
-              {item.title}
-            </h3>
-            <p className="text-[9px] leading-snug sm:text-sm sm:leading-relaxed text-white/60">
-              {item.text}
+            <div className="flex items-start justify-between gap-3 mb-2">
+              <h3 className="text-base font-bold text-white">
+                {items[expanded].title}
+              </h3>
+              <button
+                type="button"
+                onClick={() => setExpanded(null)}
+                aria-label="Close"
+                className="shrink-0 text-white/60 hover:text-white transition text-xl leading-none"
+              >
+                ×
+              </button>
+            </div>
+            <p className="text-sm text-white/60 leading-relaxed">
+              {items[expanded].text}
             </p>
           </div>
-        );
-      })}
-    </div>
+        </div>
+      )}
+    </>
   );
 }
