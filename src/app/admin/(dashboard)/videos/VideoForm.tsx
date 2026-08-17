@@ -7,6 +7,7 @@ import type { Video } from "@/lib/videos-store";
 import TagInput from "@/components/TagInput";
 import AutoGrowTextarea from "@/components/AutoGrowTextarea";
 import FaqInput from "@/components/FaqInput";
+import PromptListInput from "@/components/PromptListInput";
 import CategorySelect from "@/components/CategorySelect";
 
 const initialState: VideoFormState = {};
@@ -145,14 +146,7 @@ export default function VideoForm({
         <label className="block text-sm font-medium text-white/70 mb-1.5">
           AI Prompt *
         </label>
-        <AutoGrowTextarea
-          name="prompt"
-          required
-          rows={6}
-          defaultValue={video?.prompt}
-          className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2.5 text-white placeholder-white/30 focus:outline-none focus:border-[#ff6a3d]/60 transition font-mono text-sm"
-          placeholder="Paste the full AI prompt used for this video"
-        />
+        <PromptListInput name="prompts" defaultValue={video?.prompts} />
       </div>
 
       <div>

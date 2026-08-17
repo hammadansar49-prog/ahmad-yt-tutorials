@@ -2,7 +2,13 @@
 
 import { useState } from "react";
 
-export default function CopyPromptBox({ prompt }: { prompt: string }) {
+export default function CopyPromptBox({
+  prompt,
+  label = "Master Prompt",
+}: {
+  prompt: string;
+  label?: string;
+}) {
   const [copied, setCopied] = useState(false);
   const [expanded, setExpanded] = useState(false);
 
@@ -33,7 +39,7 @@ export default function CopyPromptBox({ prompt }: { prompt: string }) {
       <div className="rounded-lg border border-white/10 bg-black overflow-hidden">
         <div className="flex items-center justify-between px-4 py-2 bg-white/5 border-b border-white/10">
           <span className="text-xs font-medium text-white/60 tracking-wide">
-            Master Prompt
+            {label}
           </span>
           <div className="flex items-center gap-2">
             <IconButton title="Copy" onClick={handleCopy}>

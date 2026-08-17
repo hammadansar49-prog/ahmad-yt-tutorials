@@ -10,7 +10,7 @@ export type Video = {
   youtubeUrl: string;
   category: string;
   tools: string[];
-  prompt: string;
+  prompts: string[];
   views?: number;
   likes?: number;
   faqs?: { question: string; answer: string }[];
@@ -21,9 +21,21 @@ export type Video = {
 
 const videosCollection = () => adminDb.collection("videos");
 
+// Older docs stored a single `prompt: string` field before multi-prompt
+// support was added — normalize those into the `prompts` array on read.
+function normalizeVideo(data: FirebaseFirestore.DocumentData): Video {
+  const legacyPrompt = (data as { prompt?: string }).prompt;
+  const prompts = Array.isArray(data.prompts)
+    ? data.prompts
+    : legacyPrompt
+    ? [legacyPrompt]
+    : [];
+  return { ...(data as Video), prompts };
+}
+
 async function fetchVideos(): Promise<Video[]> {
   const snap = await videosCollection().get();
-  return snap.docs.map((d) => d.data() as Video);
+  return snap.docs.map((d) => normalizeVideo(d.data()));
 }
 
 export const getVideos = unstable_cache(fetchVideos, ["videos"], {
@@ -61,7 +73,7 @@ export async function toggleLike(
 export async function getVideoBySlug(slug: string): Promise<Video | undefined> {
   const snap = await videosCollection().doc(slug).get();
   if (!snap.exists) return undefined;
-  return snap.data() as Video;
+  return normalizeVideo(snap.data()!);
 }
 
 export async function saveVideos(videos: Video[]): Promise<void> {

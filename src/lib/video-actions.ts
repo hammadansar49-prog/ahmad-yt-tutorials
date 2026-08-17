@@ -71,6 +71,19 @@ function parseTools(raw: string): string[] {
     .filter(Boolean);
 }
 
+function parsePrompts(raw: string): string[] {
+  try {
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+    return parsed
+      .filter((p): p is string => typeof p === "string")
+      .map((p) => p.trim())
+      .filter(Boolean);
+  } catch {
+    return [];
+  }
+}
+
 function parseFaqs(raw: string): { question: string; answer: string }[] {
   try {
     const parsed = JSON.parse(raw);
@@ -102,11 +115,11 @@ export async function createVideoAction(
   const youtubeUrl = String(formData.get("youtubeUrl") ?? "").trim();
   const tools = parseTools(String(formData.get("tools") ?? ""));
   const faqs = parseFaqs(String(formData.get("faqs") ?? "[]"));
-  const prompt = String(formData.get("prompt") ?? "").trim();
+  const prompts = parsePrompts(String(formData.get("prompts") ?? "[]"));
   const thumbnailFile = formData.get("thumbnail") as File | null;
   const sidePictureFiles = formData.getAll("sidePictures") as File[];
 
-  if (!title || !description || !category || !youtubeUrl || !prompt) {
+  if (!title || !description || !category || !youtubeUrl || prompts.length === 0) {
     return { error: "Please fill in all required fields." };
   }
 
@@ -131,7 +144,7 @@ export async function createVideoAction(
     youtubeUrl,
     category,
     tools,
-    prompt,
+    prompts,
     faqs,
     sidePictures,
     translations,
@@ -168,11 +181,11 @@ export async function updateVideoAction(
   const youtubeUrl = String(formData.get("youtubeUrl") ?? "").trim();
   const tools = parseTools(String(formData.get("tools") ?? ""));
   const faqs = parseFaqs(String(formData.get("faqs") ?? "[]"));
-  const prompt = String(formData.get("prompt") ?? "").trim();
+  const prompts = parsePrompts(String(formData.get("prompts") ?? "[]"));
   const thumbnailFile = formData.get("thumbnail") as File | null;
   const sidePictureFiles = formData.getAll("sidePictures") as File[];
 
-  if (!title || !description || !category || !youtubeUrl || !prompt) {
+  if (!title || !description || !category || !youtubeUrl || prompts.length === 0) {
     return { error: "Please fill in all required fields." };
   }
 
@@ -208,7 +221,7 @@ export async function updateVideoAction(
     youtubeUrl,
     category,
     tools,
-    prompt,
+    prompts,
     faqs,
     sidePictures,
     translations,

@@ -108,8 +108,18 @@ export default async function TutorialPage({
           </div>
         </div>
 
-        <div className="mt-8">
-          <CopyPromptBox prompt={video.prompt} />
+        <div className="mt-8 space-y-4">
+          {video.prompts.map((prompt, i) => (
+            <CopyPromptBox
+              key={i}
+              prompt={prompt}
+              label={
+                video.prompts.length > 1
+                  ? `Master Prompt ${i + 1}`
+                  : "Master Prompt"
+              }
+            />
+          ))}
         </div>
 
         <a
