@@ -126,7 +126,7 @@ export default function CardFanDeck({
               transition: `transform 550ms ${FLOW_EASE}, opacity 500ms ${FLOW_EASE}, box-shadow 550ms ${FLOW_EASE}, border-color 550ms ${FLOW_EASE}`,
             }}
             className={`relative w-[26vw] sm:w-56 lg:w-64 shrink-0 rounded-2xl border bg-[#0d1330] p-2 sm:p-5 lg:p-6 shadow-[0_22px_35px_-12px_rgba(0,0,0,0.65)] ${
-              i === 0 ? "" : "-ml-[11vw] sm:-ml-14"
+              i === 0 ? "" : "-ml-[6vw] sm:-ml-14"
             } ${
               isHovered
                 ? "border-[#ff6a3d]/60 shadow-2xl shadow-black/70"
