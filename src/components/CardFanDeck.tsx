@@ -20,8 +20,9 @@ const FLOW_EASE = "cubic-bezier(0.22, 1, 0.36, 1)";
  *  - Hover: hovering a card pulls it fully upright (rotation reset to 0)
  *    and lifts it above the rest of the stack so it reads clearly.
  *
- * Collapses to a plain stacked list on narrow screens where the overlap
- * wouldn't leave room to read anything.
+ * Same fanned/overlapping look on every screen size, including mobile —
+ * card width and overlap just shrink at smaller breakpoints, and the deck
+ * scrolls horizontally if it's wider than the viewport.
  */
 export default function CardFanDeck({
   items,
@@ -94,66 +95,52 @@ export default function CardFanDeck({
   }, [items.length]);
 
   return (
-    <>
-      <div className="flex flex-col gap-4 sm:hidden">
-        {items.map((item) => (
+    <div
+      ref={deckRef}
+      className="flex justify-start sm:justify-center py-8 overflow-x-auto sm:overflow-visible px-4 sm:px-0 -mx-4 sm:mx-0"
+    >
+      {items.map((item, i) => {
+        const isHovered = hovered === i;
+        const isRevealed = revealed[i];
+        const tilt = TILTS[i % TILTS.length];
+
+        let transform: string;
+        if (isHovered) {
+          transform = "translateY(-52px) rotate(0deg) scale(1.12)";
+        } else if (isRevealed) {
+          transform = `translateY(0) rotate(${tilt}deg) scale(1)`;
+        } else {
+          transform = "translateY(56px) rotate(0deg) scale(0.94)";
+        }
+
+        return (
           <div
             key={item.title}
-            className="rounded-xl border border-white/10 bg-[#0d1330]/90 p-5"
+            onMouseEnter={(e) => handleHover(e, i)}
+            onMouseLeave={() => setHovered(null)}
+            style={{
+              transform,
+              opacity: isRevealed || isHovered ? 1 : 0,
+              zIndex: isHovered ? 50 : i,
+              transition: `transform 550ms ${FLOW_EASE}, opacity 500ms ${FLOW_EASE}, box-shadow 550ms ${FLOW_EASE}, border-color 550ms ${FLOW_EASE}`,
+            }}
+            className={`relative w-44 sm:w-56 lg:w-64 shrink-0 rounded-2xl border bg-[#0d1330] p-4 sm:p-5 lg:p-6 shadow-[0_22px_35px_-12px_rgba(0,0,0,0.65)] ${
+              i === 0 ? "ml-0" : "-ml-9 sm:-ml-14"
+            } ${
+              isHovered
+                ? "border-[#ff6a3d]/60 shadow-2xl shadow-black/70"
+                : "border-white/10"
+            }`}
           >
-            <h3 className="text-base font-bold text-white mb-2">
+            <h3 className="text-base lg:text-lg font-bold text-white mb-2">
               {item.title}
             </h3>
             <p className="text-sm text-white/60 leading-relaxed">
               {item.text}
             </p>
           </div>
-        ))}
-      </div>
-
-      <div ref={deckRef} className="hidden sm:flex justify-center py-8">
-        {items.map((item, i) => {
-          const isHovered = hovered === i;
-          const isRevealed = revealed[i];
-          const tilt = TILTS[i % TILTS.length];
-
-          let transform: string;
-          if (isHovered) {
-            transform = "translateY(-52px) rotate(0deg) scale(1.12)";
-          } else if (isRevealed) {
-            transform = `translateY(0) rotate(${tilt}deg) scale(1)`;
-          } else {
-            transform = "translateY(56px) rotate(0deg) scale(0.94)";
-          }
-
-          return (
-            <div
-              key={item.title}
-              onMouseEnter={(e) => handleHover(e, i)}
-              onMouseLeave={() => setHovered(null)}
-              style={{
-                transform,
-                opacity: isRevealed || isHovered ? 1 : 0,
-                zIndex: isHovered ? 50 : i,
-                marginLeft: i === 0 ? 0 : -56,
-                transition: `transform 550ms ${FLOW_EASE}, opacity 500ms ${FLOW_EASE}, box-shadow 550ms ${FLOW_EASE}, border-color 550ms ${FLOW_EASE}`,
-              }}
-              className={`relative w-56 lg:w-64 shrink-0 rounded-2xl border bg-[#0d1330] p-5 lg:p-6 shadow-[0_22px_35px_-12px_rgba(0,0,0,0.65)] ${
-                isHovered
-                  ? "border-[#ff6a3d]/60 shadow-2xl shadow-black/70"
-                  : "border-white/10"
-              }`}
-            >
-              <h3 className="text-base lg:text-lg font-bold text-white mb-2">
-                {item.title}
-              </h3>
-              <p className="text-sm text-white/60 leading-relaxed">
-                {item.text}
-              </p>
-            </div>
-          );
-        })}
-      </div>
-    </>
+        );
+      })}
+    </div>
   );
 }
