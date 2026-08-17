@@ -1,18 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useSyncExternalStore } from "react";
-
-const DESKTOP_QUERY = "(min-width: 640px)";
-
-function subscribeDesktop(callback: () => void) {
-  const mq = window.matchMedia(DESKTOP_QUERY);
-  mq.addEventListener("change", callback);
-  return () => mq.removeEventListener("change", callback);
-}
-
-function getIsDesktop() {
-  return window.matchMedia(DESKTOP_QUERY).matches;
-}
+import { useEffect, useRef, useState } from "react";
 
 const TILTS = [-4, 2, -2, 3, -3];
 // Smooth, no-bounce "water flow" easing — glides to a stop instead of
@@ -32,11 +20,10 @@ const FLOW_EASE = "cubic-bezier(0.22, 1, 0.36, 1)";
  *  - Hover: hovering a card pulls it fully upright (rotation reset to 0)
  *    and lifts it above the rest of the stack so it reads clearly.
  *
- * Same fanned/overlapping deck on desktop. Below the sm breakpoint the
- * overlap and tilt are dropped in favor of a swipeable, scroll-snapping
- * carousel of near-full-width cards — every card fully fits within
- * whatever the device's screen width is, instead of overlapping cards
- * clipping each other or bleeding off the right edge.
+ * The exact same fanned/tilted/overlapping design renders at every screen
+ * size — only the card width and overlap amount scale down on narrow
+ * screens (via responsive Tailwind classes) so the deck still fits and
+ * scrolls smoothly instead of needing a different mobile layout.
  */
 export default function CardFanDeck({
   items,
@@ -46,11 +33,6 @@ export default function CardFanDeck({
   const [hovered, setHovered] = useState<number | null>(null);
   const [revealed, setRevealed] = useState<boolean[]>(() =>
     items.map(() => false)
-  );
-  const isDesktop = useSyncExternalStore(
-    subscribeDesktop,
-    getIsDesktop,
-    () => false
   );
   const deckRef = useRef<HTMLDivElement>(null);
 
@@ -116,24 +98,20 @@ export default function CardFanDeck({
   return (
     <div
       ref={deckRef}
-      className="flex justify-start sm:justify-center py-8 gap-4 sm:gap-0 overflow-x-auto sm:overflow-visible snap-x snap-mandatory sm:snap-none px-4 sm:px-0 -mx-4 sm:mx-0"
+      className="flex justify-start sm:justify-center py-8 overflow-x-auto sm:overflow-visible px-4 sm:px-0 -mx-4 sm:mx-0"
     >
       {items.map((item, i) => {
         const isHovered = hovered === i;
         const isRevealed = revealed[i];
-        const tilt = isDesktop ? TILTS[i % TILTS.length] : 0;
+        const tilt = TILTS[i % TILTS.length];
 
         let transform: string;
         if (isHovered) {
-          transform = isDesktop
-            ? "translateY(-52px) rotate(0deg) scale(1.12)"
-            : "translateY(0) rotate(0deg) scale(1)";
+          transform = "translateY(-52px) rotate(0deg) scale(1.12)";
         } else if (isRevealed) {
           transform = `translateY(0) rotate(${tilt}deg) scale(1)`;
         } else {
-          transform = `translateY(${isDesktop ? 56 : 16}px) rotate(0deg) scale(${
-            isDesktop ? 0.94 : 1
-          })`;
+          transform = "translateY(56px) rotate(0deg) scale(0.94)";
         }
 
         return (
@@ -147,18 +125,18 @@ export default function CardFanDeck({
               zIndex: isHovered ? 50 : i,
               transition: `transform 550ms ${FLOW_EASE}, opacity 500ms ${FLOW_EASE}, box-shadow 550ms ${FLOW_EASE}, border-color 550ms ${FLOW_EASE}`,
             }}
-            className={`relative w-[82vw] sm:w-56 lg:w-64 max-w-sm shrink-0 snap-center sm:snap-align-none rounded-2xl border bg-[#0d1330] p-5 lg:p-6 shadow-[0_22px_35px_-12px_rgba(0,0,0,0.65)] ${
-              i === 0 ? "ml-0" : "sm:-ml-14"
+            className={`relative w-36 sm:w-56 lg:w-64 shrink-0 rounded-2xl border bg-[#0d1330] p-3.5 sm:p-5 lg:p-6 shadow-[0_22px_35px_-12px_rgba(0,0,0,0.65)] ${
+              i === 0 ? "" : "-ml-7 sm:-ml-14"
             } ${
               isHovered
                 ? "border-[#ff6a3d]/60 shadow-2xl shadow-black/70"
                 : "border-white/10"
             }`}
           >
-            <h3 className="text-base lg:text-lg font-bold text-white mb-2">
+            <h3 className="text-sm sm:text-base lg:text-lg font-bold text-white mb-2">
               {item.title}
             </h3>
-            <p className="text-sm text-white/60 leading-relaxed">
+            <p className="text-xs sm:text-sm text-white/60 leading-relaxed">
               {item.text}
             </p>
           </div>
