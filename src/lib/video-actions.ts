@@ -64,16 +64,31 @@ async function saveThumbnail(file: File): Promise<string | null> {
 
   const publicId = `${Date.now()}-${Math.round(Math.random() * 1e6)}`;
 
-  const result = await new Promise<{ secure_url: string }>((resolve, reject) => {
-    const stream = cloudinary.uploader.upload_stream(
-      { folder: "uploads", public_id: publicId, format: "webp" },
-      (error, uploadResult) => {
-        if (error || !uploadResult) return reject(error);
-        resolve(uploadResult);
-      }
-    );
-    stream.end(optimizedBuffer);
-  });
+  // cloudinary's upload_stream has no built-in timeout: if the outbound
+  // connection from the host stalls (flaky network, DNS hiccup, firewall),
+  // this promise would otherwise hang forever, holding the request open
+  // until the hosting platform itself kills the connection. That kind of
+  // forced kill never produces an application error log and looks to the
+  // browser like the page simply failed to load. Race it against our own
+  // timeout so the failure is fast and visible instead.
+  const result = await Promise.race([
+    new Promise<{ secure_url: string }>((resolve, reject) => {
+      const stream = cloudinary.uploader.upload_stream(
+        { folder: "uploads", public_id: publicId, format: "webp" },
+        (error, uploadResult) => {
+          if (error || !uploadResult) return reject(error);
+          resolve(uploadResult);
+        }
+      );
+      stream.end(optimizedBuffer);
+    }),
+    new Promise<never>((_, reject) =>
+      setTimeout(
+        () => reject(new Error("Image upload timed out. Please try again.")),
+        20000
+      )
+    ),
+  ]);
 
   return result.secure_url;
 }
