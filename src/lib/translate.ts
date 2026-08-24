@@ -46,13 +46,16 @@ async function translateOne(text: string, lang: string): Promise<string> {
  * Translates a set of named fields into every supported language.
  * Returns e.g. { fr: { title: "...", description: "..." }, ar: { ... } }.
  */
-// Translating every language fires an outbound HTTP request per field.
-// Doing all of them at once (12 languages x N fields) opens a burst of
-// concurrent outbound connections that's enough to strain/crash the process
-// on constrained shared hosting (Hostinger). Translate a few languages at a
-// time instead so peak concurrency stays bounded.
-const LANGUAGE_BATCH_SIZE = 3;
-
+// Each translateOne() call is bounded by its own 8s AbortSignal timeout, so
+// running every language x field combination fully in parallel keeps the
+// *total* wall-clock time for this function at ~8s worst case. Serializing
+// or batching these (as a previous version of this file did) multiplies
+// that worst case by the number of batches — easily pushing the whole save
+// request past the hosting platform's request timeout, which kills the
+// connection after the Firestore write already succeeded (the save "works"
+// but the browser never sees a response). These are lightweight HTTP
+// requests, not CPU/memory heavy like image processing, so full parallelism
+// here is safe.
 export async function translateFields(
   fields: Record<string, string>
 ): Promise<Record<string, Record<string, string>>> {
@@ -60,17 +63,16 @@ export async function translateFields(
   if (entries.length === 0) return {};
 
   const result: Record<string, Record<string, string>> = {};
-  for (let i = 0; i < TARGET_LANGUAGES.length; i += LANGUAGE_BATCH_SIZE) {
-    const batch = TARGET_LANGUAGES.slice(i, i + LANGUAGE_BATCH_SIZE);
-    await Promise.all(
-      batch.map(async (lang) => {
-        const translatedFields: Record<string, string> = {};
-        for (const [key, value] of entries) {
+  await Promise.all(
+    TARGET_LANGUAGES.map(async (lang) => {
+      const translatedFields: Record<string, string> = {};
+      await Promise.all(
+        entries.map(async ([key, value]) => {
           translatedFields[key] = await translateOne(value, lang);
-        }
-        result[lang] = translatedFields;
-      })
-    );
-  }
+        })
+      );
+      result[lang] = translatedFields;
+    })
+  );
   return result;
 }
