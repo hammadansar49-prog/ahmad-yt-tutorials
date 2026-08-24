@@ -29,6 +29,12 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
+// Shared hosting (Hostinger) gives this process very limited RAM/CPU. sharp
+// defaults to using multiple threads per operation, which can spike memory
+// enough to crash the whole Node process on an upload. Capping it to 1
+// keeps resource use predictable at the cost of slightly slower resizing.
+sharp.concurrency(1);
+
 async function saveThumbnail(file: File): Promise<string | null> {
   if (!file || file.size === 0) return null;
 
@@ -60,7 +66,14 @@ const MAX_SIDE_PICTURES = 5;
 
 async function saveSidePictures(files: File[]): Promise<string[]> {
   const usable = files.filter((f) => f && f.size > 0).slice(0, MAX_SIDE_PICTURES);
-  const uploaded = await Promise.all(usable.map((f) => saveThumbnail(f)));
+  // Sequential on purpose: processing several images through sharp at once
+  // spikes memory hard, which is enough to crash the Node process outright
+  // on a low-RAM production host (Hostinger). One at a time keeps peak
+  // memory bounded regardless of how many side pictures are uploaded.
+  const uploaded: (string | null)[] = [];
+  for (const f of usable) {
+    uploaded.push(await saveThumbnail(f));
+  }
   return uploaded.filter((url): url is string => Boolean(url));
 }
 
