@@ -30,13 +30,29 @@ cloudinary.config({
 });
 
 // Shared hosting (Hostinger) gives this process very limited RAM/CPU. sharp
-// defaults to using multiple threads per operation, which can spike memory
-// enough to crash the whole Node process on an upload. Capping it to 1
-// keeps resource use predictable at the cost of slightly slower resizing.
+// defaults to using multiple threads per operation and caching decoded
+// output, both of which can spike memory enough to get the whole Node
+// process OOM-killed on a single large photo upload. Capping concurrency
+// and disabling the cache keeps resource use predictable at the cost of
+// slightly slower resizing.
 sharp.concurrency(1);
+sharp.cache(false);
+
+// A raw phone photo can be 10-20MB+; decoding one of those on a host with
+// very little RAM is itself enough to crash the process before we ever get
+// a chance to downscale it. Reject oversized uploads early with a normal
+// form error instead of letting the process die.
+const MAX_UPLOAD_BYTES = 15 * 1024 * 1024;
 
 async function saveThumbnail(file: File): Promise<string | null> {
   if (!file || file.size === 0) return null;
+  if (file.size > MAX_UPLOAD_BYTES) {
+    throw new Error(
+      `"${file.name}" is too large (${(file.size / 1024 / 1024).toFixed(
+        1
+      )}MB). Please use an image under 15MB.`
+    );
+  }
 
   const inputBuffer = Buffer.from(await file.arrayBuffer());
 
@@ -136,12 +152,19 @@ export async function createVideoAction(
     return { error: "Please fill in all required fields." };
   }
 
-  const thumbnail = thumbnailFile ? await saveThumbnail(thumbnailFile) : null;
+  let thumbnail: string | null;
+  let sidePictures: string[];
+  try {
+    thumbnail = thumbnailFile ? await saveThumbnail(thumbnailFile) : null;
+    sidePictures = await saveSidePictures(sidePictureFiles);
+  } catch (err) {
+    return {
+      error: err instanceof Error ? err.message : "Failed to process the uploaded image(s).",
+    };
+  }
   if (!thumbnail) {
     return { error: "Please upload a thumbnail image." };
   }
-
-  const sidePictures = await saveSidePictures(sidePictureFiles);
 
   const slug = await uniqueSlug(title);
 
@@ -206,11 +229,16 @@ export async function updateVideoAction(
   const existing = videos.find((v) => v.slug === originalSlug);
   if (!existing) return { error: "Tutorial not found." };
 
-  const uploadedThumbnail = thumbnailFile
-    ? await saveThumbnail(thumbnailFile)
-    : null;
-
-  const uploadedSidePictures = await saveSidePictures(sidePictureFiles);
+  let uploadedThumbnail: string | null;
+  let uploadedSidePictures: string[];
+  try {
+    uploadedThumbnail = thumbnailFile ? await saveThumbnail(thumbnailFile) : null;
+    uploadedSidePictures = await saveSidePictures(sidePictureFiles);
+  } catch (err) {
+    return {
+      error: err instanceof Error ? err.message : "Failed to process the uploaded image(s).",
+    };
+  }
   const sidePictures =
     uploadedSidePictures.length > 0
       ? uploadedSidePictures
