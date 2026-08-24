@@ -1,7 +1,6 @@
 "use server";
 
 import sharp from "sharp";
-import { v2 as cloudinary } from "cloudinary";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { updateTag } from "next/cache";
@@ -16,18 +15,19 @@ import {
   type Video,
 } from "@/lib/videos-store";
 
-// Thumbnails are only ever displayed at small/medium sizes on the site, so
-// no matter how large the uploaded file is (a raw 4K photo, a phone camera
-// shot, etc.), we downscale and re-encode it as compressed WebP here. This
-// keeps page load fast regardless of what admins upload.
-const MAX_THUMBNAIL_WIDTH = 1920;
-const THUMBNAIL_QUALITY = 88;
-
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
+// Images are stored directly as base64 data URIs on the Firestore document
+// (same approach as the theottdeals site) instead of going through an
+// external image host. That removes the outbound network call entirely —
+// no third-party service to hang or fail — but a Firestore document maxes
+// out at 1MB total, and this document can hold a thumbnail plus up to 5
+// side pictures. Keep each image small enough that the whole set comfortably
+// fits: bigger/higher quality for the thumbnail (the one shown large on
+// video cards), smaller for side pictures (shown as thumbnails alongside
+// the FAQs).
+const THUMBNAIL_MAX_WIDTH = 1280;
+const THUMBNAIL_QUALITY = 80;
+const SIDE_PICTURE_MAX_WIDTH = 640;
+const SIDE_PICTURE_QUALITY = 72;
 
 // Shared hosting (Hostinger) gives this process very limited RAM/CPU. sharp
 // defaults to using multiple threads per operation and caching decoded
@@ -44,7 +44,10 @@ sharp.cache(false);
 // form error instead of letting the process die.
 const MAX_UPLOAD_BYTES = 15 * 1024 * 1024;
 
-async function saveThumbnail(file: File): Promise<string | null> {
+async function processImage(
+  file: File,
+  { maxWidth, quality }: { maxWidth: number; quality: number }
+): Promise<string | null> {
   if (!file || file.size === 0) return null;
   if (file.size > MAX_UPLOAD_BYTES) {
     throw new Error(
@@ -58,39 +61,18 @@ async function saveThumbnail(file: File): Promise<string | null> {
 
   const optimizedBuffer = await sharp(inputBuffer)
     .rotate() // respect EXIF orientation before resizing
-    .resize({ width: MAX_THUMBNAIL_WIDTH, withoutEnlargement: true })
-    .webp({ quality: THUMBNAIL_QUALITY })
+    .resize({ width: maxWidth, withoutEnlargement: true })
+    .webp({ quality })
     .toBuffer();
 
-  const publicId = `${Date.now()}-${Math.round(Math.random() * 1e6)}`;
+  return `data:image/webp;base64,${optimizedBuffer.toString("base64")}`;
+}
 
-  // cloudinary's upload_stream has no built-in timeout: if the outbound
-  // connection from the host stalls (flaky network, DNS hiccup, firewall),
-  // this promise would otherwise hang forever, holding the request open
-  // until the hosting platform itself kills the connection. That kind of
-  // forced kill never produces an application error log and looks to the
-  // browser like the page simply failed to load. Race it against our own
-  // timeout so the failure is fast and visible instead.
-  const result = await Promise.race([
-    new Promise<{ secure_url: string }>((resolve, reject) => {
-      const stream = cloudinary.uploader.upload_stream(
-        { folder: "uploads", public_id: publicId, format: "webp" },
-        (error, uploadResult) => {
-          if (error || !uploadResult) return reject(error);
-          resolve(uploadResult);
-        }
-      );
-      stream.end(optimizedBuffer);
-    }),
-    new Promise<never>((_, reject) =>
-      setTimeout(
-        () => reject(new Error("Image upload timed out. Please try again.")),
-        20000
-      )
-    ),
-  ]);
-
-  return result.secure_url;
+async function saveThumbnail(file: File): Promise<string | null> {
+  return processImage(file, {
+    maxWidth: THUMBNAIL_MAX_WIDTH,
+    quality: THUMBNAIL_QUALITY,
+  });
 }
 
 const MAX_SIDE_PICTURES = 5;
@@ -103,9 +85,30 @@ async function saveSidePictures(files: File[]): Promise<string[]> {
   // memory bounded regardless of how many side pictures are uploaded.
   const uploaded: (string | null)[] = [];
   for (const f of usable) {
-    uploaded.push(await saveThumbnail(f));
+    uploaded.push(
+      await processImage(f, {
+        maxWidth: SIDE_PICTURE_MAX_WIDTH,
+        quality: SIDE_PICTURE_QUALITY,
+      })
+    );
   }
   return uploaded.filter((url): url is string => Boolean(url));
+}
+
+// Firestore rejects writes over 1MB per document outright. Rather than let
+// that surface as an opaque Firestore error (or worse, a hung request),
+// check it ourselves first and give the admin a clear, actionable message.
+const MAX_DOC_BYTES = 950_000;
+
+function assertFitsInDoc(video: Video): void {
+  const size = Buffer.byteLength(JSON.stringify(video));
+  if (size > MAX_DOC_BYTES) {
+    throw new Error(
+      `These images are too large to save together (${(size / 1024).toFixed(
+        0
+      )}KB, limit ~${(MAX_DOC_BYTES / 1024).toFixed(0)}KB). Try uploading fewer side pictures or smaller images.`
+    );
+  }
 }
 
 function parseTools(raw: string): string[] {
@@ -201,6 +204,12 @@ export async function createVideoAction(
     translations,
   };
 
+  try {
+    assertFitsInDoc(newVideo);
+  } catch (err) {
+    return { error: err instanceof Error ? err.message : "Images too large to save." };
+  }
+
   await addOrUpdateVideo(newVideo);
 
   try {
@@ -282,6 +291,12 @@ export async function updateVideoAction(
     sidePictures,
     translations,
   };
+
+  try {
+    assertFitsInDoc(updated);
+  } catch (err) {
+    return { error: err instanceof Error ? err.message : "Images too large to save." };
+  }
 
   await addOrUpdateVideo(updated);
   if (newSlug !== originalSlug) {
