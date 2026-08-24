@@ -1,14 +1,21 @@
 import Link from "next/link";
-import { getVideos } from "@/lib/videos-store";
+import { getVideos, thumbnailSrc } from "@/lib/videos-store";
 import { getCommentCounts, getPendingCommentCounts } from "@/lib/comments-store";
 import VideosList from "./VideosList";
 
 export default async function AdminVideosPage() {
-  const [videos, commentCounts, pendingCounts] = await Promise.all([
+  const [allVideos, commentCounts, pendingCounts] = await Promise.all([
     getVideos(),
     getCommentCounts(),
     getPendingCommentCounts(),
   ]);
+
+  // Swap the full base64 thumbnail for a short image URL before this ever
+  // reaches the client component below — otherwise every video's full
+  // image data gets embedded into this page's payload, which is heavy
+  // enough (with several videos at once) to blow past the hosting
+  // platform's response time.
+  const videos = allVideos.map((v) => ({ ...v, thumbnail: thumbnailSrc(v) }));
 
   return (
     <div>

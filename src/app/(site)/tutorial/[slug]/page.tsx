@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { getVideoBySlug } from "@/lib/videos-store";
+import { getVideoBySlug, thumbnailSrc, sidePictureSrc } from "@/lib/videos-store";
 import { getApprovedCommentsForVideo } from "@/lib/comments-store";
 import CopyPromptBox from "@/components/CopyPromptBox";
 import FaqSection from "@/components/FaqSection";
@@ -29,13 +29,13 @@ export async function generateMetadata({
       title: video.title,
       description: video.description,
       type: "article",
-      images: [video.thumbnail],
+      images: [thumbnailSrc(video)],
     },
     twitter: {
       card: "summary_large_image",
       title: video.title,
       description: video.description,
-      images: [video.thumbnail],
+      images: [thumbnailSrc(video)],
     },
   };
 }
@@ -58,7 +58,7 @@ export default async function TutorialPage({
 
         <div className="relative w-full aspect-video rounded-2xl overflow-hidden border border-white/10">
           <Image
-            src={video.thumbnail}
+            src={thumbnailSrc(video)}
             alt={video.title}
             fill
             priority
@@ -137,12 +137,15 @@ export default async function TutorialPage({
           </h2>
           <VideoEmbed
             youtubeUrl={video.youtubeUrl}
-            thumbnail={video.thumbnail}
+            thumbnail={thumbnailSrc(video)}
             title={video.title}
           />
         </div>
 
-        <FaqSection faqs={video.faqs ?? []} sidePictures={video.sidePictures} />
+        <FaqSection
+          faqs={video.faqs ?? []}
+          sidePictures={video.sidePictures?.map((_, i) => sidePictureSrc(video, i))}
+        />
 
         <div id="comments" className="mt-12 scroll-mt-20">
           <div className="mb-8">

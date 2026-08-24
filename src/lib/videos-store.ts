@@ -21,6 +21,28 @@ export type Video = {
 
 const videosCollection = () => adminDb.collection("videos");
 
+// Thumbnail/side pictures are stored as base64 data URIs on the document
+// itself. Rendering that raw data URI directly in a page embeds the full
+// image bytes into that page's HTML every time — fine for a single image,
+// but heavy once a page lists several videos at once (admin list, home
+// grid). These helpers instead point at /api/image/, which serves the same
+// bytes as a normal cacheable image response, keeping the page itself
+// small. Anything that isn't a data: URI (e.g. a leftover externally
+// hosted URL) is returned as-is.
+export function thumbnailSrc(video: Pick<Video, "slug" | "thumbnail">): string {
+  if (!video.thumbnail?.startsWith("data:")) return video.thumbnail;
+  return `/api/image/${video.slug}/thumbnail`;
+}
+
+export function sidePictureSrc(
+  video: Pick<Video, "slug" | "sidePictures">,
+  index: number
+): string {
+  const src = video.sidePictures?.[index] ?? "";
+  if (!src.startsWith("data:")) return src;
+  return `/api/image/${video.slug}/side-${index}`;
+}
+
 // Older docs stored a single `prompt: string` field before multi-prompt
 // support was added — normalize those into the `prompts` array on read.
 function normalizeVideo(data: FirebaseFirestore.DocumentData): Video {
