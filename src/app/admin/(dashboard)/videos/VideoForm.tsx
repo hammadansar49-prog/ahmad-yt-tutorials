@@ -30,11 +30,33 @@ export default function VideoForm({
   const [sidePictureError, setSidePictureError] = useState<string | null>(
     null
   );
+  const [onWorking, setOnWorking] = useState(video?.onWorking ?? false);
 
   const MAX_SIDE_PICTURES = 5;
 
   return (
     <form action={formAction} className="space-y-6 max-w-2xl">
+      <div className="flex items-start gap-3 rounded-lg border border-[#ff6a3d]/30 bg-[#ff6a3d]/5 px-4 py-3">
+        <input
+          id="onWorking"
+          name="onWorking"
+          type="checkbox"
+          checked={onWorking}
+          onChange={(e) => setOnWorking(e.target.checked)}
+          className="mt-0.5 w-4 h-4 rounded accent-[#ff6a3d]"
+        />
+        <label htmlFor="onWorking" className="cursor-pointer select-none">
+          <span className="block text-sm font-semibold text-white">
+            On Working
+          </span>
+          <span className="block text-xs text-white/50 mt-0.5">
+            Publish this tutorial to the site now, before it&apos;s uploaded to
+            YouTube. YouTube link becomes optional — add it later once the
+            video is live there.
+          </span>
+        </label>
+      </div>
+
       <div>
         <label className="block text-sm font-medium text-white/70 mb-1.5">
           Title *
@@ -79,12 +101,12 @@ export default function VideoForm({
         </div>
         <div>
           <label className="block text-sm font-medium text-white/70 mb-1.5">
-            YouTube Video URL *
+            YouTube Video URL {onWorking ? "(optional while On Working)" : "*"}
           </label>
           <input
             name="youtubeUrl"
             type="url"
-            required
+            required={!onWorking}
             defaultValue={video?.youtubeUrl}
             className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2.5 text-white placeholder-white/30 focus:outline-none focus:border-[#ff6a3d]/60 transition"
             placeholder="https://www.youtube.com/watch?v=..."

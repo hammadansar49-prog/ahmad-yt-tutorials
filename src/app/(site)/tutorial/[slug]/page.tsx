@@ -122,14 +122,16 @@ export default async function TutorialPage({
           ))}
         </div>
 
-        <a
-          href={video.youtubeUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mt-6 inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-[#22d3ee] to-[#3b82f6] text-[#06102b] font-semibold text-sm px-8 py-3 hover:brightness-110 transition"
-        >
-          Watch on YouTube
-        </a>
+        {video.youtubeUrl && (
+          <a
+            href={video.youtubeUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-6 inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-[#22d3ee] to-[#3b82f6] text-[#06102b] font-semibold text-sm px-8 py-3 hover:brightness-110 transition"
+          >
+            Watch on YouTube
+          </a>
+        )}
 
         <div className="mt-10">
           <h2 className="text-sm font-semibold text-white/50 uppercase tracking-wide mb-3">

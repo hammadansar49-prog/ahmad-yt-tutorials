@@ -160,13 +160,20 @@ export async function createVideoAction(
   const description = String(formData.get("description") ?? "").trim();
   const category = String(formData.get("category") ?? "").trim();
   const youtubeUrl = String(formData.get("youtubeUrl") ?? "").trim();
+  const onWorking = formData.get("onWorking") === "on";
   const tools = parseTools(String(formData.get("tools") ?? ""));
   const faqs = parseFaqs(String(formData.get("faqs") ?? "[]"));
   const prompts = parsePrompts(String(formData.get("prompts") ?? "[]"));
   const thumbnailFile = formData.get("thumbnail") as File | null;
   const sidePictureFiles = formData.getAll("sidePictures") as File[];
 
-  if (!title || !description || !category || !youtubeUrl || prompts.length === 0) {
+  if (
+    !title ||
+    !description ||
+    !category ||
+    (!onWorking && !youtubeUrl) ||
+    prompts.length === 0
+  ) {
     return { error: "Please fill in all required fields." };
   }
 
@@ -201,6 +208,7 @@ export async function createVideoAction(
     prompts,
     faqs,
     sidePictures,
+    onWorking,
     translations,
   };
 
@@ -212,20 +220,24 @@ export async function createVideoAction(
 
   await addOrUpdateVideo(newVideo);
 
-  try {
-    await sendPushToAll({
-      title: "New Tutorial: " + title,
-      body: description,
-      url: `/tutorial/${slug}`,
-    });
-  } catch {
-    // Never block publishing a video on notification delivery failing.
+  // Don't announce a tutorial that's still "On Working" (no real YouTube
+  // link yet) — the push notification is for real releases.
+  if (!onWorking) {
+    try {
+      await sendPushToAll({
+        title: "New Tutorial: " + title,
+        body: description,
+        url: `/tutorial/${slug}`,
+      });
+    } catch {
+      // Never block publishing a video on notification delivery failing.
+    }
   }
 
   updateTag("videos");
   revalidatePath("/");
   revalidatePath("/admin/videos");
-  redirect("/admin/videos");
+  redirect("/admin/videos?saved=1");
 }
 
 export async function updateVideoAction(
@@ -239,13 +251,20 @@ export async function updateVideoAction(
   const description = String(formData.get("description") ?? "").trim();
   const category = String(formData.get("category") ?? "").trim();
   const youtubeUrl = String(formData.get("youtubeUrl") ?? "").trim();
+  const onWorking = formData.get("onWorking") === "on";
   const tools = parseTools(String(formData.get("tools") ?? ""));
   const faqs = parseFaqs(String(formData.get("faqs") ?? "[]"));
   const prompts = parsePrompts(String(formData.get("prompts") ?? "[]"));
   const thumbnailFile = formData.get("thumbnail") as File | null;
   const sidePictureFiles = formData.getAll("sidePictures") as File[];
 
-  if (!title || !description || !category || !youtubeUrl || prompts.length === 0) {
+  if (
+    !title ||
+    !description ||
+    !category ||
+    (!onWorking && !youtubeUrl) ||
+    prompts.length === 0
+  ) {
     return { error: "Please fill in all required fields." };
   }
 
@@ -289,6 +308,7 @@ export async function updateVideoAction(
     prompts,
     faqs,
     sidePictures,
+    onWorking,
     translations,
   };
 
@@ -307,7 +327,7 @@ export async function updateVideoAction(
   revalidatePath("/");
   revalidatePath("/admin/videos");
   revalidatePath(`/tutorial/${newSlug}`);
-  redirect("/admin/videos");
+  redirect("/admin/videos?edited=1");
 }
 
 export async function deleteVideoAction(formData: FormData): Promise<void> {

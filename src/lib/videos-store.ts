@@ -15,6 +15,11 @@ export type Video = {
   likes?: number;
   faqs?: { question: string; answer: string }[];
   sidePictures?: string[];
+  // "On Working": the tutorial is published on the site (prompt, images,
+  // etc.) before the video has been uploaded to YouTube yet. While true,
+  // youtubeUrl may be empty — the site hides the "Watch on YouTube" link
+  // and embed play button until a real link is added later.
+  onWorking?: boolean;
   // { [languageCode]: { title, description } }
   translations?: Record<string, Record<string, string>>;
 };

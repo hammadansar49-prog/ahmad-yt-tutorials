@@ -89,14 +89,16 @@ export default function VideoCard({
           >
             View Prompt
           </Link>
-          <a
-            href={video.youtubeUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-[#22d3ee] to-[#3b82f6] text-[#06102b] font-semibold text-xs sm:text-sm py-1.5 sm:py-2 hover:brightness-110 transition"
-          >
-            Watch on YouTube
-          </a>
+          {video.youtubeUrl && (
+            <a
+              href={video.youtubeUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-[#22d3ee] to-[#3b82f6] text-[#06102b] font-semibold text-xs sm:text-sm py-1.5 sm:py-2 hover:brightness-110 transition"
+            >
+              Watch on YouTube
+            </a>
+          )}
         </div>
       </div>
     </article>

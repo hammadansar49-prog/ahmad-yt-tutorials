@@ -1,7 +1,9 @@
+import { Suspense } from "react";
 import Link from "next/link";
 import { getVideos, thumbnailSrc } from "@/lib/videos-store";
 import { getCommentCounts, getPendingCommentCounts } from "@/lib/comments-store";
 import VideosList from "./VideosList";
+import SavedBanner from "./SavedBanner";
 
 // Admins land here right after adding/editing a tutorial and need to see
 // the change immediately, not a cached snapshot from before their edit.
@@ -41,6 +43,10 @@ export default async function AdminVideosPage() {
           + Add New
         </Link>
       </div>
+
+      <Suspense fallback={null}>
+        <SavedBanner />
+      </Suspense>
 
       <VideosList
         videos={videos}
