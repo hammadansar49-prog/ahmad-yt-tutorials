@@ -3,6 +3,14 @@ import { getVideos, thumbnailSrc } from "@/lib/videos-store";
 import { getCommentCounts, getPendingCommentCounts } from "@/lib/comments-store";
 import VideosList from "./VideosList";
 
+// Admins land here right after adding/editing a tutorial and need to see
+// the change immediately, not a cached snapshot from before their edit.
+// Without this, Next.js can serve a cached version of this route even
+// though the underlying data cache was already invalidated (via
+// updateTag("videos") in video-actions.ts), which is what made the list
+// look stale until a manual hard refresh.
+export const dynamic = "force-dynamic";
+
 export default async function AdminVideosPage() {
   const [allVideos, commentCounts, pendingCounts] = await Promise.all([
     getVideos(),
