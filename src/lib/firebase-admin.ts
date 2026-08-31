@@ -1,6 +1,5 @@
 import { cert, getApps, initializeApp, type App } from "firebase-admin/app";
 import { getFirestore, type Firestore } from "firebase-admin/firestore";
-import { getStorage } from "firebase-admin/storage";
 
 // Lazy on purpose: some hosts (e.g. Hostinger) don't expose environment
 // variables during `next build`, only once the app is actually running.
@@ -8,7 +7,7 @@ import { getStorage } from "firebase-admin/storage";
 // build's page-data-collection step for any route that imports this file)
 // would throw and fail the build even though the vars are perfectly fine
 // at runtime. Nothing here actually touches Firebase until a request
-// handler calls into adminDb/adminBucket/getAdminApp.
+// handler calls into adminDb/getAdminApp.
 let cachedApp: App | null = null;
 
 export function getAdminApp(): App {
@@ -77,20 +76,3 @@ export const adminDb: Firestore = new Proxy({} as Firestore, {
     return typeof value === "function" ? value.bind(db) : value;
   },
 }) as Firestore;
-
-let cachedBucket: ReturnType<ReturnType<typeof getStorage>["bucket"]> | null = null;
-function realBucket() {
-  if (!cachedBucket) cachedBucket = getStorage(getAdminApp()).bucket();
-  return cachedBucket;
-}
-
-export const adminBucket = new Proxy(
-  {} as ReturnType<ReturnType<typeof getStorage>["bucket"]>,
-  {
-    get(_target, prop) {
-      const bucket = realBucket();
-      const value = Reflect.get(bucket as object, prop, bucket);
-      return typeof value === "function" ? value.bind(bucket) : value;
-    },
-  }
-);
