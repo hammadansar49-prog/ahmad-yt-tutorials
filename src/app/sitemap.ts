@@ -4,6 +4,11 @@ import { ARTICLES } from "@/lib/articles-data";
 
 const BASE_URL = "https://ahmadyttutorial.com";
 
+// Safety net on top of the on-demand revalidatePath("/sitemap.xml") calls in
+// video-actions.ts: even if that ever gets missed, the sitemap self-heals
+// within a minute instead of staying stale until the next deploy.
+export const revalidate = 60;
+
 const STATIC_ROUTES = [
   "",
   "/tutorials",

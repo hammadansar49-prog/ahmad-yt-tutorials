@@ -237,6 +237,7 @@ export async function createVideoAction(
   updateTag("videos");
   revalidatePath("/");
   revalidatePath("/admin/videos");
+  revalidatePath("/sitemap.xml");
   redirect("/admin/videos?saved=1");
 }
 
@@ -327,6 +328,7 @@ export async function updateVideoAction(
   revalidatePath("/");
   revalidatePath("/admin/videos");
   revalidatePath(`/tutorial/${newSlug}`);
+  revalidatePath("/sitemap.xml");
   redirect("/admin/videos?edited=1");
 }
 
@@ -340,6 +342,7 @@ export async function deleteVideoAction(formData: FormData): Promise<void> {
   revalidatePath("/");
   revalidatePath("/admin/videos");
   revalidatePath(`/tutorial/${slug}`);
+  revalidatePath("/sitemap.xml");
 }
 
 export async function bulkDeleteVideosAction(
@@ -356,5 +359,6 @@ export async function bulkDeleteVideosAction(
   for (const slug of slugs) {
     revalidatePath(`/tutorial/${slug}`);
   }
+  revalidatePath("/sitemap.xml");
   return {};
 }
