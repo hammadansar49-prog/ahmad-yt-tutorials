@@ -18,7 +18,7 @@ export default function LiveVideoMeta({
   const likes = video?.likes ?? initialVideo.likes ?? 0;
 
   return (
-    <div className="mt-4 flex items-center gap-5 text-white/60">
+    <div className="mt-4 flex items-center gap-5 text-muted">
       <span className="inline-flex items-center gap-1.5 text-sm">
         <svg
           viewBox="0 0 24 24"
@@ -35,7 +35,7 @@ export default function LiveVideoMeta({
       <LikeButton slug={slug} initialLikes={likes} />
       <a
         href="#comments"
-        className="inline-flex items-center gap-1.5 text-sm hover:text-white transition"
+        className="inline-flex items-center gap-1.5 text-sm hover:text-ink transition"
       >
         <svg
           viewBox="0 0 24 24"

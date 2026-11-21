@@ -36,15 +36,19 @@ export default function CopyPromptBox({
 
   return (
     <>
-      <div className="rounded-lg border border-white/10 bg-black overflow-hidden">
-        <div className="flex items-center justify-between px-4 py-2 bg-white/5 border-b border-white/10">
-          <span className="text-xs font-medium text-white/60 tracking-wide">
+      <div className="rounded-lg border border-line bg-white overflow-hidden shadow-[0_12px_30px_-20px_rgba(11,11,15,0.3)]">
+        <div className="flex items-center justify-between px-4 py-2 bg-soft border-b border-line">
+          <span className="text-xs font-medium text-muted tracking-wide">
             {label}
           </span>
           <div className="flex items-center gap-2">
-            <IconButton title="Copy" onClick={handleCopy}>
-              {copied ? <CheckIcon /> : <CopyIcon />}
-            </IconButton>
+            <button
+              type="button"
+              onClick={handleCopy}
+              className="inline-flex items-center gap-1.5 rounded-md bg-ink px-3 py-1.5 text-xs font-medium text-white hover:bg-brand active:scale-95"
+            >
+              {copied ? "Copied!" : "Copy Code"}
+            </button>
             <IconButton title="Expand" onClick={() => setExpanded(true)}>
               <ExpandIcon />
             </IconButton>
@@ -53,7 +57,7 @@ export default function CopyPromptBox({
             </IconButton>
           </div>
         </div>
-        <pre className="px-4 py-3 font-mono text-sm text-gray-200 whitespace-pre-wrap break-words leading-relaxed max-h-[40rem] overflow-y-auto">
+        <pre className="px-4 py-3 font-mono text-sm text-ink whitespace-pre-wrap break-words leading-relaxed max-h-[40rem] overflow-y-auto">
           {prompt}
         </pre>
       </div>
@@ -64,11 +68,11 @@ export default function CopyPromptBox({
           onClick={() => setExpanded(false)}
         >
           <div
-            className="w-full max-w-3xl max-h-[85vh] rounded-lg border border-white/10 bg-black overflow-hidden flex flex-col"
+            className="w-full max-w-3xl max-h-[85vh] rounded-lg border border-line bg-white overflow-hidden shadow-[0_12px_30px_-20px_rgba(11,11,15,0.3)] flex flex-col"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between px-4 py-2 bg-white/5 border-b border-white/10">
-              <span className="text-xs font-medium text-white/60 tracking-wide">
+            <div className="flex items-center justify-between px-4 py-2 bg-soft border-b border-line">
+              <span className="text-xs font-medium text-muted tracking-wide">
                 Master Prompt
               </span>
               <div className="flex items-center gap-2">
@@ -83,7 +87,7 @@ export default function CopyPromptBox({
                 </IconButton>
               </div>
             </div>
-            <pre className="px-4 py-3 font-mono text-sm text-gray-200 whitespace-pre-wrap break-words leading-relaxed overflow-y-auto">
+            <pre className="px-4 py-3 font-mono text-sm text-ink whitespace-pre-wrap break-words leading-relaxed overflow-y-auto">
               {prompt}
             </pre>
           </div>
@@ -107,7 +111,7 @@ function IconButton({
       onClick={onClick}
       title={title}
       aria-label={title}
-      className="flex items-center justify-center h-7 w-7 rounded-md text-white/70 hover:text-white hover:bg-white/10 active:scale-90 transition"
+      className="flex items-center justify-center h-7 w-7 rounded-md text-[#2a2a33] hover:text-ink hover:bg-soft active:scale-90 transition"
     >
       {children}
     </button>
@@ -125,7 +129,7 @@ function CopyIcon() {
 
 function CheckIcon() {
   return (
-    <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4 text-emerald-400" stroke="currentColor" strokeWidth="2">
+    <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4 text-emerald-600" stroke="currentColor" strokeWidth="2">
       <path d="M20 6 9 17l-5-5" />
     </svg>
   );

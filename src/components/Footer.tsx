@@ -5,92 +5,70 @@ import { getSiteContent } from "@/lib/site-content-store";
 export default async function Footer() {
   const content = await getSiteContent();
 
+  const quickLinks = [
+    { href: "/", label: "Home" },
+    { href: "/tutorials", label: "All Posts" },
+    { href: "/articles", label: "Articles" },
+    { href: "/about", label: "About" },
+    { href: "/contact", label: "Contact" },
+    { href: "/disclaimer", label: "Disclaimer" },
+    { href: "/privacy-policy", label: "Privacy Policy" },
+  ];
+
   return (
-    <footer className="relative border-t border-white/10 mt-8 bg-[#06102b]/60 backdrop-blur">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-14 grid grid-cols-1 sm:grid-cols-3 gap-10">
+    <footer className="relative mt-8 border-t border-line bg-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-16 pb-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr] gap-12">
         <div>
-          <span className="flex items-center gap-2 font-extrabold text-lg text-white">
+          <span className="flex items-center gap-3 font-semibold text-lg tracking-tight text-ink">
             <Image
               src="/icon.png"
-              alt="Ahmad YT Tutorial"
-              width={32}
-              height={32}
-              className="h-8 w-8 rounded-md object-cover"
+              alt=""
+              width={48}
+              height={48}
+              className="h-12 w-12 rounded-full object-cover"
             />
-            Ahmad <span className="text-[#ff6a3d]">YT</span> Tutorial
+            Ahmad YT Tutorial
           </span>
-          <p className="mt-3 text-sm text-white/60 leading-relaxed">
+          <p className="mt-4 max-w-sm text-sm text-muted leading-relaxed">
             {content.aboutDescription}
           </p>
+          <a
+            href={`${content.youtubeUrl}?sub_confirmation=1`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-6 inline-flex rounded-lg bg-brand px-5 py-3 text-sm font-medium text-white hover:bg-brand-dark"
+          >
+            Subscribe on YouTube
+          </a>
         </div>
 
         <div>
-          <h3 className="text-sm font-semibold text-white uppercase tracking-wide mb-4">
+          <h3 className="text-xs font-semibold text-muted uppercase tracking-[0.12em] mb-5">
             Quick Links
           </h3>
-          <ul className="space-y-2 text-sm">
-            <li>
-              <Link href="/" className="nav-link-fx text-white/70 hover:text-white transition">
-                Home
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/about"
-                className="nav-link-fx text-white/70 hover:text-white transition"
-              >
-                About
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/contact"
-                className="nav-link-fx text-white/70 hover:text-white transition"
-              >
-                Contact
-              </Link>
-            </li>
-            <li>
-              <a
-                href={content.youtubeUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="nav-link-fx text-white/70 hover:text-white transition"
-              >
-                YouTube Channel
-              </a>
-            </li>
-            <li>
-              <Link
-                href="/disclaimer"
-                className="nav-link-fx text-white/70 hover:text-white transition"
-              >
-                Disclaimer
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/privacy-policy"
-                className="nav-link-fx text-white/70 hover:text-white transition"
-              >
-                Privacy Policy
-              </Link>
-            </li>
+          <ul className="space-y-2.5 text-[15px]">
+            {quickLinks.map((l) => (
+              <li key={l.href}>
+                <Link href={l.href} className="nav-link-fx text-ink hover:text-brand">
+                  {l.label}
+                </Link>
+              </li>
+            ))}
           </ul>
         </div>
 
         <div>
-          <h3 className="text-sm font-semibold text-white uppercase tracking-wide mb-4">
+          <h3 className="text-xs font-semibold text-muted uppercase tracking-[0.12em] mb-5">
             Get In Touch
           </h3>
-          <ul className="space-y-2 text-sm">
+          <ul className="space-y-2.5 text-[15px]">
             {content.socials.map((s) => (
               <li key={s.name}>
                 <a
                   href={s.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="nav-link-fx text-white/70 hover:text-white transition"
+                  className="nav-link-fx text-ink hover:text-brand"
                 >
                   {s.name}
                 </a>
@@ -99,7 +77,7 @@ export default async function Footer() {
             <li>
               <a
                 href={`mailto:${content.email}`}
-                className="nav-link-fx text-white/70 hover:text-white transition"
+                className="nav-link-fx text-ink hover:text-brand break-all"
               >
                 {content.email}
               </a>
@@ -108,8 +86,11 @@ export default async function Footer() {
         </div>
       </div>
 
-      <div className="border-t border-white/10 py-6 text-center text-xs text-white/40">
-        © {new Date().getFullYear()} Ahmad YT Tutorial. All rights reserved.
+      <div className="border-t border-line">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 flex flex-wrap justify-between gap-3 text-sm text-muted">
+          <span>© {new Date().getFullYear()} Ahmad YT Tutorial. All rights reserved.</span>
+          <span>Learn · Create · Grow</span>
+        </div>
       </div>
     </footer>
   );

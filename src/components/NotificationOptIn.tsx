@@ -88,12 +88,12 @@ export default function NotificationOptIn() {
       type="button"
       onClick={status === "on" ? disable : enable}
       disabled={status === "loading"}
-      className="fixed bottom-5 right-5 z-40 flex items-center gap-2 rounded-full border border-white/10 bg-[#0d1330]/95 backdrop-blur px-4 py-2.5 text-xs sm:text-sm font-semibold text-white shadow-[0_8px_30px_-8px_rgba(0,0,0,0.6)] hover:border-[#ff6a3d]/50 transition disabled:opacity-60"
+      className="fixed bottom-5 right-5 z-40 flex items-center gap-2 rounded-full border border-line bg-white backdrop-blur px-4 py-2.5 text-xs sm:text-sm font-semibold text-ink shadow-[0_12px_30px_-12px_rgba(11,11,15,0.3)] hover:border-ink/25 transition disabled:opacity-60"
     >
       <svg
         viewBox="0 0 24 24"
         className="w-4 h-4 shrink-0"
-        fill={status === "on" ? "#ff6a3d" : "none"}
+        fill={status === "on" ? "#e0242b" : "none"}
         stroke="currentColor"
         strokeWidth="2"
       >

@@ -15,7 +15,7 @@ export default function BackToTutorials() {
           router.push("/");
         }
       }}
-      className="inline-flex items-center gap-1.5 text-sm text-white/60 hover:text-white transition mb-6"
+      className="inline-flex items-center gap-1.5 text-sm text-muted hover:text-ink transition mb-6"
     >
       ← Back to all tutorials
     </button>

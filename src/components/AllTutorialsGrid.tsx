@@ -66,16 +66,20 @@ export default function AllTutorialsGrid({
     .filter((c) => c.count > 0);
 
   return (
-    <section className="max-w-6xl mx-auto px-4 sm:px-6 py-12">
-      <div className="text-center mb-10">
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-white">
-          All Tutorials
+    <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-16 sm:pt-20 pb-20">
+      <div className="fade-up mb-10">
+        <p className="mb-3 text-xs font-semibold uppercase tracking-[0.12em] text-muted">
+          Library
+        </p>
+        <h1 data-no-scrub className="font-serif font-normal text-5xl sm:text-7xl leading-none tracking-tight">
+          All Posts
         </h1>
-        <p className="mt-3 text-white/60 max-w-2xl mx-auto">
-          Every tutorial we&apos;ve ever posted, in one place.
+        <p className="mt-4 text-lg text-muted max-w-xl">
+          Every tutorial we&apos;ve ever posted, in one place — each with its
+          exact prompt.
         </p>
         {query && (
-          <p className="mt-4 text-sm text-white/50">
+          <p className="mt-4 text-sm text-muted">
             {filteredVideos.length > 0
               ? `Showing results for "${query}"`
               : `No tutorials found for "${query}"`}
@@ -96,7 +100,7 @@ export default function AllTutorialsGrid({
           className={
             filteredVideos.length === 1
               ? "flex justify-center"
-              : "grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6"
+              : "grid grid-cols-2 lg:grid-cols-3 gap-x-3 gap-y-8 sm:gap-x-7 sm:gap-y-12"
           }
         >
           {filteredVideos.map((video) => (
@@ -114,7 +118,7 @@ export default function AllTutorialsGrid({
           ))}
         </div>
       ) : (
-        <p className="text-center text-white/50">No tutorials yet.</p>
+        <p className="text-center text-muted py-16 border border-dashed border-line rounded-2xl">No tutorials yet.</p>
       )}
     </section>
   );

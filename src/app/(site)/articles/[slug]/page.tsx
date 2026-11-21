@@ -54,22 +54,22 @@ export default async function ArticlePage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <article className="max-w-3xl mx-auto px-4 sm:px-6 py-10">
+      <article className="max-w-3xl mx-auto px-4 sm:px-6 pt-12 pb-24">
         <Link
           href="/articles"
-          className="inline-flex items-center gap-1.5 text-sm text-white/60 hover:text-white transition mb-6"
+          className="inline-flex items-center gap-1.5 text-sm text-muted hover:text-ink transition mb-6"
         >
           ← Back to all articles
         </Link>
 
-        <span className="inline-block rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-semibold text-white/70 uppercase tracking-wide mb-4">
+        <span className="inline-block rounded-full bg-brand-soft px-3 py-1 text-xs font-semibold text-brand uppercase tracking-wide mb-6">
           {article.category}
         </span>
 
-        <h1 className="text-2xl sm:text-4xl font-extrabold text-white leading-tight">
+        <h1 data-no-scrub className="fade-up font-serif font-normal text-5xl sm:text-7xl leading-[1.02] tracking-tight text-ink">
           {article.title}
         </h1>
-        <p className="mt-4 text-white/60 text-base sm:text-lg leading-relaxed">
+        <p className="mt-6 text-muted text-xl leading-relaxed pb-8 border-b border-line">
           {article.description}
         </p>
 
@@ -78,25 +78,25 @@ export default async function ArticlePage({
             "h2" in block ? (
               <h2
                 key={i}
-                className="text-xl sm:text-2xl font-bold text-white pt-4"
+                className="font-serif font-normal text-3xl sm:text-4xl leading-tight tracking-tight text-ink pt-8"
               >
                 {block.h2}
               </h2>
             ) : (
-              <p key={i} className="text-white/75 leading-relaxed">
+              <p key={i} className="text-[#2a2a33] text-[17px] sm:text-lg leading-[1.8]">
                 {block.p}
               </p>
             )
           )}
         </div>
 
-        <div className="mt-12 pt-8 border-t border-white/10 text-center">
-          <p className="text-white/60 mb-4">
+        <div className="mt-16 rounded-2xl bg-soft p-8 sm:p-10 text-center">
+          <p className="text-muted mb-4">
             Want the exact prompts behind our AI videos too?
           </p>
           <Link
             href="/tutorials"
-            className="inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-[#ff2d55] to-[#ff8a1c] text-white font-semibold text-sm px-8 py-3 hover:brightness-110 transition"
+            className="inline-flex items-center justify-center gap-2 rounded-lg bg-brand text-white font-medium text-sm px-8 py-3.5 hover:bg-brand-dark hover:-translate-y-0.5"
           >
             Browse All Tutorials
           </Link>

@@ -31,8 +31,9 @@ export default async function PrivacyPolicyPage() {
   return (
     <main className="flex-1">
       <PageViewTracker trackKey="privacy-policy" />
-      <section className="max-w-3xl mx-auto px-4 sm:px-6 py-16">
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-white mb-8">
+      <section className="max-w-3xl mx-auto px-4 sm:px-6 pt-16 sm:pt-20 pb-24">
+        <p className="mb-3 text-xs font-semibold uppercase tracking-[0.12em] text-muted">Legal</p>
+        <h1 data-no-scrub className="fade-up font-serif font-normal text-5xl sm:text-6xl leading-none tracking-tight text-ink mb-10 pb-8 border-b border-line">
           {heading}
         </h1>
         <LegalContentBlock body={body} />

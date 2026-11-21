@@ -1,4 +1,3 @@
-import CardFanDeck from "./CardFanDeck";
 
 const REASONS = [
   {
@@ -26,15 +25,19 @@ const REASONS = [
  */
 export default function WhyOurPrompts() {
   return (
-    <section className="max-w-5xl mx-auto px-4 sm:px-6 pt-14 pb-4">
-      <div className="text-center mb-10">
-        <span className="inline-block text-xs font-semibold tracking-widest text-[#ff8a1c] uppercase mb-4">
+    <section className="bg-soft border-b border-line">
+     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-20 sm:py-28">
+      <div className="reveal mb-12 grid gap-8 lg:grid-cols-[1fr_1.1fr] lg:gap-16 items-start">
+        <div>
+        <span className="block text-xs font-semibold tracking-[0.12em] text-muted uppercase mb-4">
           Why This Channel
         </span>
-        <h2 className="text-2xl sm:text-4xl font-extrabold text-white mb-5">
+        <h2 className="font-serif font-normal text-5xl sm:text-6xl leading-[1.02] tracking-tight">
           Why AI Prompts Matter — And Why Ours Work
         </h2>
-        <p className="text-white/70 max-w-3xl mx-auto text-base sm:text-lg leading-relaxed">
+        </div>
+        <div>
+        <p className="text-muted text-base sm:text-lg leading-relaxed">
           Ahmad YT Tutorial exists for one reason: to help anyone start their
           YouTube journey using AI, even with zero budget, zero equipment,
           and zero editing experience. Every tutorial on this site comes
@@ -43,7 +46,7 @@ export default function WhyOurPrompts() {
           creating your own AI videos, Shorts, and content today instead of
           spending months guessing what actually works.
         </p>
-        <p className="text-white/70 max-w-3xl mx-auto text-base sm:text-lg leading-relaxed mt-4">
+        <p className="text-muted text-base sm:text-lg leading-relaxed mt-4">
           If you've ever typed a prompt into an AI video tool and gotten
           back something blurry, weird, or nothing like what you imagined,
           you already know the real problem — it was never the AI tool
@@ -52,15 +55,29 @@ export default function WhyOurPrompts() {
           stopping video for another, purely because of how the prompt was
           written. That gap is exactly what this channel closes.
         </p>
+        </div>
       </div>
 
-      <CardFanDeck items={REASONS} />
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+        {REASONS.map((r, i) => (
+          <div
+            key={r.title}
+            className="pop-card rounded-2xl border border-line bg-white p-6 sm:p-7 flex flex-col hover:border-ink/25 hover:shadow-[0_18px_40px_-20px_rgba(11,11,15,0.3)]"
+          >
+            <span className="font-serif text-4xl text-brand mb-8">
+              {String(i + 1).padStart(2, "0")}
+            </span>
+            <h3 className="text-lg font-semibold tracking-tight mb-3">{r.title}</h3>
+            <p className="text-sm leading-relaxed text-muted">{r.text}</p>
+          </div>
+        ))}
+      </div>
 
-      <div className="max-w-3xl mx-auto mt-10 space-y-4">
-        <h3 className="text-xl sm:text-2xl font-bold text-white text-center mb-2">
+      <div className="reveal max-w-3xl mx-auto mt-20 space-y-5">
+        <h3 className="font-serif font-normal text-3xl sm:text-4xl tracking-tight mb-2">
           Why Most AI Videos Look Fake — And How to Fix That
         </h3>
-        <p className="text-white/60 text-sm sm:text-base leading-relaxed">
+        <p className="text-muted text-base sm:text-[17px] leading-[1.8]">
           Scroll through YouTube Shorts or Reels for five minutes and you'll
           see it instantly: some AI-made videos look like real cinema, and
           others look broken, warped, and obviously fake. The difference
@@ -73,7 +90,7 @@ export default function WhyOurPrompts() {
           prompt leaves all of that up to chance, and chance is exactly why
           so many AI videos look inconsistent from shot to shot.
         </p>
-        <p className="text-white/60 text-sm sm:text-base leading-relaxed">
+        <p className="text-muted text-base sm:text-[17px] leading-[1.8]">
           This is the exact gap Ahmad YT Tutorial was built to close. Every
           single tutorial published on this channel comes with the complete,
           word-for-word prompt used to generate that video — not a
@@ -84,10 +101,10 @@ export default function WhyOurPrompts() {
           own niche.
         </p>
 
-        <h3 className="text-xl sm:text-2xl font-bold text-white text-center mb-2 pt-4">
+        <h3 className="font-serif font-normal text-3xl sm:text-4xl tracking-tight mb-2 pt-8">
           Who This Channel Is Actually For
         </h3>
-        <p className="text-white/60 text-sm sm:text-base leading-relaxed">
+        <p className="text-muted text-base sm:text-[17px] leading-[1.8]">
           This site is built for the person who wants to start a YouTube
           channel but doesn't know where to begin. Maybe you've thought
           about starting a faceless YouTube channel but didn't have a
@@ -100,7 +117,7 @@ export default function WhyOurPrompts() {
           you are, if the goal is making real videos with AI — not just
           experimenting with it — Ahmad YT Tutorial is written for you.
         </p>
-        <p className="text-white/60 text-sm sm:text-base leading-relaxed">
+        <p className="text-muted text-base sm:text-[17px] leading-[1.8]">
           We specifically focus on AI video editing, faceless YouTube
           content, Shorts and Reels formats, thumbnail ideas, and channel
           growth tips that actually apply to AI-generated content — not
@@ -112,10 +129,10 @@ export default function WhyOurPrompts() {
           random collection of unrelated clips.
         </p>
 
-        <h3 className="text-xl sm:text-2xl font-bold text-white text-center mb-2 pt-4">
+        <h3 className="font-serif font-normal text-3xl sm:text-4xl tracking-tight mb-2 pt-8">
           Free, Because a Real Starting Point Should Be
         </h3>
-        <p className="text-white/60 text-sm sm:text-base leading-relaxed">
+        <p className="text-muted text-base sm:text-[17px] leading-[1.8]">
           This isn't a paid course, a locked Discord server, or a "prompt
           pack" you have to buy before you can use it. Every prompt, every
           tutorial, and every tool recommendation on Ahmad YT Tutorial is
@@ -127,7 +144,7 @@ export default function WhyOurPrompts() {
           building here for you: real, working prompts, explained simply,
           with a new one added every time a new video goes up.
         </p>
-        <p className="text-white/60 text-sm sm:text-base leading-relaxed">
+        <p className="text-muted text-base sm:text-[17px] leading-[1.8]">
           You're also not locked into copying prompts exactly forever. Once
           you start using the prompts on this site and see how they're
           structured — the way camera direction, lighting, subject
@@ -137,12 +154,13 @@ export default function WhyOurPrompts() {
           your own characters, and your own niche, and you stop needing
           this site as a crutch and start using it as a reference.
         </p>
-        <p className="text-center text-white/60 text-sm sm:text-base leading-relaxed pt-2">
+        <p className="text-center text-muted text-base sm:text-[17px] leading-[1.8] pt-2">
           Browse the tutorials below, pick one that matches the kind of
           video you want to make, copy the prompt, and go create. That's
           it — that's the whole system.
         </p>
       </div>
+     </div>
     </section>
   );
 }

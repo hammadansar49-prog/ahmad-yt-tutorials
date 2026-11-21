@@ -9,7 +9,7 @@ export default function ExpandableDescription({ text }: { text: string }) {
   const isLong = text.length > TRUNCATE_THRESHOLD;
 
   return (
-    <div className="hidden sm:block text-sm text-white/60 min-h-[2.6em]">
+    <div className="hidden sm:block text-sm text-muted min-h-[2.6em]">
       <p
         className={expanded ? "break-words" : "overflow-hidden break-words"}
         style={
@@ -32,7 +32,7 @@ export default function ExpandableDescription({ text }: { text: string }) {
             e.preventDefault();
             setExpanded((v) => !v);
           }}
-          className="mt-0.5 text-xs font-semibold text-[#ff8a1c] hover:underline"
+          className="mt-0.5 text-xs font-semibold text-brand hover:underline"
         >
           {expanded ? "Show less" : "Read more"}
         </button>

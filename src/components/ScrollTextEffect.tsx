@@ -59,6 +59,7 @@ export default function ScrollTextEffect() {
       );
       targets.forEach((el) => {
         if (el.closest(".pop-card")) return;
+        if (el.closest("[data-no-scrub]")) return;
         if (!el.dataset.scrollScrub) {
           el.dataset.scrollScrub = "true";
           splitIntoChars(el);

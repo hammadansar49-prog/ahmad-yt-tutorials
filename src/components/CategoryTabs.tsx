@@ -20,15 +20,15 @@ export default function CategoryTabs({
   }
 
   return (
-    <div className="flex flex-wrap justify-center gap-2 mb-10">
+    <div className="flex flex-wrap gap-1 border-b border-line mb-10">
       <button
         type="button"
         onMouseDown={preventFocus}
         onClick={() => onSelect("")}
         className={
           !active
-            ? "cat-tab rounded-full px-4 py-2 text-sm font-semibold bg-gradient-to-r from-[#ff2d55] to-[#ff8a1c] text-white transition"
-            : "cat-tab rounded-full px-4 py-2 text-sm font-semibold border border-white/10 text-white/70 hover:bg-white/5 hover:text-white transition"
+            ? "cat-tab -mb-px border-b-2 border-ink px-4 py-3 text-sm font-semibold text-ink"
+            : "cat-tab -mb-px border-b-2 border-transparent px-4 py-3 text-sm font-medium text-muted hover:text-ink"
         }
       >
         All
@@ -43,12 +43,12 @@ export default function CategoryTabs({
             onClick={() => onSelect(c.name)}
             className={
               isActive
-                ? "cat-tab rounded-full px-4 py-2 text-sm font-semibold bg-gradient-to-r from-[#ff2d55] to-[#ff8a1c] text-white transition"
-                : "cat-tab rounded-full px-4 py-2 text-sm font-semibold border border-white/10 text-white/70 hover:bg-white/5 hover:text-white transition"
+                ? "cat-tab -mb-px border-b-2 border-ink px-4 py-3 text-sm font-semibold text-ink"
+                : "cat-tab -mb-px border-b-2 border-transparent px-4 py-3 text-sm font-medium text-muted hover:text-ink"
             }
           >
             {c.name}
-            <span className="ml-1.5 text-xs opacity-70">{c.count}</span>
+            <span className="ml-1.5 text-xs text-muted">{c.count}</span>
           </button>
         );
       })}

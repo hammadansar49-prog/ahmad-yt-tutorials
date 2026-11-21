@@ -45,7 +45,7 @@ export default function LikeButton({
       onClick={handleClick}
       disabled={pending}
       className={`inline-flex items-center gap-1.5 ${textSize} font-medium transition ${
-        liked ? "text-[#ff2d55]" : "text-white/60 hover:text-white"
+        liked ? "text-[#ff2d55]" : "text-muted hover:text-ink"
       }`}
       aria-pressed={liked}
       aria-label={liked ? "Unlike" : "Like"}

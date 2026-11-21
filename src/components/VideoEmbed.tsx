@@ -26,7 +26,7 @@ export default function VideoEmbed({
 
   if (playing && videoId) {
     return (
-      <div className="relative w-full aspect-video rounded-2xl overflow-hidden border border-white/10 bg-black">
+      <div className="relative w-full aspect-video rounded-2xl overflow-hidden border border-line bg-black">
         <iframe
           src={`https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1`}
           title={title}
@@ -44,7 +44,7 @@ export default function VideoEmbed({
       onClick={() => setPlaying(true)}
       disabled={!videoId}
       aria-label={`Play ${title}`}
-      className="group relative w-full aspect-video rounded-2xl overflow-hidden border border-white/10 block text-left"
+      className="group relative w-full aspect-video rounded-2xl overflow-hidden border border-line block text-left"
     >
       <Image
         src={thumbnail}
@@ -62,7 +62,7 @@ export default function VideoEmbed({
       )}
       {videoId && (
         <span className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/35 transition">
-          <span className="flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-r from-[#ff2d55] to-[#ff8a1c] shadow-xl shadow-black/40 group-hover:scale-110 transition-transform">
+          <span className="flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-brand shadow-xl shadow-black/10 group-hover:scale-110 transition-transform">
             <svg
               viewBox="0 0 24 24"
               className="w-7 h-7 sm:w-8 sm:h-8 text-white translate-x-0.5"

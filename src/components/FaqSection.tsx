@@ -20,7 +20,7 @@ export default function FaqSection({
   return (
     <div className="mt-10">
       {hasFaqs && (
-        <h2 className="text-sm font-semibold text-white/50 uppercase tracking-wide mb-3">
+        <h2 className="text-sm font-semibold text-muted uppercase tracking-wide mb-3">
           Frequently Asked Questions
         </h2>
       )}
@@ -32,17 +32,17 @@ export default function FaqSection({
         }
       >
         {hasFaqs && (
-          <div className="rounded-lg border border-white/10 divide-y divide-white/10 overflow-hidden">
+          <div className="rounded-lg border border-line divide-y divide-line overflow-hidden">
             {faqs.map((faq, i) => {
               const open = openIndex === i;
               return (
-                <div key={i} className="bg-white/5">
+                <div key={i} className="bg-soft">
                   <button
                     type="button"
                     onClick={() => setOpenIndex(open ? null : i)}
                     className="w-full flex items-center justify-between gap-4 px-4 py-3 text-left"
                   >
-                    <span className="text-sm font-medium text-white">
+                    <span className="text-sm font-medium text-ink">
                       {faq.question}
                     </span>
                     <svg
@@ -50,7 +50,7 @@ export default function FaqSection({
                       fill="none"
                       stroke="currentColor"
                       strokeWidth="2"
-                      className={`h-4 w-4 shrink-0 text-white/50 transition-transform ${
+                      className={`h-4 w-4 shrink-0 text-muted transition-transform ${
                         open ? "rotate-180" : ""
                       }`}
                     >
@@ -58,7 +58,7 @@ export default function FaqSection({
                     </svg>
                   </button>
                   {open && (
-                    <div className="px-4 pb-4 text-sm text-white/70 leading-relaxed">
+                    <div className="px-4 pb-4 text-sm text-[#2a2a33] leading-relaxed">
                       {faq.answer}
                     </div>
                   )}
@@ -73,7 +73,7 @@ export default function FaqSection({
             {sidePictures!.map((src, i) => (
               <div
                 key={src}
-                className="relative aspect-square rounded-lg overflow-hidden border border-white/10"
+                className="relative aspect-square rounded-lg overflow-hidden border border-line"
               >
                 <Image
                   src={src}

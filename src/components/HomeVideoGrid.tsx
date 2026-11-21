@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { where } from "firebase/firestore";
 import Hero from "./Hero";
@@ -74,18 +75,26 @@ export default function HomeVideoGrid({
       {!hasFilter && <Hero />}
       {!hasFilter && <WhyOurPrompts />}
 
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 py-12">
-        <div className="text-center mb-10">
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-white">
-            Latest Tutorials &amp; Prompts
-          </h1>
-          <p className="mt-3 text-white/60 max-w-2xl mx-auto">
-            Every video comes with its full AI prompt — just hit{" "}
-            <span className="text-[#ff6a3d] font-semibold">Copy Code</span>{" "}
-            and the whole prompt is copied instantly.
-          </p>
+      <section id="tutorials" className="max-w-7xl mx-auto px-4 sm:px-6 py-16 sm:py-24 scroll-mt-20">
+        <div className="mb-10 flex flex-wrap items-end justify-between gap-6">
+          <div>
+            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.12em] text-muted">
+              Selected work
+            </p>
+            <h1 className="font-serif font-normal text-5xl sm:text-6xl leading-none tracking-tight">
+              Latest Tutorials &amp; Prompts
+            </h1>
+            <p className="mt-4 text-muted max-w-xl">
+              Every video comes with its full AI prompt — just hit{" "}
+              <span className="text-brand font-semibold">Copy Code</span>{" "}
+              and the whole prompt is copied instantly.
+            </p>
+          </div>
+          <Link href="/tutorials" className="text-[15px] font-medium hover:text-brand">
+            View all posts <span className="arrow-move">→</span>
+          </Link>
           {query && (
-            <p className="mt-4 text-sm text-white/50">
+            <p className="w-full text-sm text-muted">
               {filteredVideos.length > 0
                 ? `Showing results for "${query}"`
                 : `No tutorials found for "${query}"`}
@@ -106,7 +115,7 @@ export default function HomeVideoGrid({
             className={
               filteredVideos.length === 1
                 ? "flex justify-center"
-                : "grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6"
+                : "grid grid-cols-2 lg:grid-cols-3 gap-x-3 gap-y-8 sm:gap-x-7 sm:gap-y-12"
             }
           >
             {filteredVideos.map((video) => (
@@ -124,7 +133,7 @@ export default function HomeVideoGrid({
             ))}
           </div>
         ) : !query ? (
-          <p className="text-center text-white/50">
+          <p className="text-center text-muted py-16 border border-dashed border-line rounded-2xl">
             {hasFilter
               ? "No tutorials in this category yet."
               : "No tutorials in this category yet."}

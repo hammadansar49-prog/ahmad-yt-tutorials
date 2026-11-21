@@ -14,12 +14,13 @@ export default function ArticlesPage() {
   return (
     <main className="flex-1">
       <PageViewTracker trackKey="articles" />
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 py-12">
-        <div className="text-center mb-10">
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-white">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-16 sm:pt-20 pb-24">
+        <div className="fade-up mb-12">
+          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.12em] text-muted">Guides</p>
+          <h1 data-no-scrub className="font-serif font-normal text-5xl sm:text-7xl leading-none tracking-tight">
             Articles
           </h1>
-          <p className="mt-3 text-white/60 max-w-2xl mx-auto">
+          <p className="mt-4 text-lg text-muted max-w-2xl">
             In-depth guides on AI video prompts, faceless YouTube channels,
             and growing a channel with AI-generated content.
           </p>
@@ -30,17 +31,20 @@ export default function ArticlesPage() {
             <Link
               key={article.slug}
               href={`/articles/${article.slug}`}
-              className="group rounded-xl sm:rounded-2xl border border-white/10 bg-[#0d1330]/95 p-5 sm:p-6 hover:border-[#3b82f6]/40 hover:shadow-[0_0_40px_-12px_rgba(59,130,246,0.5)] transition"
+              className="group lift rounded-2xl border border-line bg-white p-6 sm:p-8 flex flex-col hover:border-ink/25"
             >
-              <span className="inline-block rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[10px] font-semibold text-white/70 uppercase tracking-wide mb-3">
+              <span className="self-start rounded-full bg-brand-soft px-3 py-1 text-[11px] font-semibold text-brand uppercase tracking-wide mb-6">
                 {article.category}
               </span>
-              <h2 className="text-base sm:text-lg font-bold text-white leading-snug group-hover:text-[#ff8a1c] transition">
+              <h2 className="text-base sm:text-lg font-bold text-ink leading-snug group-hover:text-brand transition">
                 {article.title}
               </h2>
-              <p className="mt-2 text-sm text-white/60 leading-relaxed line-clamp-3">
+              <p className="mt-3 text-sm text-muted leading-relaxed line-clamp-3">
                 {article.description}
               </p>
+              <span className="mt-6 pt-5 border-t border-line text-sm font-medium group-hover:text-brand">
+                Read article <span className="arrow-move">→</span>
+              </span>
             </Link>
           ))}
         </div>

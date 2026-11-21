@@ -53,10 +53,10 @@ export default async function TutorialPage({
   return (
     <main className="flex-1">
       <PageViewTracker slug={slug} trackKey={`video_${slug}`} />
-      <section className="max-w-4xl mx-auto px-4 sm:px-6 py-10">
+      <section className="max-w-4xl mx-auto px-4 sm:px-6 pt-10 pb-20">
         <BackToTutorials />
 
-        <div className="relative w-full aspect-video rounded-2xl overflow-hidden border border-white/10">
+        <div className="fade-up relative w-full aspect-video rounded-2xl overflow-hidden bg-soft2 shadow-[0_30px_60px_-30px_rgba(11,11,15,0.4)]">
           <Image
             src={thumbnailSrc(video)}
             alt={video.title}
@@ -73,14 +73,14 @@ export default async function TutorialPage({
 
         <TranslatedText
           as="h1"
-          className="text-2xl sm:text-3xl font-extrabold text-white mt-6"
+          className="font-serif font-normal text-4xl sm:text-6xl leading-[1.02] tracking-tight text-ink mt-10"
           original={video.title}
           translations={video.translations}
           field="title"
         />
         <TranslatedText
           as="p"
-          className="mt-2 text-white/60"
+          className="mt-4 text-lg leading-relaxed text-muted"
           original={video.description}
           translations={video.translations}
           field="description"
@@ -93,14 +93,14 @@ export default async function TutorialPage({
         />
 
         <div className="mt-6">
-          <h2 className="text-sm font-semibold text-white/50 uppercase tracking-wide mb-3">
+          <h2 className="text-sm font-semibold text-muted uppercase tracking-wide mb-3">
             Tools Used
           </h2>
           <div className="flex flex-wrap gap-2">
             {video.tools.map((tool) => (
               <span
                 key={tool}
-                className="rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-sm text-white/80"
+                className="rounded-full border border-line bg-white px-3.5 py-1.5 text-sm text-ink hover:border-ink/30"
               >
                 {tool}
               </span>
@@ -127,14 +127,14 @@ export default async function TutorialPage({
             href={video.youtubeUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-6 inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-[#22d3ee] to-[#3b82f6] text-[#06102b] font-semibold text-sm px-8 py-3 hover:brightness-110 transition"
+            className="mt-6 inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-lg bg-brand text-white font-medium text-sm px-8 py-3.5 hover:bg-brand-dark hover:-translate-y-0.5"
           >
             Watch on YouTube
           </a>
         )}
 
         <div className="mt-10">
-          <h2 className="text-sm font-semibold text-white/50 uppercase tracking-wide mb-3">
+          <h2 className="text-sm font-semibold text-muted uppercase tracking-wide mb-3">
             Watch The Full Video
           </h2>
           <VideoEmbed

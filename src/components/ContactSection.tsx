@@ -71,27 +71,22 @@ export default function ContactSection({
 }) {
   return (
     <>
-      <div className="relative h-px max-w-5xl mx-auto">
-        <div className="absolute inset-x-4 sm:inset-x-6 h-px bg-gradient-to-r from-transparent via-[#3b82f6]/50 to-transparent" />
-      </div>
-
       {showHeading && (
-        <section className="relative overflow-hidden">
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_50%_60%_at_50%_30%,rgba(59,130,246,0.14),transparent_70%)]" />
-          <div className="relative max-w-5xl mx-auto px-4 sm:px-6 pt-14 pb-16 text-center">
-            <span className="inline-block text-xs font-semibold tracking-widest text-[#ff8a1c] uppercase mb-4">
+        <section className="border-t border-line bg-soft">
+          <div className="fade-up max-w-7xl mx-auto px-4 sm:px-6 pt-20 sm:pt-28 pb-4">
+            <span className="block text-xs font-semibold tracking-[0.12em] text-muted uppercase mb-5">
               Get In Touch
             </span>
             <TranslatedText
               as={headingLevel}
-              className="text-3xl sm:text-5xl font-extrabold text-white mb-5"
+              className="font-serif font-normal text-5xl sm:text-7xl leading-[1] tracking-tight mb-6 max-w-4xl"
               original={content.contactHeading}
               translations={content.translations}
               field="contactHeading"
             />
             <TranslatedText
               as="p"
-              className="text-white/70 max-w-2xl mx-auto text-base sm:text-lg leading-relaxed"
+              className="text-muted max-w-2xl text-lg leading-relaxed"
               original={content.contactDescription}
               translations={content.translations}
               field="contactDescription"
@@ -100,8 +95,9 @@ export default function ContactSection({
         </section>
       )}
 
-      <section className="max-w-5xl mx-auto px-4 sm:px-6 py-16">
-        <div className="grid grid-cols-2 gap-2.5 sm:gap-5">
+      <section className={showHeading ? "bg-soft" : ""}>
+       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
+        <div className="grid grid-cols-1 min-[420px]:grid-cols-2 gap-3 sm:gap-5">
           {content.socials.map((s) => {
             const visuals = iconMap[s.name.toLowerCase()] ?? defaultIcon;
             return (
@@ -110,7 +106,7 @@ export default function ContactSection({
                 href={s.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="pop-card pop-hover group flex items-center gap-2.5 sm:gap-4 rounded-xl sm:rounded-2xl border border-white/10 bg-[#0d1330]/80 p-3 sm:p-5 hover:border-white/30 transition-colors"
+                className="pop-card pop-hover group flex items-center gap-3 sm:gap-4 rounded-xl sm:rounded-2xl border border-line bg-white p-4 sm:p-6 hover:border-ink/25 hover:shadow-[0_18px_40px_-20px_rgba(11,11,15,0.3)]"
               >
                 <span
                   className={`flex items-center justify-center w-9 h-9 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-gradient-to-br ${visuals.gradient} text-white shrink-0 [&_svg]:w-4 [&_svg]:h-4 sm:[&_svg]:w-6 sm:[&_svg]:h-6`}
@@ -118,32 +114,38 @@ export default function ContactSection({
                   {visuals.icon}
                 </span>
                 <span className="min-w-0">
-                  <span className="block text-white font-semibold text-sm sm:text-base truncate">
+                  <span className="block text-ink font-semibold text-sm sm:text-base truncate">
                     {s.name}
                   </span>
-                  <span className="block text-white/50 text-xs sm:text-sm truncate">
+                  <span className="block text-muted text-xs sm:text-sm truncate">
                     {s.handle}
                   </span>
                 </span>
-                <span className="ml-auto hidden sm:inline text-white/30 group-hover:text-white/70 transition">
+                <span className="ml-auto hidden sm:flex w-9 h-9 items-center justify-center rounded-full border border-line text-muted group-hover:bg-ink group-hover:text-white group-hover:border-ink transition">
                   ↗
                 </span>
               </a>
             );
           })}
         </div>
+       </div>
       </section>
 
-      <section className="max-w-5xl mx-auto px-4 sm:px-6 pb-20">
-        <div className="pop-card rounded-2xl border border-white/10 bg-[#0d1330]/80 p-8 sm:p-10 text-center">
-          <h2 className="text-xl font-bold text-white mb-2">Email</h2>
+      <section className={showHeading ? "bg-soft pb-20 sm:pb-28" : "pb-20"}>
+       <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="pop-card rounded-2xl border border-line bg-white p-8 sm:p-10 flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <h2 className="text-xs font-semibold uppercase tracking-[0.12em] text-muted mb-2">Email</h2>
+            <p className="font-serif text-3xl sm:text-4xl">Let&apos;s work together.</p>
+          </div>
           <a
             href={`mailto:${content.email}`}
-            className="text-[#ff8a1c] font-semibold hover:underline"
+            className="rounded-lg bg-brand px-6 py-3.5 text-white font-medium hover:bg-brand-dark break-all"
           >
             {content.email}
           </a>
         </div>
+       </div>
       </section>
     </>
   );

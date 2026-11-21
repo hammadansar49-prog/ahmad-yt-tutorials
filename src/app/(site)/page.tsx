@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import HomeVideoGrid from "@/components/HomeVideoGrid";
 import AboutSection from "@/components/AboutSection";
+import HomeArticles from "@/components/HomeArticles";
 import ContactSection from "@/components/ContactSection";
 import PageViewTracker from "@/components/PageViewTracker";
 import { getVideos } from "@/lib/videos-store";
@@ -47,6 +48,7 @@ export default async function Home({
         category={category}
       />
 
+      <HomeArticles />
       <AboutSection content={siteContent} headingLevel="h2" />
       <ContactSection content={siteContent} headingLevel="h2" />
     </main>

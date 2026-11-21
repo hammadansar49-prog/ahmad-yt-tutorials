@@ -22,12 +22,12 @@ export default function LiveComments({
 
   return (
     <>
-      <h2 className="text-xl font-bold text-white mb-4">
+      <h2 className="text-xl font-bold text-ink mb-4">
         Comments ({comments.length})
       </h2>
       <div id="comments-list">
         {comments.length === 0 ? (
-          <p className="text-sm text-white/50">
+          <p className="text-sm text-muted">
             No comments yet. Be the first to comment!
           </p>
         ) : (
@@ -35,17 +35,17 @@ export default function LiveComments({
             {comments.map((c) => (
               <div
                 key={c.id}
-                className="rounded-xl border border-white/10 bg-[#0d1330]/80 p-4"
+                className="rounded-xl border border-line bg-white p-4"
               >
                 <div className="flex items-center justify-between mb-1.5">
-                  <span className="font-semibold text-white text-sm">
+                  <span className="font-semibold text-ink text-sm">
                     {c.name}
                   </span>
-                  <span className="text-xs text-white/40">
+                  <span className="text-xs text-muted">
                     {new Date(c.createdAt).toLocaleDateString()}
                   </span>
                 </div>
-                <p className="text-sm text-white/70 whitespace-pre-wrap">
+                <p className="text-sm text-[#2a2a33] whitespace-pre-wrap">
                   {c.text}
                 </p>
               </div>

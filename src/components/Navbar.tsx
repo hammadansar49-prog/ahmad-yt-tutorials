@@ -54,101 +54,105 @@ export default function Navbar() {
     window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
   }
 
-  const navLinkClass =
-    "nav-link-fx text-white/80 hover:text-white transition";
+  const links = [
+    { href: "/", label: "Home" },
+    { href: "/tutorials", label: "All Posts" },
+    { href: "/articles", label: "Articles" },
+    { href: "/about", label: "About" },
+    { href: "/contact", label: "Contact" },
+    { href: "/disclaimer", label: "Disclaimer" },
+    { href: "/privacy-policy", label: "Privacy Policy" },
+  ];
+
+  const isActive = (href: string) =>
+    href === "/" ? pathname === "/" : pathname.startsWith(href);
+
+  const searchBox = (id: string) => (
+    <div className="relative w-full">
+      <label htmlFor={id} className="sr-only">
+        Search tutorials
+      </label>
+      <svg
+        viewBox="0 0 24 24"
+        className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        aria-hidden="true"
+      >
+        <circle cx="11" cy="11" r="7" />
+        <path d="m20 20-3.5-3.5" strokeLinecap="round" />
+      </svg>
+      <input
+        id={id}
+        type="text"
+        value={query}
+        onChange={(e) => handleChange(e.target.value)}
+        placeholder="Search tutorials"
+        className="w-full rounded-lg border border-line bg-soft pl-9 pr-9 py-2.5 text-sm text-ink placeholder-muted"
+      />
+      {query && (
+        <button
+          type="button"
+          onClick={clearSearch}
+          aria-label="Clear search"
+          className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted hover:text-ink"
+        >
+          <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+            <path d="M6 6l12 12M18 6 6 18" strokeLinecap="round" />
+          </svg>
+        </button>
+      )}
+    </div>
+  );
 
   return (
-    <header className="sticky top-0 z-50 bg-[#06102b]/95 border-b border-white/10 relative after:absolute after:inset-x-0 after:bottom-0 after:h-px after:bg-gradient-to-r after:from-transparent after:via-[#3b82f6]/60 after:to-transparent">
-      <nav className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center gap-3 sm:gap-6">
+    <header className="glass-header sticky top-0 z-50 border-b border-line">
+      <nav className="max-w-7xl mx-auto px-4 sm:px-6 h-[72px] flex items-center gap-4 lg:gap-6">
         <Link
           href="/"
           onClick={goHome}
-          className="flex items-center gap-2 font-extrabold text-base sm:text-lg text-white shrink-0"
+          className="flex items-center gap-2.5 font-semibold text-[15px] sm:text-base tracking-tight text-ink shrink-0"
         >
           <Image
             src="/icon.png"
-            alt="Ahmad YT Tutorial"
-            width={32}
-            height={32}
-            className="h-7 w-7 sm:h-8 sm:w-8 rounded-md object-cover"
+            alt=""
+            width={44}
+            height={44}
+            className="h-10 w-10 sm:h-11 sm:w-11 rounded-full object-cover"
+            priority
           />
-          <span>
-            Ahmad <span className="text-[#ff6a3d]">YT</span> Tutorial
-          </span>
+          <span>Ahmad YT Tutorial</span>
         </Link>
 
-        <div className="hidden sm:flex flex-1 items-center justify-center gap-6 text-sm font-medium">
-          <Link href="/" onClick={goHome} className={navLinkClass}>
-            Home
-          </Link>
-          <Link href="/tutorials" className={navLinkClass}>
-            All Posts
-          </Link>
-          <Link href="/articles" className={navLinkClass}>
-            Articles
-          </Link>
-          <Link href="/about" className={navLinkClass}>
-            About
-          </Link>
-          <Link href="/contact" className={navLinkClass}>
-            Contact
-          </Link>
-          <Link href="/disclaimer" className={navLinkClass}>
-            Disclaimer
-          </Link>
-          <Link href="/privacy-policy" className={navLinkClass}>
-            Privacy Policy
-          </Link>
+        <div className="hidden xl:flex flex-1 items-center justify-center gap-6 text-sm">
+          {links.map((l) => (
+            <Link
+              key={l.href}
+              href={l.href}
+              onClick={l.href === "/" ? goHome : undefined}
+              aria-current={isActive(l.href) ? "page" : undefined}
+              className={`nav-link-fx whitespace-nowrap ${
+                isActive(l.href) ? "text-ink font-semibold" : "text-muted hover:text-ink"
+              }`}
+            >
+              {l.label}
+            </Link>
+          ))}
         </div>
 
         <form
           onSubmit={handleSearch}
-          className="hidden sm:flex items-center w-48 lg:w-56 shrink-0 ml-auto"
+          className="hidden md:flex items-center w-52 shrink-0 ml-auto xl:ml-0"
         >
-          <div className="relative w-full">
-            <svg
-              viewBox="0 0 24 24"
-              className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <circle cx="11" cy="11" r="7" />
-              <path d="m20 20-3.5-3.5" strokeLinecap="round" />
-            </svg>
-            <input
-              type="text"
-              value={query}
-              onChange={(e) => handleChange(e.target.value)}
-              placeholder="Search tutorials..."
-              className="w-full rounded-lg border border-white/10 bg-gray-700/60 pl-9 pr-9 py-2 text-sm text-white placeholder-white/40 focus:outline-none focus:border-[#ff6a3d]/60 transition"
-            />
-            {query && (
-              <button
-                type="button"
-                onClick={clearSearch}
-                aria-label="Clear search"
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-white/40 hover:text-white transition"
-              >
-                <svg
-                  viewBox="0 0 24 24"
-                  className="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <path d="M6 6l12 12M18 6 6 18" strokeLinecap="round" />
-                </svg>
-              </button>
-            )}
-          </div>
+          {searchBox("nav-search")}
         </form>
 
         <a
           href="https://www.youtube.com/@AhmadYTTutorial?sub_confirmation=1"
           target="_blank"
           rel="noopener noreferrer"
-          className="hidden sm:inline-flex shrink-0 rounded-lg bg-gradient-to-r from-[#ff2d55] to-[#ff8a1c] px-4 py-2 text-sm text-white font-semibold hover:brightness-110 transition whitespace-nowrap"
+          className="hidden sm:inline-flex shrink-0 rounded-lg bg-brand px-4 py-2.5 text-sm text-white font-medium hover:bg-brand-dark hover:-translate-y-0.5 whitespace-nowrap"
         >
           Subscribe
         </a>
@@ -158,15 +162,9 @@ export default function Navbar() {
           onClick={() => setMenuOpen((o) => !o)}
           aria-label="Toggle menu"
           aria-expanded={menuOpen}
-          className="sm:hidden ml-auto shrink-0 w-9 h-9 flex items-center justify-center rounded-lg border border-white/10 text-white/80 hover:text-white transition"
+          className="xl:hidden ml-auto sm:ml-0 shrink-0 w-11 h-11 flex items-center justify-center rounded-full border border-line text-ink hover:bg-soft"
         >
-          <svg
-            viewBox="0 0 24 24"
-            className="w-5 h-5"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-          >
+          <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
             {menuOpen ? (
               <path d="M6 6l12 12M18 6 6 18" strokeLinecap="round" />
             ) : (
@@ -177,84 +175,32 @@ export default function Navbar() {
       </nav>
 
       {menuOpen && (
-        <div className="sm:hidden border-t border-white/10 px-4 py-3 space-y-1 bg-[#06102b]">
-          <form onSubmit={handleSearch} className="mb-2">
-            <div className="relative w-full">
-              <svg
-                viewBox="0 0 24 24"
-                className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
-                <circle cx="11" cy="11" r="7" />
-                <path d="m20 20-3.5-3.5" strokeLinecap="round" />
-              </svg>
-              <input
-                type="text"
-                value={query}
-                onChange={(e) => handleChange(e.target.value)}
-                placeholder="Search tutorials..."
-                className="w-full rounded-lg border border-white/10 bg-gray-700/60 pl-9 pr-3 py-2 text-sm text-white placeholder-white/40 focus:outline-none focus:border-[#ff6a3d]/60 transition"
-              />
-            </div>
+        <div className="xl:hidden border-t border-line px-4 py-4 bg-white fade-up" style={{ animationDuration: ".35s" }}>
+          <form onSubmit={handleSearch} className="mb-3 md:hidden">
+            {searchBox("menu-search")}
           </form>
-          <Link
-            href="/"
-            onClick={goHome}
-            className="block rounded-lg px-3 py-2.5 text-white/80 hover:bg-white/5 hover:text-white transition"
-          >
-            Home
-          </Link>
-          <Link
-            href="/tutorials"
-            onClick={() => setMenuOpen(false)}
-            className="block rounded-lg px-3 py-2.5 text-white/80 hover:bg-white/5 hover:text-white transition"
-          >
-            All Posts
-          </Link>
-          <Link
-            href="/articles"
-            onClick={() => setMenuOpen(false)}
-            className="block rounded-lg px-3 py-2.5 text-white/80 hover:bg-white/5 hover:text-white transition"
-          >
-            Articles
-          </Link>
-          <Link
-            href="/about"
-            onClick={() => setMenuOpen(false)}
-            className="block rounded-lg px-3 py-2.5 text-white/80 hover:bg-white/5 hover:text-white transition"
-          >
-            About
-          </Link>
-          <Link
-            href="/contact"
-            onClick={() => setMenuOpen(false)}
-            className="block rounded-lg px-3 py-2.5 text-white/80 hover:bg-white/5 hover:text-white transition"
-          >
-            Contact
-          </Link>
-          <Link
-            href="/disclaimer"
-            onClick={() => setMenuOpen(false)}
-            className="block rounded-lg px-3 py-2.5 text-white/80 hover:bg-white/5 hover:text-white transition"
-          >
-            Disclaimer
-          </Link>
-          <Link
-            href="/privacy-policy"
-            onClick={() => setMenuOpen(false)}
-            className="block rounded-lg px-3 py-2.5 text-white/80 hover:bg-white/5 hover:text-white transition"
-          >
-            Privacy Policy
-          </Link>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-1">
+            {links.map((l) => (
+              <Link
+                key={l.href}
+                href={l.href}
+                onClick={l.href === "/" ? goHome : () => setMenuOpen(false)}
+                aria-current={isActive(l.href) ? "page" : undefined}
+                className={`block rounded-lg px-3 py-3 ${
+                  isActive(l.href) ? "bg-brand-soft text-brand font-semibold" : "text-ink hover:bg-soft"
+                }`}
+              >
+                {l.label}
+              </Link>
+            ))}
+          </div>
           <a
             href="https://www.youtube.com/@AhmadYTTutorial?sub_confirmation=1"
             target="_blank"
             rel="noopener noreferrer"
-            className="block rounded-lg bg-gradient-to-r from-[#ff2d55] to-[#ff8a1c] px-3 py-2.5 text-white font-semibold text-center mt-2"
+            className="sm:hidden block rounded-lg bg-brand px-3 py-3 text-white font-medium text-center mt-3"
           >
-            Subscribe
+            Subscribe on YouTube
           </a>
         </div>
       )}

@@ -14,7 +14,7 @@ export default function CommentForm({ slug }: { slug: string }) {
 
   if (state.success) {
     return (
-      <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-4 text-sm text-emerald-300">
+      <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-4 text-sm text-emerald-700">
         Thanks! Your comment has been submitted and will appear once it&apos;s
         approved.
       </div>
@@ -27,20 +27,20 @@ export default function CommentForm({ slug }: { slug: string }) {
         name="name"
         required
         placeholder="Your name"
-        className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-white placeholder-white/30 focus:outline-none focus:border-[#3b82f6]/60 transition"
+        className="w-full rounded-lg border border-line bg-soft px-3 py-2.5 text-sm text-ink placeholder-muted focus:outline-none focus:border-brand transition"
       />
       <textarea
         name="text"
         required
         rows={3}
         placeholder="Write a comment..."
-        className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-white placeholder-white/30 focus:outline-none focus:border-[#3b82f6]/60 transition resize-none"
+        className="w-full rounded-lg border border-line bg-soft px-3 py-2.5 text-sm text-ink placeholder-muted focus:outline-none focus:border-brand transition resize-none"
       />
-      {state.error && <p className="text-xs text-red-400">{state.error}</p>}
+      {state.error && <p className="text-xs text-red-600">{state.error}</p>}
       <button
         type="submit"
         disabled={pending}
-        className="rounded-lg bg-gradient-to-r from-[#ff2d55] to-[#ff8a1c] text-white font-semibold text-sm px-5 py-2.5 hover:brightness-110 transition disabled:opacity-60"
+        className="rounded-lg bg-brand text-white font-semibold text-sm px-5 py-2.5 hover:opacity-90 transition disabled:opacity-60"
       >
         {pending ? "Posting..." : "Post Comment"}
       </button>
