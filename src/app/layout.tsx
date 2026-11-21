@@ -5,6 +5,7 @@ import ScrollPopEffect from "@/components/ScrollPopEffect";
 import ScrollWiggle from "@/components/ScrollWiggle";
 import LanguageProvider from "@/components/LanguageProvider";
 import { SITE_URL, SITE_NAME } from "@/lib/site";
+import WebMcpTools from "@/components/WebMcpTools";
 import "./globals.css";
 
 const inter = Inter({
@@ -95,6 +96,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
             {children}
           </div>
         </LanguageProvider>
+        <WebMcpTools />
       </body>
     </html>
   );
