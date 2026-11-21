@@ -3,6 +3,9 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   serverExternalPackages: ["firebase-admin"],
   experimental: {
+    // Hostinger build servers have little memory: build in one process.
+    cpus: 1,
+    workerThreads: false,
     serverActions: {
       bodySizeLimit: "100mb",
       allowedOrigins: ["ahmadyttutorial.com", "www.ahmadyttutorial.com"],
