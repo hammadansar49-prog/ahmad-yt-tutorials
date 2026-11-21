@@ -22,6 +22,9 @@ export type Video = {
   onWorking?: boolean;
   // { [languageCode]: { title, description } }
   translations?: Record<string, Record<string, string>>;
+  // ISO timestamps, set by the admin create/update actions (used for SEO).
+  createdAt?: string;
+  updatedAt?: string;
 };
 
 const videosCollection = () => adminDb.collection("videos");
@@ -34,19 +37,7 @@ const videosCollection = () => adminDb.collection("videos");
 // bytes as a normal cacheable image response, keeping the page itself
 // small. Anything that isn't a data: URI (e.g. a leftover externally
 // hosted URL) is returned as-is.
-export function thumbnailSrc(video: Pick<Video, "slug" | "thumbnail">): string {
-  if (!video.thumbnail?.startsWith("data:")) return video.thumbnail;
-  return `/api/image/${video.slug}/thumbnail`;
-}
-
-export function sidePictureSrc(
-  video: Pick<Video, "slug" | "sidePictures">,
-  index: number
-): string {
-  const src = video.sidePictures?.[index] ?? "";
-  if (!src.startsWith("data:")) return src;
-  return `/api/image/${video.slug}/side-${index}`;
-}
+export { thumbnailSrc, sidePictureSrc } from "./video-images";
 
 // Older docs stored a single `prompt: string` field before multi-prompt
 // support was added — normalize those into the `prompts` array on read.

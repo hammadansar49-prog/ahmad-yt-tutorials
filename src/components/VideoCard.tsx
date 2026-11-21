@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { Video } from "@/lib/videos-store";
+import { thumbnailSrc } from "@/lib/video-images";
 import LikeButton from "./LikeButton";
 import ExpandableDescription from "./ExpandableDescription";
 import { useLang } from "./LanguageProvider";
@@ -26,7 +27,7 @@ export default function VideoCard({
         className="v-thumb relative block aspect-video overflow-hidden rounded-xl sm:rounded-2xl bg-soft2"
       >
         <Image
-          src={video.thumbnail}
+          src={thumbnailSrc(video)}
           alt={title}
           fill
           quality={90}

@@ -1,3 +1,4 @@
+import { SITE_URL, SITE_NAME, SAME_AS, pageTitle, jsonLdString } from "@/lib/site";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -11,7 +12,7 @@ export async function generateMetadata({
   const article = ARTICLES.find((a) => a.slug === slug);
   if (!article) return {};
   return {
-    title: `${article.title} - Ahmad YT Tutorial`,
+    title: pageTitle(article.title),
     description: article.description,
     alternates: { canonical: `/articles/${article.slug}` },
     openGraph: {
@@ -41,10 +42,27 @@ export default async function ArticlePage({
     headline: article.title,
     description: article.description,
     articleSection: article.category,
+    url: `${SITE_URL}/articles/${article.slug}`,
+    mainEntityOfPage: `${SITE_URL}/articles/${article.slug}`,
+    image: `${SITE_URL}/icon.png`,
+    inLanguage: "en",
+    author: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
     publisher: {
       "@type": "Organization",
-      name: "Ahmad YT Tutorial",
+      name: SITE_NAME,
+      url: SITE_URL,
+      logo: { "@type": "ImageObject", url: `${SITE_URL}/icon.png` },
+      sameAs: SAME_AS,
     },
+  };
+  const breadcrumbLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
+      { "@type": "ListItem", position: 2, name: "Articles", item: `${SITE_URL}/articles` },
+      { "@type": "ListItem", position: 3, name: article.title, item: `${SITE_URL}/articles/${article.slug}` },
+    ],
   };
 
   return (
@@ -52,7 +70,11 @@ export default async function ArticlePage({
       <PageViewTracker trackKey={`article_${slug}`} />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: jsonLdString(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonLdString(breadcrumbLd) }}
       />
       <article className="max-w-3xl mx-auto px-4 sm:px-6 pt-12 pb-24">
         <Link

@@ -210,6 +210,8 @@ export async function createVideoAction(
     sidePictures,
     onWorking,
     translations,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   };
 
   try {
@@ -311,6 +313,8 @@ export async function updateVideoAction(
     sidePictures,
     onWorking,
     translations,
+    ...(existing.createdAt ? { createdAt: existing.createdAt } : {}),
+    updatedAt: new Date().toISOString(),
   };
 
   try {
