@@ -12,7 +12,31 @@ export async function proxy(request: NextRequest) {
     }
   }
 
-  return NextResponse.next();
+  // Serve Markdown to agents that ask for it on public pages.
+  const accept = request.headers.get("accept") ?? "";
+  if (
+    accept.includes("text/markdown") &&
+    !pathname.startsWith("/admin") &&
+    !pathname.startsWith("/api") &&
+    !/\.[a-z0-9]+$/i.test(pathname)
+  ) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/api/markdown";
+    url.search = `?path=${encodeURIComponent(pathname)}`;
+    const headers = new Headers(request.headers);
+    headers.set("x-markdown-path", pathname);
+    return NextResponse.rewrite(url, { request: { headers } });
+  }
+
+  const res = NextResponse.next();
+  if (!pathname.startsWith("/admin") && !pathname.startsWith("/api")) {
+    res.headers.set("Vary", "Accept");
+    res.headers.set(
+      "Link",
+      '</llms.txt>; rel="describedby"; type="text/plain", </.well-known/mcp/server-card.json>; rel="mcp-server-card"'
+    );
+  }
+  return res;
 }
 
 export const config = {
