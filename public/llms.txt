@@ -12,3 +12,8 @@
 - Each tutorial lives at /tutorial/{slug}: the video, a description, the tools used, the full prompts and FAQs.
 - Each article lives at /articles/{slug}.
 - Full URL list: https://ahmadyttutorial.com/sitemap.xml
+
+## For AI agents
+- Any page as Markdown: send `Accept: text/markdown`
+- JSON search: https://ahmadyttutorial.com/api/tutorials?q={keywords} and ?slug={slug}
+- MCP server (read-only, no auth): https://ahmadyttutorial.com/api/mcp — card: https://ahmadyttutorial.com/.well-known/mcp/server-card.json
