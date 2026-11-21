@@ -2,7 +2,8 @@ import type { MetadataRoute } from "next";
 import { getVideos } from "@/lib/videos-store";
 import { ARTICLES } from "@/lib/articles-data";
 
-const BASE_URL = "https://ahmadyttutorial.com";
+import { SITE_URL as BASE_URL } from "@/lib/site";
+import { thumbnailSrc } from "@/lib/video-images";
 
 // Safety net on top of the on-demand revalidatePath("/sitemap.xml") calls in
 // video-actions.ts: even if that ever gets missed, the sitemap self-heals
@@ -31,7 +32,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const tutorialEntries: MetadataRoute.Sitemap = videos.map((video) => ({
     url: `${BASE_URL}/tutorial/${video.slug}`,
-    lastModified: new Date(),
+    lastModified: video.updatedAt ? new Date(video.updatedAt) : new Date(),
+    images: video.thumbnail ? [`${BASE_URL}${thumbnailSrc(video)}`] : undefined,
     changeFrequency: "monthly",
     priority: 0.8,
   }));

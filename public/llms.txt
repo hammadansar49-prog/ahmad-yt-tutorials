@@ -1,0 +1,14 @@
+# Ahmad YT Tutorial
+
+> Official website of the Ahmad YT Tutorial YouTube channel (https://www.youtube.com/@ahmadyttutorial). Every AI video tutorial on the channel has a page here with the exact, tested AI video prompts used to make it, free to copy. Topics: AI video generation (Google Flow, Veo, Sora, Kling, Runway), AI video prompts, YouTube Shorts and faceless YouTube channel growth.
+
+## Main pages
+- [All tutorials](https://ahmadyttutorial.com/tutorials): every AI video tutorial with its prompts
+- [Articles](https://ahmadyttutorial.com/articles): guides on writing AI video prompts and growing a YouTube channel with AI
+- [About](https://ahmadyttutorial.com/about)
+- [Contact](https://ahmadyttutorial.com/contact)
+
+## Notes
+- Each tutorial lives at /tutorial/{slug}: the video, a description, the tools used, the full prompts and FAQs.
+- Each article lives at /articles/{slug}.
+- Full URL list: https://ahmadyttutorial.com/sitemap.xml
