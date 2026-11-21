@@ -3,7 +3,17 @@
 import Link from "next/link";
 import { useEffect, useRef } from "react";
 
-export default function Hero() {
+function fmt(n: number) {
+  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1).replace(/\.0$/, "")}M`;
+  if (n >= 1_000) return `${(n / 1_000).toFixed(1).replace(/\.0$/, "")}K`;
+  return String(n);
+}
+
+export default function Hero({
+  stats,
+}: {
+  stats?: { tutorials: number; views: number; likes: number };
+}) {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
@@ -35,45 +45,53 @@ export default function Hero() {
     return () => document.removeEventListener("visibilitychange", onVisibility);
   }, []);
 
+  const statItems = stats
+    ? [
+        { value: fmt(stats.tutorials), label: "Tutorials published" },
+        { value: fmt(stats.views), label: "Total views" },
+        { value: fmt(stats.likes), label: "Total likes" },
+        { value: "Free", label: "Every prompt, free to copy" },
+      ]
+    : [];
+
   return (
-    <section className="relative overflow-hidden border-b border-line">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-14 sm:pt-20 pb-16 sm:pb-24 flex flex-wrap items-center gap-12 lg:gap-16">
+    <>
+    <section className="relative overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-16 sm:pt-24 pb-16 sm:pb-24 flex flex-wrap items-center gap-12 lg:gap-16">
         <div className="flex-[999_1_520px] min-w-0">
-          <p className="fade-up mb-6 text-sm text-muted flex items-center gap-2.5">
+          <p className="fade-up mb-7 text-sm text-muted flex items-center gap-2.5">
             <span className="pulse-dot w-2 h-2 rounded-full bg-brand" />
-            YouTube educator · AI video &amp; creator tools
+            YouTube educator · AI &amp; creator tools
           </p>
           <h1
             data-no-scrub
-            className="fade-up delay-1 font-serif font-normal text-[52px] sm:text-7xl lg:text-[88px] leading-[0.98] tracking-tight"
+            className="fade-up delay-1 font-serif font-normal text-[52px] sm:text-7xl lg:text-[84px] leading-[0.98] tracking-tight"
           >
-            Free AI video prompts for{" "}
+            Practical tutorials for{" "}
             <em className="text-brand">modern creators.</em>
           </h1>
-          <div className="fade-up delay-2 mt-10 flex flex-wrap items-end justify-between gap-8">
-            <p className="max-w-lg text-lg leading-relaxed text-muted">
-              Clear, step-by-step tutorials on AI video editing, Shorts and
-              channel growth. Every video comes with the exact prompt used —
-              free to copy.
-            </p>
-            <div className="flex flex-wrap gap-3">
-              <a
-                href="#tutorials"
-                className="rounded-lg bg-ink px-6 py-3.5 text-[15px] font-medium text-white hover:-translate-y-0.5 hover:shadow-lg"
-              >
-                Browse tutorials
-              </a>
-              <Link
-                href="/about"
-                className="rounded-lg border border-line px-6 py-3.5 text-[15px] font-medium text-ink hover:border-ink"
-              >
-                About
-              </Link>
-            </div>
+          <p className="fade-up delay-2 mt-10 max-w-xl text-lg leading-relaxed text-muted">
+            Clear, step-by-step videos on AI tools, YouTube growth and
+            editing. Every tutorial includes the exact prompts and resources
+            used.
+          </p>
+          <div className="fade-up delay-2 mt-8 flex flex-wrap gap-3">
+            <a
+              href="#tutorials"
+              className="rounded-lg bg-ink px-6 py-3.5 text-[15px] font-medium text-white hover:-translate-y-0.5 hover:shadow-lg"
+            >
+              Browse tutorials
+            </a>
+            <Link
+              href="/about"
+              className="rounded-lg border border-line px-6 py-3.5 text-[15px] font-medium text-ink hover:border-ink"
+            >
+              About me
+            </Link>
           </div>
         </div>
 
-        <div className="fade-up delay-3 relative flex-[1_1_340px] max-w-[480px] mx-auto pt-6 pb-16">
+        <div className="fade-up delay-3 relative flex-[1_1_340px] max-w-[440px] mx-auto pt-6 pb-16">
           <div className="float-y overflow-hidden rounded-2xl bg-ink shadow-[0_40px_80px_-30px_rgba(11,11,15,0.45)]">
             <video
               ref={videoRef}
@@ -88,7 +106,7 @@ export default function Hero() {
               controls={false}
               width={1920}
               height={1080}
-              style={{ aspectRatio: "16 / 9" }}
+              style={{ aspectRatio: "16 / 10" }}
               className="w-full h-auto object-cover pointer-events-none"
             />
             <div className="flex items-center gap-3 px-4 py-3 text-xs text-white/70">
@@ -96,14 +114,14 @@ export default function Hero() {
                 <path d="M7 4l13 8-13 8z" fill="currentColor" />
               </svg>
               <span className="flex-1 h-1 rounded-full bg-white/15 overflow-hidden">
-                <span className="bar-grow block h-full bg-brand" />
+                <span className="bar-grow block h-full bg-white" />
               </span>
-              <span>Ahmad YT Tutorial</span>
+              <span>Latest video</span>
             </div>
           </div>
           <div className="float-y-2 absolute -left-4 sm:-left-8 bottom-0 w-[78%] rounded-xl border border-line bg-white p-4 shadow-[0_24px_48px_-20px_rgba(11,11,15,0.3)]">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-xs font-semibold">Master Prompt</span>
+              <span className="text-xs font-semibold">Prompt</span>
               <span className="text-[11px] font-medium rounded-md bg-ink text-white px-2.5 py-1">
                 Copy
               </span>
@@ -119,5 +137,26 @@ export default function Hero() {
         </div>
       </div>
     </section>
+
+    {statItems.length > 0 && (
+      <section className="border-y border-line">
+        <div className="max-w-7xl mx-auto grid grid-cols-2 lg:grid-cols-4">
+          {statItems.map((s, i) => (
+            <div
+              key={s.label}
+              className={`px-4 sm:px-6 py-7 sm:py-9 hover:bg-soft transition-colors ${
+                i % 2 === 1 ? "border-l border-line" : ""
+              } ${i === 2 ? "lg:border-l lg:border-line border-t lg:border-t-0" : ""} ${
+                i === 3 ? "border-t lg:border-t-0" : ""
+              }`}
+            >
+              <p className="font-serif text-4xl sm:text-5xl leading-none">{s.value}</p>
+              <p className="mt-2 text-sm text-muted">{s.label}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+    )}
+    </>
   );
 }

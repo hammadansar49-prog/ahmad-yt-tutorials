@@ -152,7 +152,7 @@ export default function Navbar() {
           href="https://www.youtube.com/@AhmadYTTutorial?sub_confirmation=1"
           target="_blank"
           rel="noopener noreferrer"
-          className="hidden sm:inline-flex shrink-0 rounded-lg bg-brand px-4 py-2.5 text-sm text-white font-medium hover:bg-brand-dark hover:-translate-y-0.5 whitespace-nowrap"
+          className="hidden sm:inline-flex shrink-0 rounded-lg border border-ink px-4 py-2.5 text-sm text-ink font-medium hover:bg-ink hover:text-white hover:-translate-y-0.5 whitespace-nowrap"
         >
           Subscribe
         </a>

@@ -72,7 +72,15 @@ export default function HomeVideoGrid({
 
   return (
     <>
-      {!hasFilter && <Hero />}
+      {!hasFilter && (
+        <Hero
+          stats={{
+            tutorials: videos.length,
+            views: videos.reduce((s, v) => s + (v.views ?? 0), 0),
+            likes: videos.reduce((s, v) => s + (v.likes ?? 0), 0),
+          }}
+        />
+      )}
       {!hasFilter && <WhyOurPrompts />}
 
       <section id="tutorials" className="max-w-7xl mx-auto px-4 sm:px-6 py-16 sm:py-24 scroll-mt-20">
