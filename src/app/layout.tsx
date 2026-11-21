@@ -6,6 +6,7 @@ import ScrollTextEffect from "@/components/ScrollTextEffect";
 import ScrollPopEffect from "@/components/ScrollPopEffect";
 import ScrollWiggle from "@/components/ScrollWiggle";
 import LanguageProvider from "@/components/LanguageProvider";
+import { SITE_URL, SITE_NAME } from "@/lib/site";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -19,7 +20,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://ahmadyttutorial.com"),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "Ahmad YT Tutorial - AI Video Editing, Shorts & Tutorials",
     template: "%s",
@@ -32,8 +33,27 @@ export const metadata: Metadata = {
     "AI video editing",
     "AI prompts",
     "YouTube shorts tutorial",
+    "free AI video prompts",
+    "AI video generator prompts",
+    "faceless YouTube channel AI",
+    "Google Flow AI tutorial",
   ],
-  robots: { index: true, follow: true },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-video-preview": -1,
+      "max-snippet": -1,
+    },
+  },
+  applicationName: SITE_NAME,
+  authors: [{ name: SITE_NAME, url: SITE_URL }],
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || undefined,
+  },
   openGraph: {
     siteName: "Ahmad YT Tutorial",
     title: "Ahmad YT Tutorial",

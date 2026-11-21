@@ -12,6 +12,16 @@ import LiveComments from "@/components/LiveComments";
 import CommentForm from "@/components/CommentForm";
 import PageViewTracker from "@/components/PageViewTracker";
 import TranslatedText from "@/components/TranslatedText";
+import { getYouTubeId } from "@/lib/youtube";
+import {
+  SITE_URL,
+  SITE_NAME,
+  YOUTUBE_CHANNEL_URL,
+  absoluteUrl,
+  metaDescription,
+  pageTitle,
+  jsonLdString,
+} from "@/lib/site";
 
 export const dynamic = "force-dynamic";
 
@@ -21,20 +31,24 @@ export async function generateMetadata({
   const { slug } = await params;
   const video = await getVideoBySlug(slug);
   if (!video) return {};
+  const description = metaDescription(video.description || video.title);
   return {
-    title: `${video.title} - Ahmad YT Tutorial`,
-    description: video.description,
+    title: pageTitle(video.title),
+    description,
+    keywords: [video.category, ...(video.tools ?? []), "AI video prompt", "free AI prompt"],
     alternates: { canonical: `/tutorial/${video.slug}` },
     openGraph: {
       title: video.title,
-      description: video.description,
-      type: "article",
-      images: [thumbnailSrc(video)],
+      description,
+      type: "video.other",
+      url: `/tutorial/${video.slug}`,
+      images: [{ url: thumbnailSrc(video), alt: video.title }],
+      ...(video.youtubeUrl ? { videos: [{ url: video.youtubeUrl }] } : {}),
     },
     twitter: {
       card: "summary_large_image",
       title: video.title,
-      description: video.description,
+      description,
       images: [thumbnailSrc(video)],
     },
   };
@@ -50,8 +64,65 @@ export default async function TutorialPage({
 
   const comments = await getApprovedCommentsForVideo(slug);
 
+  const pageUrl = `${SITE_URL}/tutorial/${video.slug}`;
+  const ytId = video.youtubeUrl ? getYouTubeId(video.youtubeUrl) : null;
+  const faqs = (video.faqs ?? []).filter((f) => f.question && f.answer);
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      ...(ytId
+        ? [
+            {
+              "@type": "VideoObject",
+              name: video.title,
+              description: video.description || video.title,
+              thumbnailUrl: [
+                absoluteUrl(thumbnailSrc(video)),
+                `https://i.ytimg.com/vi/${ytId}/hqdefault.jpg`,
+              ],
+              ...(video.createdAt ? { uploadDate: video.createdAt } : {}),
+              embedUrl: `https://www.youtube.com/embed/${ytId}`,
+              contentUrl: `https://www.youtube.com/watch?v=${ytId}`,
+              url: pageUrl,
+              genre: video.category,
+              author: { "@type": "Person", name: "Ahmad", url: YOUTUBE_CHANNEL_URL },
+              publisher: { "@id": `${SITE_URL}/#organization`, "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+              interactionStatistic: [
+                { "@type": "InteractionCounter", interactionType: { "@type": "WatchAction" }, userInteractionCount: video.views ?? 0 },
+                { "@type": "InteractionCounter", interactionType: { "@type": "LikeAction" }, userInteractionCount: video.likes ?? 0 },
+              ],
+            },
+          ]
+        : []),
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
+          { "@type": "ListItem", position: 2, name: "Tutorials", item: `${SITE_URL}/tutorials` },
+          { "@type": "ListItem", position: 3, name: video.title, item: pageUrl },
+        ],
+      },
+      ...(faqs.length
+        ? [
+            {
+              "@type": "FAQPage",
+              mainEntity: faqs.map((f) => ({
+                "@type": "Question",
+                name: f.question,
+                acceptedAnswer: { "@type": "Answer", text: f.answer },
+              })),
+            },
+          ]
+        : []),
+    ],
+  };
+
   return (
     <main className="flex-1">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonLdString(jsonLd) }}
+      />
       <PageViewTracker slug={slug} trackKey={`video_${slug}`} />
       <section className="max-w-4xl mx-auto px-4 sm:px-6 py-10">
         <BackToTutorials />

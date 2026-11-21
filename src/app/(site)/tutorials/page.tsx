@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import AllTutorialsGrid from "@/components/AllTutorialsGrid";
 import PageViewTracker from "@/components/PageViewTracker";
 import { getVideos } from "@/lib/videos-store";
+import { toListVideo } from "@/lib/video-images";
 import { getCategories } from "@/lib/categories-store";
 
 export const dynamic = "force-dynamic";
@@ -36,7 +37,7 @@ export default async function AllTutorialsPage({
     <main className="flex-1">
       <PageViewTracker trackKey="tutorials" />
       <AllTutorialsGrid
-        initialVideos={videos}
+        initialVideos={videos.map(toListVideo)}
         initialCategories={allCategories}
         query={query}
         category={category}
