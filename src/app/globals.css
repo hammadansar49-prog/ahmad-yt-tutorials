@@ -45,7 +45,7 @@ input:focus, textarea:focus, select:focus {
 }
 
 @keyframes fade-up {
-  from { opacity: 0; transform: translateY(24px); }
+  from { opacity: 0.001; transform: translateY(24px); }
   to { opacity: 1; transform: none; }
 }
 @keyframes float-y {
@@ -82,7 +82,7 @@ input:focus, textarea:focus, select:focus {
   .reveal {
     animation: fade-up linear both;
     animation-timeline: view();
-    animation-range: entry 0% cover 28%;
+    animation-range: entry 0% entry 70%;
   }
 }
 @keyframes header-shadow { to { box-shadow: 0 10px 30px -18px rgba(11, 11, 15, .35); } }

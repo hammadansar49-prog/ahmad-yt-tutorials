@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Geist_Mono, Inter, Instrument_Serif } from "next/font/google";
-import ScrollTextEffect from "@/components/ScrollTextEffect";
 import ScrollPopEffect from "@/components/ScrollPopEffect";
 import ScrollWiggle from "@/components/ScrollWiggle";
 import LanguageProvider from "@/components/LanguageProvider";
@@ -87,7 +86,6 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         className="relative min-h-full flex flex-col bg-white text-ink"
         suppressHydrationWarning
       >
-        <ScrollTextEffect />
         <ScrollPopEffect />
         <ScrollWiggle />
         <LanguageProvider initialLang={null}>
